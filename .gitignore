@@ -1,0 +1,10 @@
+.idea/*
+data/*
+**/.vs/*
+*.o
+*.out
+t/*
+r/*
+test/*
+
+
