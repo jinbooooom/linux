@@ -4,10 +4,15 @@
 
 计划包含的内容：
 
-- [x] 熟悉 linux
-  - [x] [linux 命令行](https://github.com/jinbooooom/linux/blob/master/tools/command_line.md)
-  - [ ] shell 脚本
-  - [ ] VIM
-  - [ ] gdb
-- [ ] linux 编程
-- [ ] linux 系统
+- linux 工具
+  - [linux 命令行](tools/command_line.md)
+
+  - shell 脚本
+  - [VIM](tools/VIM.md)
+  - gdb
+  - Makefile
+- linux 编程
+  - 多进程
+  - [多线程](programming/multithreading.md)
+- 网络编程
+- linux 系统

@@ -216,7 +216,7 @@ cat 1a/2a.txt | wc -l -w
 - 文件类型
 - 权限属性
 - 权限属性实例
-```
+```shell
 drwxrwxr-x 3 jinbo jinbo  4096 11月 26 09:31 1a
 ---xrwxrwx 1 jinbo jinbo   482 11月 26 09:55 1a.txt
 drwxrwxr-x 4 jinbo jinbo  4096 11月 26 13:53 1b
