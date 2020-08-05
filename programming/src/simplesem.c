@@ -44,9 +44,11 @@ void handle_data2(void)
 	{
 		pthread_mutex_unlock(&mutex);
 		sem_wait(&sem);
-		printf("Multiple: %d * %d = %d\n", stack[i][0], stack[i][1], stack[i][0] + stack[i][1]);
+		printf("Multiple: %d * %d = %d\n", stack[i][0], stack[i][1], stack[i][0] * stack[i][1]);
 	}
 	pthread_mutex_unlock(&mutex);
+	// int a = pthread_mutex_unlock(&mutex);
+	// printf("a = %d", a);
 }
 
 int main(int argc, char **argv)
@@ -66,6 +68,7 @@ int main(int argc, char **argv)
 
 
 /* #####################################################################
+
 jinbo@fang:~/gitme/linux/programming/src$ gcc simplesem.c -lpthread -o simplesem.o
 jinbo@fang:~/gitme/linux/programming/src$ ./simplesem.o 
 Plus: 0 + 0 = 0
@@ -77,13 +80,15 @@ Plus: 6 + 6 = 12
 Plus: 7 + 7 = 14
 Plus: 8 + 8 = 16
 Plus: 9 + 9 = 18
-Multiple: 1 * 1 = 2
+Multiple: 1 * 1 = 1
 
 Question:
 运行结果跟书里完全一样，但有两处不理解：
 
 源代码 Q1 处: while 里上锁后为什么不执行关键区代码就马上解锁？
-源代码 Q2 处：如果 while 循环里解过一次锁，跳出 while 循环后，又要再解一次锁？
+A：关键区代码要看你保护什么了，例子里觉得要保护 size。
 
+源代码 Q2 处：如果 while 循环里解过一次锁，跳出 while 循环后，又要再解一次锁？
+A：while 循环如果不满足，循环体是不执行的，所以退出时需要再解锁一次。即使满足 while 循环。在循环内部解过一次锁，退出后去解锁一个未加锁的互斥量，对程序运行结果没影响。
 */
 

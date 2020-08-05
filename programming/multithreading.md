@@ -1,4 +1,4 @@
-# 多线程编程
+# 多线程编程初步
 
 ## 使用多线程的好处
 
@@ -9,7 +9,7 @@
 
 ## 基本 API
 
-### pthread_create 创建线程
+- `pthread_create` 创建线程
 
 ```c++
 int pthread_create(pthread_t *thread, pthread_attr_t *attr, void *(*func)(void *), void *arg); // 函数原型
@@ -19,13 +19,13 @@ int pthread_create(pthread_t *thread, pthread_attr_t *attr, void *(*func)(void *
 // void *arg：func 指向的函数的参数
 ```
 
-### pthread_exit 结束线程_
+- `pthread_exit` 结束线程
 
 ``` C++
 pthread_exit(void *retval)  // retval 用于存放结束线程的退出状态
 ```
 
-### pthread_join 等待线程结束
+- `pthread_join` 等待线程结束
 
 ```C++
 int pthread_join(pthread_t th, void ** thread_return); // 函数原型
@@ -50,3 +50,41 @@ int pthread_join(pthread_t th, void ** thread_return); // 函数原型
 访问共享对象后进行解锁操作
 
 - `pthread_mutex_unlock(&mutex);`
+
+### 信号量
+
+以下方法均需要头文件 `#include <semaphore.h>`
+
+```C
+int sem_init(sem_t *sem, int pshared, unsigned int value);
+```
+
+功能：初始化信号量。成功返回 0，失败 -1
+
+```C
+int sem_wait(sem_t *sem);
+```
+
+功能：实现信号量 -1，当 sem = 0 阻塞。成功返回 0，失败 -1
+
+```
+int sem_post(sem_t *sem);
+```
+
+功能：实现信号量 +1，当有线程阻塞在这个信号量上，调用这个函数会使其中的一个线程不再阻塞，选择机制同样是由线程的调度策略来决定。
+
+成功返回 0，错误返回 -1
+
+```C
+int sem_destroy(sem_t *sem);
+```
+
+功能：删除信号量。成功返回 0，失败 -1
+
+### 实例
+
+- [创建多线程](./src/thrdcreat.c)
+- [互斥量](./src/simplemutex.c)
+
+- [信号量](src/simplesem.c)
+

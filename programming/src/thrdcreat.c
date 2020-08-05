@@ -102,11 +102,12 @@ Question:
 
 源代码 Q1 处: 
 先创建线程 thrd1 不是应该先进入函数 task1 中，然后打印 task1 count: 0 吗？为什么先打印的是 I'm in main function?
+A：在没有加入同步机制的情况下，谁先打印谁后打印都有可能。另外，不同的操作系统，和不同的CPU架构，对书中的例子运行情况都不一样。
 
 源代码 Q2 处: 
 第一次执行 cleanup(g1, g2); 打印 total iterators: 0，而之前已经打印了 task1 count: 0(（此时g1 = 1），task2 count: 2(此时g2 = 3)，
 那么执行完 cleanup(g1, g2) 应该等于 4，但运行结果却是 0？
- 
+A：正好反映了多线程的问题，所以才需要同步。
 
 */
 
