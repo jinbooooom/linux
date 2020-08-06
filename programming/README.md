@@ -81,7 +81,7 @@ int sem_destroy(sem_t *sem);
 
 功能：删除信号量。成功返回 0，失败 -1
 
-### 实例
+### 示例程序
 
 - [创建多线程](./src/thrdcreat.c)
 - [互斥量](./src/simplemutex.c)
