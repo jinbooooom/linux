@@ -12,9 +12,9 @@
   - gdb
   - Makefile
   
-- linux 编程
+- [linux 编程](programming/README.md)
   - 多进程
-  - [多线程](programming/multithreading.md)
+  - [多线程](programming/multithreading)
   
   - 网络编程
 - linux 系统

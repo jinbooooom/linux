@@ -130,7 +130,6 @@ find *[[:lower:]123] # 以小写字母或数字1、2、3中的任一个结尾的
     └── parent
     
     2 directories, 0 files
-    
     ```
 
 ### cp 复制文件和目录

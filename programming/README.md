@@ -83,8 +83,8 @@ int sem_destroy(sem_t *sem);
 
 ### 示例程序
 
-- [创建多线程](./src/thrdcreat.c)
-- [互斥量](./src/simplemutex.c)
+- [创建多线程](multithreading/thrdcreat.c)
+- [互斥量](multithreading/simplemutex.c)
 
-- [信号量](src/simplesem.c)
+- [信号量](multithreading/simplesem.c)
 
