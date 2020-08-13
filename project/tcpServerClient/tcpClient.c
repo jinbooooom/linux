@@ -15,7 +15,7 @@
 char *host_name = "127.0.0.1";	// 这是主机的地址，自己与自己通信，方便调试
 int port = 8000;
 
-// 命令行：tcpClient 本机IP 选择排序算法名字 输入数字字符串（不要用空格隔开，其它的都可以）
+// 命令行：可执行文件名 本机IP 输入数字字符串（不要用空格隔开，其它的都可以）
 int main(int argc, char **argv)
 {
 	char buf[8192];
@@ -35,14 +35,13 @@ int main(int argc, char **argv)
 	}
 	bzero(&pin, sizeof(pin));
 	pin.sin_family = AF_INET;
-	inet_pton(AF_INET, host_name, &pin.sin_addr);
+	inet_pton(AF_INET, host_name, &pin.sin_addr);	// 将点分十进制 －> 二进制整数
 	pin.sin_port = htons(port);
 	if ((socket_descriptor = socket(AF_INET, SOCK_STREAM, 0)) == -1)
 	{
 		perror("Error opening socket\n");
 		exit(1);
 	}
-
 
 	if (connect(socket_descriptor, (struct sockaddr *)&pin, sizeof(pin)) == -1) // 三次握手
 	{

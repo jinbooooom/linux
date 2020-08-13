@@ -12,4 +12,4 @@ all:${SRC}
 client:tcpClient.c
 	${CC} tcpClient.c -o tcpClient
 clean:
-	rm -f ${OBJS} sort
+	rm -f *.o tcpServer tcpClient

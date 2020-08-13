@@ -4,7 +4,7 @@
 
 #include "utils.h"
 
-int* str2arr(char *str, int *arr, int *cnt)
+void stoa(char *str, int *arr, int *cnt) // 将包含一系列数字的字符串转换成整数数组
 {
 	// cnt：通过处理 str 计算 arr 的长度，存放在 cnt 中
 	char stmp[20] = { '\0' };	// 临时提取的单个数字字符串
@@ -28,7 +28,7 @@ int* str2arr(char *str, int *arr, int *cnt)
 	show(arr, *cnt);
 }
 
-char *arr2str(int *arr, int len, char *str)
+void atos(int *arr, int len, char *str)	// 将整数数组转换成字节序
 {
 	char stmp[20] = { "\0" };	// 用来存放单个数字转换后的字符串
     
@@ -38,7 +38,6 @@ char *arr2str(int *arr, int len, char *str)
 		strcat(str, stmp);// 将 arr[i] 转换成字符串，拼接到 str 后面
         strcat(str, " ");
 	}
-	return str;
 }
 
 
