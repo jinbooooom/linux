@@ -1,5 +1,5 @@
 /*
-一个 TCP 服务器的例子，配合代码 tcpClient.c 阅读
+一个 TCP 服务器的例子，处理客户端发送过来的数据，排好序后发送给客户端
 */
 
 #include <sys/types.h>
@@ -25,6 +25,10 @@ int main(int argc, char **argv)
 	int sock_descriptor, temp_sock_descriptor, address_size;
 	int i, len, on = 1;
 	char buf[16384];
+
+	char sort_name[3] = { '\0' };
+	char cmp = '0';
+
 	// 创建一个用于网络通信的套接字，并返回该套接字的整数描述符
 	sock_descriptor = socket(AF_INET, SOCK_STREAM, 0);
 	// 四次挥手时服务器处于 TIME_WAIT 状态，需要等待 2MSL 时间。
@@ -67,13 +71,15 @@ int main(int argc, char **argv)
 		}
 		// 将二进制整数 －> 点分十进制
 		inet_ntop(AF_INET, &pin.sin_addr, host_name, sizeof(host_name));
-		printf("received from client(%s): %s\n", host_name, buf);
+		printf("received data from client(%s): %s\n", host_name, buf + HEAD_SIZE);
 
 		len = strlen(buf);
 		int arr[ARR_SIZE] = { 0 };
 		int size = 0;	// 数组的长度
-		stoa(buf, arr, &size);
-		merge(arr, 0, size - 1);
+		stoa(buf + HEAD_SIZE, arr, &size);	// 前面 HEAD_SIZE 个数据为包头，后面的才是真正的数据
+		unpack(buf, sort_name, &cmp);
+		// printf("buf:%s\nsort_name:%s\ncmp:%c\n", buf, sort_name, cmp);
+		sort(arr, size, sort_name, cmp);
 		// show(arr, size);
 		
 		memset(buf, '\0', sizeof(buf));

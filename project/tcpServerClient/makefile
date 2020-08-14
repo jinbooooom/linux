@@ -1,15 +1,14 @@
 OBJS = sort.o utils.o tcpServer.o
-#OBJS = $(wildcard *.o)
 SRC = $(wildcard *.c)
 
 CC = gcc
 #STD = -std=c++11
 
-tcpServer:${OBJS}
+server:${OBJS}
 	${CC} ${OBJS} -o $@ 
 all:${SRC}
 	${CC} -c ${SRC} 
 client:tcpClient.c
-	${CC} tcpClient.c -o tcpClient
+	${CC} tcpClient.c utils.h utils.o -o client
 clean:
-	rm -f *.o tcpServer tcpClient
+	rm -f *.o server client
