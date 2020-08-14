@@ -53,6 +53,8 @@ int main(int argc, char **argv)
 	}
 	printf("Accepting connections...\n");
 
+	int arr[ARR_SIZE] = { 0 };
+	int size = 0;	// 数组的长度
 	while (1)
 	{
 		address_size = sizeof(pin);
@@ -74,13 +76,14 @@ int main(int argc, char **argv)
 		printf("received data from client(%s): %s\n", host_name, buf + HEAD_SIZE);
 
 		len = strlen(buf);
-		int arr[ARR_SIZE] = { 0 };
-		int size = 0;	// 数组的长度
+		memset(arr, 0, sizeof(int) * ARR_SIZE);
+		size = 0;
 		stoa(buf + HEAD_SIZE, arr, &size);	// 前面 HEAD_SIZE 个数据为包头，后面的才是真正的数据
 		unpack(buf, sort_name, &cmp);
 		// printf("buf:%s\nsort_name:%s\ncmp:%c\n", buf, sort_name, cmp);
 		sort(arr, size, sort_name, cmp);
 		// show(arr, size);
+		// printf("\n%s\n", buf);
 		
 		memset(buf, '\0', sizeof(buf));
 		atos(arr, size, buf);

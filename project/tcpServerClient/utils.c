@@ -76,7 +76,7 @@ void stoa(const char *str, int *arr, int *cnt)
 	// cnt：通过处理 str 计算 arr 的长度，存放在 cnt 中
 	char stmp[20] = { '\0' };	// 临时提取的单个数字字符串
 	int itmp = 0;   			// 字符数组 stmp 的索引
-	for (int i = 0; i < STR_SIZE; ++i)
+	for (int i = 0; i < strlen(str) + 1; ++i)
 	{
 		if (str[i] >= '0' && str[i] <= '9' || str[i] == '-' || str[i] == '+')
 		{   
