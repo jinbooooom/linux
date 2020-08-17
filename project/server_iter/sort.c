@@ -1,3 +1,4 @@
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -13,10 +14,8 @@ int compare(int x, int y, char cmp)
 	}
 	else
 	{
-		if (x <= y) 
-			return 1;
-		else 
-			return 0;
+		if (x <= y) return 1;
+		else return 0;
 	}
 }
 
@@ -154,57 +153,47 @@ void shell(int *arr,int len, char cmp)
     }
 }
 
-void sort(int *arr, int len, char sort_name, char cmp)
+void sort(int *arr, int len, char *sort_name, char cmp)
 {
-	switch(sort_name)
+	if (!strcmp(sort_name, "01")) 
 	{
-		case '1':
-		{
-			printf("call insert sort...\n");
-			insert(arr, len, cmp);				// insert
-			break;	
-		}
-		case '2':		
-		{
-			printf("call shell sort...\n");
-			shell(arr, len, cmp);				// shell
-			break;
-		}
-		case '3':
-		{
-			printf("call select sort...\n");
-			my_select(arr, len, cmp);			// select
-			break;
-		}
-		/*
-		case '4':
-		{
-			heap(par);					// heap
-		}
-		*/
-		case '5':
-		{
-			printf("call bubble sort...\n");
-			bubble(arr, len, cmp);				// bubble
-			break;
-		}
-		case '6':
-		{
-			printf("call quick sort...\n");
-			quick(arr, 0, len - 1, cmp);		// quick
-			break;
-		}
-		case '7':
-		{
-			printf("call merge sort...\n");
-			merge(arr, 0, len - 1, cmp);		// merge
-			break;
-		}
-		default:
-		{
-			printf("call merge sort...\n");
-			merge(arr, 0, len - 1, cmp);		// "\0":即其他情况均用归并排序
-			break;
-		}	
-	}						
+		printf("call insert sort...\n");
+		insert(arr, len, cmp);				// insert	
+	}			
+	else if (!strcmp(sort_name, "02")) 
+	{
+		printf("call shell sort...\n");
+		shell(arr, len, cmp);				// shell
+	}
+	else if (!strcmp(sort_name, "03")) 
+	{
+		printf("call select sort...\n");
+		my_select(arr, len, cmp);			// select
+	}
+	/* else if (!strcmp(sort_name, "04")) 
+	{
+		heap(par);					// heap
+	}
+	*/
+	else if (!strcmp(sort_name, "05")) 
+	{
+		printf("call bubble sort...\n");
+		bubble(arr, len, cmp);				// bubble
+	}
+	else if (!strcmp(sort_name, "06")) 
+	{
+		printf("call quick sort...\n");
+		quick(arr, 0, len - 1, cmp);		// quick
+	}
+	else if (!strcmp(sort_name, "07")) 
+	{
+		printf("call merge sort...\n");
+		merge(arr, 0, len - 1, cmp);		// merge
+	}
+	else 
+	{
+		printf("call merge sort...\n");
+		merge(arr, 0, len - 1, cmp);		// "00":其他情况均用归并排序
+	}		
+	cmp = '\0';					
 }

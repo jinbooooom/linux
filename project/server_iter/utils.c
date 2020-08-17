@@ -12,14 +12,14 @@
 **************************************************************/
 char *getSortID(const char *sort_name)
 {
-	if (!strcmp(sort_name, "insert")) return "1";
-	else if (!strcmp(sort_name, "shell")) return "2";
-	else if (!strcmp(sort_name, "select")) return "3";
-	// else if (!strcmp(sort_name, "heap")) return "4";
-	else if (!strcmp(sort_name, "bubble")) return "5";
-	else if (!strcmp(sort_name, "quick")) return "6";
-	else if (!strcmp(sort_name, "merge")) return "7";
-	else return "\0";
+	if (!strcmp(sort_name, "insert")) return "01";
+	else if (!strcmp(sort_name, "shell")) return "02";
+	else if (!strcmp(sort_name, "select")) return "03";
+	// else if (!strcmp(sort_name, "heap")) return "04";
+	else if (!strcmp(sort_name, "bubble")) return "05";
+	else if (!strcmp(sort_name, "quick")) return "06";
+	else if (!strcmp(sort_name, "merge")) return "07";
+	else return "00";
 }
 
 /*************************************************************
@@ -52,7 +52,6 @@ void packet(char *dst, const char *src, const char *sort_name, const char *cmp)
 	memset(fill, ' ', fill_size);
 	strcat(dst, fill);
 	strcat(dst, src);
-	// 
 }
 
 /*************************************************************
@@ -62,13 +61,9 @@ void packet(char *dst, const char *src, const char *sort_name, const char *cmp)
 **************************************************************/
 void unpack(const char *dst, char *sort_name, char *cmp)
 {
-	/*
 	*sort_name = *dst;
 	*(sort_name + 1) = *(dst + 1);
 	*cmp = *(dst + 2);
-	*/
-	*sort_name = *dst;
-	*cmp = *(dst + 1);
 }
 
 /*************************************************************
