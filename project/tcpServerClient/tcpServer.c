@@ -44,11 +44,11 @@ int main(int argc, char **argv)
 	// 四次挥手时服务器处于 TIME_WAIT 状态，需要等待 2MSL 时间。
 	// 此时监听服务器试图绑定到该端口，操作系统不会允许，可以在 socket 和 bind 之间设置允许地址重用套接口选项
 	setsockopt(sock_descriptor, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
-	bzero(&sin, sizeof(sin));		// 置字符串的前 n 位为 0，无返回值
+	bzero(&sin, sizeof(sin));			// 置字符串的前 n 位为 0，无返回值
 	// 填写本机 socket 地址结构体
 	sin.sin_family = AF_INET;
-	sin.sin_addr.s_addr = INADDR_ANY;
-	sin.sin_port = htons(port);		// 调用 htons 对端口号进行字节序转换
+	sin.sin_addr.s_addr = INADDR_ANY;	// 转换过来就是0.0.0.0，表示本机的所有IP，因为有些机子不止一块网卡
+	sin.sin_port = htons(port);			// 调用 htons 对端口号进行字节序转换
 	// 将 socket 与 IP 和端口号绑定，组成三元组
 	if (bind(sock_descriptor, (struct sockaddr *)&sin, sizeof(sin)) == -1) // 返回 -1 为失败
 	{
@@ -83,6 +83,7 @@ int main(int argc, char **argv)
 		}
 		else if (pid == 0) // child
 		{
+			// 子进程不需要监听套接字（3 元组）
 			close(sock_descriptor);
 			// 从 TCP 的另一端接收数据; 设置大小为 BUF_SIZE 的缓冲区 buf 用来接收收到的数据
 			if (recv(temp_sock_descriptor, buf, BUF_SIZE, 0) == -1)
@@ -114,7 +115,9 @@ int main(int argc, char **argv)
 				perror("call to send faild\n");
 				exit(1);
 			}
-			// sleep(10);
+			// printf("pid=%d, ppid=%d\n", getpid(), getppid());
+			sleep(5);
+			// 父进程不需要连接套接字（5 元组）
 			close(temp_sock_descriptor);
 			exit(0);
 		}

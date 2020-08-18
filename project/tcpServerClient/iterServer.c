@@ -24,7 +24,7 @@ int main(int argc, char **argv)
 	struct sockaddr_in sin, pin;	// sockaddr_in: IPv4 地址，sockaddr_in6: IPv6 地址 
 	int sock_descriptor, temp_sock_descriptor, address_size;
 	int i, len, on = 1;
-	char buf[16384];
+	char buf[BUF_SIZE];
 
 	char sort_name = '\0';
 	char cmp = '0';
@@ -33,12 +33,12 @@ int main(int argc, char **argv)
 	sock_descriptor = socket(AF_INET, SOCK_STREAM, 0);
 	// 四次挥手时服务器处于 TIME_WAIT 状态，需要等待 2MSL 时间。
 	// 此时监听服务器试图绑定到该端口，操作系统不会允许，可以在 socket 和 bind 之间设置允许地址重用套接口选项
-	setsockopt(sock_descriptor, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
-	bzero(&sin, sizeof(sin));		// 置字符串的前 n 位为 0，无返回值
+	//setsockopt(sock_descriptor, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
+	bzero(&sin, sizeof(sin));			// 置字符串的前 n 位为 0，无返回值
 	// 填写本机 socket 地址结构体
 	sin.sin_family = AF_INET;
-	sin.sin_addr.s_addr = INADDR_ANY;
-	sin.sin_port = htons(port);		// 调用 htons 对端口号进行字节序转换
+	sin.sin_addr.s_addr = INADDR_ANY;	// 转换过来就是0.0.0.0，表示本机的所有IP，因为有些机子不止一块网卡
+	sin.sin_port = htons(port);			// 调用 htons 对端口号进行字节序转换
 	// 将 socket 与 IP 和端口号绑定，组成三元组
 	if (bind(sock_descriptor, (struct sockaddr *)&sin, sizeof(sin)) == -1) // 返回 -1 为失败
 	{
@@ -65,8 +65,8 @@ int main(int argc, char **argv)
 			perror("call to accept\n"); 
 			exit(1);
 		}
-		// 从 TCP 的另一端接收数据; 设置大小为 16384 的缓冲区 buf 用来接收收到的数据
-		if (recv(temp_sock_descriptor, buf, 16384, 0) == -1)
+		// 从 TCP 的另一端接收数据; 设置大小为 BUF_SIZE 的缓冲区 buf 用来接收收到的数据
+		if (recv(temp_sock_descriptor, buf, BUF_SIZE, 0) == -1)
 		{
 			perror("call to recv");
 			exit(1);
@@ -88,7 +88,7 @@ int main(int argc, char **argv)
 		memset(buf, '\0', sizeof(buf));
 		atos(arr, size, buf);
 		printf("after sort：%s\n\n", buf);
-		
+
 		if (send(temp_sock_descriptor, buf, len + 1, 0) == -1) // 向 TCP 另一端（客户端）发送数据
 		{
 			perror("call to send\n");

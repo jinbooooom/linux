@@ -27,10 +27,10 @@ def ascORdes():
     return str(dic[key])
 
 for _ in range(cntLoop):
-    begin = time.time()
     command = "./client 127.0.0.1 {} {} {}".format(provideData()[:-2], sortName(), ascORdes())
     #print(command)
+    begin = time.time()
     os.system(command)
     t = time.time() - begin
     print("sort has spent {}s\n".format(t))
-    time.sleep(1)
+    time.sleep(1.02)
