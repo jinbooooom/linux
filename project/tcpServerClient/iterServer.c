@@ -1,5 +1,5 @@
 /*
-一个 TCP 服务器的例子，处理客户端发送过来的数据，排好序后发送给客户端
+一个 TCP 迭代服务器的例子，处理客户端发送过来的数据，排好序后发送给客户端
 */
 
 #include <sys/types.h>
@@ -17,7 +17,7 @@
 #include "utils.h"
 
 char host_name[20];
-int port = 8000;
+int port = 8888;
 
 int main(int argc, char **argv)
 {
@@ -26,7 +26,7 @@ int main(int argc, char **argv)
 	int i, len, on = 1;
 	char buf[16384];
 
-	char sort_name[3] = { '\0' };
+	char sort_name = '\0';
 	char cmp = '0';
 
 	// 创建一个用于网络通信的套接字，并返回该套接字的整数描述符
@@ -79,7 +79,7 @@ int main(int argc, char **argv)
 		memset(arr, 0, sizeof(int) * ARR_SIZE);
 		size = 0;
 		stoa(buf + HEAD_SIZE, arr, &size);	// 前面 HEAD_SIZE 个数据为包头，后面的才是真正的数据
-		unpack(buf, sort_name, &cmp);
+		unpack(buf, &sort_name, &cmp);
 		// printf("buf:%s\nsort_name:%s\ncmp:%c\n", buf, sort_name, cmp);
 		sort(arr, size, sort_name, cmp);
 		// show(arr, size);

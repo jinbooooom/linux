@@ -3,7 +3,7 @@
 
 #define STR_SIZE 10000
 #define ARR_SIZE 100
-#define HEAD_SIZE 8
+#define HEAD_SIZE 4
 #define BUF_SIZE 16384
 
 char *getSortID(const char *sort_name);

@@ -32,5 +32,5 @@ for _ in range(cntLoop):
     #print(command)
     os.system(command)
     t = time.time() - begin
-    print("sort has spent {}s".format(t))
+    print("sort has spent {}s\n".format(t))
     time.sleep(1)
