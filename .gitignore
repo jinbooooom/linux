@@ -5,11 +5,13 @@ data/*
 **/*.s
 **/*.o
 **/*.out
-*/t/*
+**/t/*
 **/t.*
 **/**/t
 r/*
 test/*
+**/.vscode/*
+#.vscode
 
 
 
