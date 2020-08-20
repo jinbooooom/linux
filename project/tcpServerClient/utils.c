@@ -52,7 +52,7 @@ void packet(char *dst, const char *src, const char *sort_name, const char *cmp)
 	memset(fill, ' ', fill_size);
 	strcat(dst, fill);
 	strcat(dst, src);
-	// 
+	free(fill);
 }
 
 /*************************************************************

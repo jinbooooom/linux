@@ -1,5 +1,5 @@
 /*
-一个 TCP 服务器的例子，处理客户端发送过来的数据，排好序后发送给客户端
+一个 TCP 并发服务器的例子，处理客户端发送过来的数据，排好序后发送给客户端
 */
 
 #include <sys/types.h>
@@ -116,7 +116,7 @@ int main(int argc, char **argv)
 				exit(1);
 			}
 			// printf("pid=%d, ppid=%d\n", getpid(), getppid());
-			sleep(5);
+			// sleep(5);
 			// 父进程不需要连接套接字（5 元组）
 			close(temp_sock_descriptor);
 			exit(0);

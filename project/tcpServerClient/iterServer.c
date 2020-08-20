@@ -33,7 +33,7 @@ int main(int argc, char **argv)
 	sock_descriptor = socket(AF_INET, SOCK_STREAM, 0);
 	// 四次挥手时服务器处于 TIME_WAIT 状态，需要等待 2MSL 时间。
 	// 此时监听服务器试图绑定到该端口，操作系统不会允许，可以在 socket 和 bind 之间设置允许地址重用套接口选项
-	//setsockopt(sock_descriptor, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
+	setsockopt(sock_descriptor, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
 	bzero(&sin, sizeof(sin));			// 置字符串的前 n 位为 0，无返回值
 	// 填写本机 socket 地址结构体
 	sin.sin_family = AF_INET;
@@ -94,7 +94,7 @@ int main(int argc, char **argv)
 			perror("call to send\n");
 			exit(1);
 		}
-		sleep(5);
+		// sleep(5);
 		close(temp_sock_descriptor); // 结束通信
 	}
 }
