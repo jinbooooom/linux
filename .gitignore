@@ -8,10 +8,10 @@ data/*
 **/t/*
 **/t.*
 **/**/t
-r/*
+**/r/*
 test/*
 **/.vscode/*
-#.vscode
+**/.vscode
 
 
 

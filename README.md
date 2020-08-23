@@ -7,7 +7,7 @@
 - linux 工具
   - [linux 命令行](tools/command_line.md)
   - gcc
-  - Makefile
+  - [Makefile](tools/Makefile.pdf)
   - [VIM](tools/VIM.md)
   - gdb
   - shell 脚本
