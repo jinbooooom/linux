@@ -199,4 +199,8 @@ $ git reset --keep [commit]
 $ git revert [commit]
 ```
 
-## 其他
+## 
+
+### 推荐阅读
+
+- http://gityuan.com/2015/06/27/git-notes/
