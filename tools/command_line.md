@@ -37,6 +37,7 @@ jinbo@fang:~/gitme/linux/test$ cal
 
 - ifconfig 显示或配置网络设备
 ## linux 常用命令
+
 ### ls
 - ls | wc -w :查看当前目录下有多少个文件及文件夹（不包括子文件夹）
 	- wc 统计文本中行数、字数、字符数，例如 `wc xx.md`（也等于 `wc -lwc xx.md`），打印 xx.md 文件里的行数、单词数、字符数
@@ -55,16 +56,10 @@ drwxrwxr-x 2 jinbo jinbo  4096 7月  31 19:59 tools
 jinbo@fang:~/gitme/linux$ ls | wc
       5       5      33
 ```
-### find
-
-find：这个命令用于查找文件，功能强大。例如：find ./*.txt，查找当前目录及其子目录下所有扩展名是 .txt 的文件。
-
-```shell
-find *[[:lower:]123] # 以小写字母或数字1、2、3中的任一个结尾的任一文件
-```
 ### file 用于确定文件的种类
 ```markdown
-# 比如 1.txt 其实是 1.JPEG 重命名的，$ file 1.txt 显示
+# 比如 1.txt 其实是 1.JPEG 重命名的，执行命令 $ file 1.txt 显示：
+$ file 1.txt 
 1.txt: JPEG image data, JFIF standard 1.01, resolution (DPI), density 72x72, segment length 16, baseline, precision 8, 440x440, frames 3
 ```
 
@@ -293,11 +288,53 @@ kill -2 8798  # 杀死 PID 为 8798 的进程，-2 的效果等同于 ctrl+C，-
 # -9 是没有办法的最后选择。
 ```
 ### 网络
+
 - ping # 向网络主机发送数据包，用来检测网络连接是否正常
 ```
 ping www.baidu.com
 ```
-### 推荐/参考链接
+### 拷贝服务器文件到本地目录
+
+```shell
+$ scp -r username@172.xx.xx.xx:~/worker/soft(远程目录) ./soft(当前目录下的 soft 目录)
+```
+
+## 文件搜索
+
+### find
+
+find：这个命令用于查找文件，功能强大。例如：find ./*.txt，查找当前目录及其子目录下所有扩展名是 .txt 的文件。
+
+```shell
+# 以小写字母或数字1、2、3中的任一个结尾的任一文件
+find *[[:lower:]123] 
+#打印当前目录下的所有文件夹
+find . -type d 
+找到当前目录下大小超过 1M 的 jpg 格式图像
+find . -type f -name *.jpg -size +1M
+```
+
+```shell
+# 从当前目录递归寻找能匹配 *dvr*.c 的文件且该文件某一行有字符 "main"
+# 即找文件 *dvr*.c 的 main 函数。该方式 find 的文件在 vscode 中可以跳转
+find . -type f -name *dvr*.c | xargs grep -wnr main
+```
+
+
+
+
+
+
+
+**推荐阅读**
+
+- [linux 下 find 和 grep 的区别](https://blog.csdn.net/denghonghao/article/details/78610861)
+
+
+
+功能很强大，用时查，暂不记录。
+
+## 推荐/参考链接
 
 - [Linux Tools Quick Tutorial](https://linuxtools-rst.readthedocs.io/zh_CN/latest/index.html) 
 

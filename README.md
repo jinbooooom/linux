@@ -7,7 +7,7 @@
 - linux 工具
   - [linux 命令行](tools/command_line.md)
   - gcc
-  - [Makefile](tools/Makefile.pdf)
+  - [Makefile](https://www.androidos.net.cn/codebook/Makefile/README.html) [PDF](tools/Makefile.pdf)
   - [VIM](tools/VIM.md)
   - gdb
   - shell 脚本

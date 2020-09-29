@@ -47,16 +47,16 @@ WM_CLASS(STRING) = "jetbrains-pycharm-ce", "jetbrains-pycharm-ce"
 SDK和Android studio都安装在`/usr/local/` 下，分别建文件夹 `java/jdk_14.0.2`和`java/android-studio`
 
 ```shell
-cd /usr/local/
-mkdir java
-cd java
-mkdir jdk_14.0.2
-mkdir android-studio
+$ cd /usr/local/
+$ mkdir java
+$ cd java
+$ mkdir jdk_14.0.2
+$ mkdir android-studio
 ```
 
 1、Sdk 安装，[点击下载](https://www.oracle.com/java/technologies/javase-jdk14-downloads.html)
 
-```
+```shell
 # 解压 JDK
 sudo tar -zxvf jdk-14.0.2_linux-x64_bin.tar.gz
 # 在jdk文件夹中输入以下命令生成jre
@@ -128,24 +128,88 @@ WM_CLASS(STRING) = "sun-awt-X11-XFramePeer", "jetbrains-studio"
 
 将输出的字符串`jetbrains-studio`填入`PyCharm.desktop`的`StartupWMClass`变量。实际上把`sun-awt-X11-XFramePeer`填入`StartupWMClass`变量也没问题。
 
+## 配置
+
+### [中文 man](https://blog.csdn.net/BobYuan888/article/details/88865219)
+
+```shell
+sudo apt-get update                              # 更新你的下载源目录，此步骤可省略。
+sudo apt-get install manpages-zh   # 系统会自动下载并安装
+sudo gedit ~/.bashrc                             # 在最后一行输入：alias cman='man -M /usr/share/man/zh_CN'  
+                                                                       # 将中文的man命令重命名为cman命令，之后保存并退出编辑
+source ~/.bashrc                                     # 重新运行.bashrc文件
+```
+
+## 代码跟踪
+
+### sourcetrail
+
+[下载](https://github.com/CoatiSoftware/Sourcetrail/releases)
+
+解压后运行`install.sh`脚本
+
+### doxygen
+
+```shell
+sudo apt-get install doxygen
+sudo apt-get install graphviz
+```
+
+**Usage**
+
+获取[配置文件](./src/Doxyfile)
+
+```shell
+$ doxygen -g
+# 此时用获取的配置文件覆盖掉新创建的配置文件
+$ doxygen 
+```
+
+**参考**
+
+- [Linux 下 Doxygen 安装及使用大全](https://blog.csdn.net/t990423909/article/details/106169890)
+- [配置文件设置](https://www.cnblogs.com/Mr--Yang/p/6338095.html)
+
 ## 常用软件
 
 ### teamviewer
 
 ```
-sudo dpkg -i teamviewer*.deb
+$ sudo dpkg -i teamviewer*.deb
 ```
 
 不出意外会出现一些错误，需要安装一些依赖。使用下面的修复依赖关系的命令：
 
 ```
-sudo apt-get install -f
+$ sudo apt-get install -f
 ```
 
 再次执行命令:
 
 ```
-sudo dpkg -i teamviewer*.deb
+$ sudo dpkg -i teamviewer*.deb
+```
+
+### 百度网盘
+
+[下载 .deb 格式的软件包](https://pan.baidu.com/download)
+
+```shell
+$ sudo dpkg -i baidunetdisk_3.4.1_amd64.deb
+```
+
+### 微信
+
+[下载微信安装包](https://www.cnblogs.com/limanjihe/p/9963574.html)
+
+链接: https://pan.baidu.com/s/1YIswiB6UnTPsVD2K162j8w  密码: 0wtt
+
+```shell
+# 解压后
+$ electronic-wechat
+# 如果不能启动，则
+$ sudo snap install electronic-wechat
+$ electronic-wechat
 ```
 
 ## 娱乐软件
