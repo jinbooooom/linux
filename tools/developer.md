@@ -240,3 +240,38 @@ netease-cloud-music
 
 参考链接： [网易云安装](https://blog.csdn.net/zz531987464/article/details/83050067)
 
+## 其它
+
+### amule
+
+aMule是一个开源免费的P2P文件共享软件，遵循GNU通用公共许可证协议发布。类似于eMule。基于xMule和lMule。可应用eDonkey网络协议，也支持KAD网络。可在包括各种类Unix系统、Windows在内的多种操作系统下运行。
+
+主要用它来下载MSDN里的ed2k格式链接
+
+```shell
+sudo apt-get install amule
+```
+
+
+
+### VMware
+
+[点击下载vmware pro16](https://www.vmware.com/cn/products/workstation-pro/workstation-pro-evaluation.html)
+
+```shell
+sudo chmod +x VMware-Workstation-Full-16.0.0-16894299.x86_64.bundle 
+sudo ./VMware-Workstation-Full-16.0.0-16894299.x86_64.bundle
+```
+
+```markdown
+# 许可密钥文本，复制其中一条然后点击激活即可
+ZF3R0-FHED2-M80TY-8QYGC-NPKYF
+YF390-0HF8P-M81RQ-2DXQE-M2UT6
+ZF71R-DMX85-08DQY-8YMNC-PPHV8
+```
+
+参考：
+
+- [vmware workstation16许可证密钥附使用说明](http://blog.itpub.net/69983919/viewspace-2721808/)
+- [ubuntu19.10安装vmware workstation pro(详细步骤)](https://blog.csdn.net/weixin_42473164/article/details/104421386)
+
