@@ -158,8 +158,8 @@ void sort(int *arr, int len, char sort_name, char cmp)
 {
 	switch(sort_name)
 	{
-		case '1':
 		{
+		case '1':
 			printf("call insert sort...\n");
 			insert(arr, len, cmp);				// insert
 			break;	
