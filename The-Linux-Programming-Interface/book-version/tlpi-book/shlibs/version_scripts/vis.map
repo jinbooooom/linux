@@ -1,0 +1,7 @@
+VER_1 {
+    global:
+        vis_f1;
+	vis_f2;
+    local:
+	*;
+};

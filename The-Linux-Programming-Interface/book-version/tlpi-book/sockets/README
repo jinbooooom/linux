@@ -1,0 +1,23 @@
+Many of the programs in this directory are named according to the 
+conventions described below.
+
+A prefix identifies the socket domain in which the program operates, 
+and the socket type employed. The socket domain is indicated by one
+or two letters:
+
+    u  UNIX
+    i   Internet (both v4 and v6)
+    i6  Internet v6 only
+
+The socket type is one of the following:
+
+    d   datagram
+    s   stream
+
+A suffix indicates whether the program is a client or server:
+
+    cl client
+    sv server
+
+Thus, id_echo_sv.c is a server program that uses datagram sockets in 
+the Internet domain.

@@ -1,0 +1,190 @@
+PLEASE TAKE NOTE!
+=================
+
+If you have difficulty building the programs, then the problem is most
+likely one of the following:
+
+a) A configuration issue on your system (e.g., you may not have all of
+   the necessary libraries installed).
+b) You are using a system with an older Linux kernel or an older
+   version of glibc. If this is so, your system may not provide a
+   more recent system call or library function, or the glibc headers
+   may not provide a needed function declaration or constant
+   definition.
+
+Other than the notes on "Installing library dependencies" below,
+I can't really help with fixing these problems. However, do take
+a look at the online code FAQ (http://man7.org/tlpi/code/faq.html)
+for some frequently asked questions about the code. You may find
+the answer to your problem there.
+
+If, after ensuring that the problem is not a configuration issue on your
+system (did you try compiling the program(s) on a different system?) and
+checking the FAQ, you still have a problem *and* you have a solution, then
+please do let me know, and I will publish the fix on the web site.
+
+
+Unpacking the code tarball
+==========================
+
+Unpacking the tarball with the command
+
+        tar xfz tlpi-YYMMDD-xxxx.tar.gz
+
+will create a directory tree 'tlpi-xxxx' containing all of the source code
+("xxxx" will be either "dist" or "book" depending on which version of the
+source code tarball you downloaded).
+
+
+Building the programs on Linux
+==============================
+
+(For instructions on building the programs on other UNIX
+implementations, see the notes lower down in this file.)
+
+The methods described below involve the use of 'make'. If you need
+more information on 'make', try the command 'man make' or 'info make'.
+
+
+Installing library dependencies
+-------------------------------
+
+Various programs in the course code depend on libraries that may not
+be installed by default on your system. If you have build problems,
+then in the first instance you should make sure that the following
+libraries are installed.
+
+Debian, Ubuntu, and similar distributions:
+
+        libcap-dev
+        libacl1-dev
+        libselinux1-dev
+	libseccomp-dev
+
+RPM-based distributions (Fedora, OpenSUSE, CentOS, etc.):
+
+        libcap-devel
+        libacl-devel
+        libselinux-devel
+	libseccomp-devel
+
+If you are using Arch or Gentoo, then I'm sure you can work out what to
+do, based on the above information.
+
+
+Method A - Building all programs in all directories
+---------------------------------------------------
+
+Go into the 'tlpi' subdirectory, and type 'make':
+
+        cd tlpi-xxxx
+        make
+
+This will build all programs in (nearly) all subdirectories (a few
+subdirectories are excluded, as noted in the Makefile.)
+
+
+Method B - Build programs in individual directories
+---------------------------------------------------
+
+1) First, build the library used by all programs:
+
+        cd lib
+        make            # This will make libtlpi.a and place
+                        # it in the parent directory
+
+2) Build programs using the 'Makefile' in each subdirectory.
+
+In each subdirectory, there is a file called 'Makefile' that can be
+used with the 'make' command to build the programs in that directory.
+To build a particular program you can simply say:
+
+        make progname
+
+where 'progname' is one of the C (main) programs in the directory.
+Thus, to build the executable for the program 'copy.c' you would use
+the command:
+
+        make copy
+
+Each makefile also contains the following special targets (which are
+named according to the usual 'make' conventions):
+
+all     This target will build all programs in the subdirectory.
+        Simply enter the command:
+
+                make all
+
+clean   This target cleans up, by removing all executables and object
+        files created by the makefile:
+
+                make clean
+
+
+Building the programs on other UNIX implementations
+===================================================
+
+I have gone to some effort to ensure that, where possible, the programs
+work on other UNIX implementations also.
+
+Obviously, some of the example programs employ Linux-specific features, 
+and won't compile on other UNIX implementations. As a first indication 
+of what works on Linux, and what may work elsewhere, look in the 
+makefiles in each directory. Most of the makefiles define two macros:
+
+LINUX_EXE       These are programs that probably won't work
+                on anything other than Linux.
+
+GEN_EXE         These programs may compile on other UNIX implementations.
+                I say "may", because of course not all implementations
+                provide exactly the same features. The presence of a
+                program in this list indicates that it compiles and runs
+                on at least some UNIX implementations other than Linux.
+
+
+Instructions
+------------
+
+1. Edit Makefile.inc in the 'tlpi' root directory to modify the 
+   definitions of the CFLAGS and LDLIBS macros (and possibly other 
+   macros depending on your version of make(1)) as appropriate. 
+   Probably you'll need to define CFLAGS as follows:
+
+        CFLAGS += -g -I${TLPI_INCL_DIR}
+
+   The setting of LDLIBS is a bit harder to determine. As well as
+   listing the library for this book, you should include '-l' linker
+   options for any other libraries that the programs may need.
+   For example, the following is suitable on Solaris 8:
+
+        LDLIBS = ${TLPI_LIB} -lsocket -lnsl -lrt -ldl -lm -lresolv
+
+   **** NOTE:   Under the 'tlpi' root directory you'll find a few
+                sample replacement files for 'Makefile.inc', named 
+                'Makefile.inc.*'. You may be able to simply copy the 
+                appropriate file to 'Makefile.inc'.
+
+2. Try the following to build all of the GEN_EXE programs:
+
+        cd tlpi-xxxx
+        make -k allgen 
+
+   The '-k' option tells 'make' to build as much as possible, so that if
+   a particular program won't compile, 'make' goes on to attempt to
+   build the remaining programs.
+
+
+Building the 'Go' example programs
+==================================
+
+All of the code published in TLPI is in C. However, since the book was
+written I have added a small number of examples in 'Go', related to topics
+that are not covered in TLPI (in particular, Linux namespaces). I chose
+to use Go for these programs as part of my own experimentation with
+learning the language, and also because it provides a richer set of data
+types (maps, in particular) and easier handling of strings, file I/O, and
+memory allocation; those features make the resulting programs simpler.
+
+The Makefiles do not build the Go programs. Instead, you will have to do
+this manually after installing a Go compiler (either the compiler provided
+by the Go project or the gccgo front end).

@@ -1,0 +1,15 @@
+# Makefile.inc - common definitions used by all makefiles
+# Solaris version
+
+TLPI_DIR = ..
+TLPI_LIB = ${TLPI_DIR}/libtlpi.a
+TLPI_INCL_DIR = ${TLPI_DIR}/lib
+
+IMPL_CFLAGS += -g -I${TLPI_INCL_DIR} -D__EXTENSIONS__ -D_XOPEN_SOURCE=600 -D_XPG4_2 -D_POSIX_C_SOURCE=199506
+CFLAGS = ${IMPL_CFLAGS}
+IMPL_THREAD_FLAGS = -mt
+
+IMPL_LDLIBS = ${TLPI_LIB} -lsocket -lnsl -lrt -ldl -lm -lresolv
+LDLIBS = ${IMPL_LDLIBS}
+
+RM = rm -f
