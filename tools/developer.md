@@ -256,9 +256,10 @@ sudo apt-get install amule
 
 ### VMware
 
-[点击下载vmware pro16](https://www.vmware.com/cn/products/workstation-pro/workstation-pro-evaluation.html)
+[点击下载vmware pro16](https://my.vmware.com/cn/web/vmware/downloads/info/slug/desktop_end_user_computing/vmware_workstation_pro/16_0)
 
 ```shell
+wget -c https://download3.vmware.com/software/wkst/file/VMware-Workstation-Full-16.0.0-16894299.x86_64.bundle
 sudo chmod +x VMware-Workstation-Full-16.0.0-16894299.x86_64.bundle 
 sudo ./VMware-Workstation-Full-16.0.0-16894299.x86_64.bundle
 ```

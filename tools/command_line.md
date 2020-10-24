@@ -287,6 +287,20 @@ kill -2 8798  # 杀死 PID 为 8798 的进程，-2 的效果等同于 ctrl+C，-
 # 当以这种方式被终止，目标进程将没有机会对自己进行清理或者对当前结果进行保存。
 # -9 是没有办法的最后选择。
 ```
+杀死卡死的程序
+
+有时候程序过多，用TOP找不到卡死程序的PID，用如下命令根据程序名字搜索
+
+```shell
+# ps -aux | grep procees_name_key_word
+# 如杀死 Android studio
+jinbo@fang:~/gitme$ ps -aux | grep studio
+jinbo    10346  0.0  0.0   4624  1616 tty2     S+   21:05   0:00 /bin/sh /home/jinbo/soft/studio/android-studio/bin/studio.sh
+jinbo    10410  1.2  6.4 7177276 518056 tty2   Sl+  21:05   0:57 /home/jinbo/soft/studio/android-studio/jre/bin/java -classpath
+```
+
+
+
 ### 网络
 
 - ping # 向网络主机发送数据包，用来检测网络连接是否正常
