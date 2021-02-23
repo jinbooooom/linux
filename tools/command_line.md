@@ -256,7 +256,7 @@ u+x，go = rx：为文件所有者添加可执行权限，同时设置所属群�
 - ps #显示当前终端进程
 - ps x # 显示所有终端所控制的进程，TTY中的?表示没有控制终端，STAT是state的缩写，显示的是当前进程的状态,S表示睡眠状态，进程不在运行，而是在等待。
 
-```
+```shell
  PID TTY      STAT   TIME COMMAND
  2740 pts/2    Ss     0:00 bash
  2858 ?        Sl     0:00 /usr/lib/x86_64-linux-gnu/deja-dup/deja-dup-monitor
@@ -307,11 +307,43 @@ jinbo    10410  1.2  6.4 7177276 518056 tty2   Sl+  21:05   0:57 /home/jinbo/sof
 ```
 ping www.baidu.com
 ```
+## 解决实际问题
+
 ### 拷贝服务器文件到本地目录
 
 ```shell
 $ scp -r username@172.xx.xx.xx:~/worker/soft(远程目录) ./soft(当前目录下的 soft 目录)
 ```
+
+### 用文件作为swap分区
+
+（场景：编译Android时内存不够用时）
+
+1.创建要作为swap分区的文件:增加10GB大小的交换分区（原理的swap分区不变），则命令写法如下，其中的count等于想要的块的数量（bs*count=文件大小）。
+
+```shell
+dd if=/dev/zero of=/root/swapfile bs=1M count=10240
+```
+
+2.格式化为交换分区文件:
+
+```shell
+mkswap /root/swapfile  #建立swap的文件系统
+```
+
+3.启用交换分区文件:
+
+```shell
+swapon /root/swapfile   #启用swap文件
+```
+
+4.使系统开机时自启用，在文件/etc/fstab中添加一行：
+
+```shell
+/root/swapfile swap swap defaults 0 0
+```
+
+[用`free -m`查看内存使用情况](https://blog.csdn.net/makang456/article/details/78694120)
 
 ## 文件搜索
 
@@ -333,12 +365,6 @@ find . -type f -name *.jpg -size +1M
 # 即找文件 *dvr*.c 的 main 函数。该方式 find 的文件在 vscode 中可以跳转
 find . -type f -name *dvr*.c | xargs grep -wnr main
 ```
-
-
-
-
-
-
 
 **推荐阅读**
 

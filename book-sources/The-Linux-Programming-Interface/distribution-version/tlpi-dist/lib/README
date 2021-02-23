@@ -1,0 +1,7 @@
+A small design note... Many of the library functions defined in the 
+source code modules in this directory handle errors from system calls 
+and C library functions by simply terminating the process.  This 
+isn't acceptable design for a "real world" suite of library functions;
+I did things this way to keep the source code simpler and shorter.
+A properly designed function should indicate an error to its caller
+using a status argument or some special function return value.

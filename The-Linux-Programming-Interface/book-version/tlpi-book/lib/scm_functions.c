@@ -1,1 +1,0 @@
-../sockets/scm_functions.c
