@@ -1,0 +1,1686 @@
+This file summarizes the changes that have been made since publication
+to the program examples printed in "The Linux Programming Interface".
+Background on some of these changes can be found in the online errata
+for TLPI, available at http://man7.org/tlpi/errata/.
+
+2010-11-13
+        sockets/us_abstract_bind.c
+                The code was improved as per the erratum for page 1176.
+
+2011-01-17
+        timers/real_timer.c
+                A mistake in the ordering of the code in main() was fixed.
+                See the erratum for page 483.
+
+2011-02-17
+        psem/thread_incr_psem.c
+                Fixed an error in a comment. See the erratum for page 1102.
+
+2011-04-05
+        threads/thread_multijoin.c.
+                Fixed a race condition. See the erratum for page 649.
+        threads/prod_condvar.c
+                Fixed a race condition. The problem was similar to that
+                described in the erratum for page 649.
+        threads/prod_no_condvar.c
+                Fixed a race condition. The problem was similar to that
+                described in the erratum for page 649.
+
+2011-04-19
+        altio/demo_sigio.c
+                Fixed a race condition. See the erratum for page 1349.
+        daemons/daemon_SIGHUP.c
+                Fixed a race condition. See the erratum for page 774.
+
+2011-05-18
+        signals/t_kill.c
+                Fixed an error in a diagnostic message. See the erratum
+                for page 406.
+
+2011-07-06
+        Makefile
+                Added missing "memalloc" to the directory list.
+        memalloc/free_and_sbrk.c
+                Added feature test macro definition (_BSD_SOURCE).
+                See the erratum for page 142.
+
+2011-08-11
+        acl/acl_view.c
+                Fixed a small bug as per the erratum for page 336.
+
+2011-09-04
+        pipes/popen_glob.c
+        procexec/make_zombie.c
+        sockets/inet_sockets.c
+                Removed an unnecessary assignment statement that added
+                a terminating null byte to the string buffer output by
+                snprintf().  See the erratum for page 555.
+
+2011-12-05
+        dirs_links/t_unlink.c
+                Added a comment referring to the erratum for page 348.
+
+2011-12-06
+        pty/unbuffer.c
+                Change parent exit status when read() returns <= 0
+                from EXIT_FAILURE to EXIT_SUCCESS.
+
+2011-12-13
+        signals/catch_rtsigs.c
+                Restore 3 lines that were accidentally omitted at the
+                end of this program. See the erratum for page 463.
+
+2011-12-31
+        threads/thread_incr.c
+                Make global variable 'glob' volatile, so that the program
+                more easily produces "incorrect" behavior, even in the face
+                of compiler optimizations. See the erratum for page 632.
+
+2012-02-16
+        lib/alt_functions.c
+                Fix indentation in ALT_posix_openpt().
+
+2012-04-03
+        lib/Makefile
+        lib/Build_ename.sh
+                Refactor, so that Build_ename.sh produces output on stdout,
+                rather than to a named file.
+
+2012-04-06
+        lib/itimerspec_from_str.c
+                Conditionally make the content of this file empty if
+                compiling on MacOSX, since that operating system doesn't
+                define the 'itimerspec' structure.
+                (Only in "dist" version of code.)
+        Makefile.inc.MacOSX
+                Remove '-lrt' from the IMPL_LDLIBS definition, since there
+                is no librt on MacOSX.
+
+2012-05-04
+        fileio/seek_io.c
+                Fix a typo in comment at top of the program.
+                (Only in "dist" version of code.)
+
+2012-05-11
+        psem/Makefile
+                Correct the makefile to use "cc -pthreads" for POSIX
+                semaphores. Formerly, the makefile used "cc -lrt", but
+                recent toolchain changes mean that that this no longer works
+                ("cc -pthreads" always worked.) See the erratum for page 1061.
+                (Thanks to Robert P. J. Day.)
+        pshm/Makefile
+                Correct a bug in the makefile that caused link errors.
+                (Formerly, the makefile worked, but this was fortuitous;
+                recent toolchain changes revealed the bug.)
+
+2012-05-13
+        pshm/README
+                Fix a wordo.
+
+2012-05-20
+        README
+                Various small fixes.
+                (Thanks to Robert P. J. Day.)
+
+2012-05-25
+        BUILDING
+                Various small fixes.
+                (Thanks to Robert P. J. Day.)
+
+2012-05-26
+        memalloc/free_and_sbrk.c
+                Fix an error in the code comments at the top of the program.
+                (Only in "dist" version of code.)
+                (Thanks to Robert P. J. Day.)
+
+2012-05-31
+        svmsg/svmsg_info.c
+        svsem/svsem_info.c
+        svshm/svshm_info.c
+                Eliminate unnecessary inclusion of <sys/ipc.h> header file.
+                (Thanks to Robert P. J. Day.)
+
+2012-06-05
+        COPYING
+                Renamed to COPYING.agpl-v3
+        Added new files:
+                COPYING.gpl-v3
+                        Copy of the GNU General Public License, version 3
+                COPYING.lgpl-v3
+                        Copy of the GNU Lesser General Public License, version 3
+        lib/*
+                Changed the license of the library functions in the /lib
+                directory to GNU Lesser General Public License, version 3.
+        sockets/read_line_buf.c
+        sockets/read_line_buf.h
+                Created links for the sockets/read_line_buf.{c,h} files in the
+                lib/ directory, so that these files are licensed LGPLv3.
+
+        README
+                Updated to note the licensing of the library functions.
+
+2012-07-05
+        filesys/t_statfs.c
+        filesys/t_statvfs.c
+                Changed several printf() statements to use unsigned types for
+                various fields, since (in the case of the 'statvfs' structure at
+                least) these fields are specified as unsigned in SUSv[34].
+                (The 'statfs' structure isn't covered by SUSv[34], but using 
+                unsigned types seems reasonable and safe.)
+
+2012-07-22
+        filelock/create_pid_file.c
+                Small wording fix in a comment.
+                (Only in "dist" version of code.)
+        procexec/execlp.c
+                Small wording fix in a comment.
+        svshm/svshm_xfr_reader.c
+                Small wording fix in a comment.
+                (Only in "dist" version of code.)
+        sysinfo/procfs_pidmax.c
+                Small wording fix in a comment.
+                (Only in "dist" version of code.)
+        threads/one_time_init.c
+                Small wording fix in a comment.
+
+2012-07-26
+        filebuff/direct_read.c
+                Fix an error in comment describing program arguments.
+                (Thanks to Jason Orendorff.)
+                (Only in "dist" version of code.)
+
+2012-08-03
+        loginacct/dump_utmpx.c
+        loginacct/utmpx_login.c
+        loginacct/view_lastlog.c
+                Remove unneeded casts.
+                See the errata for pages 824, 829, and 831.
+
+2012-09-10
+        loginacct/dump_utmpx.c
+                Fix error introduced in 2012-08-03 changes.
+        altio/epoll_input.c
+                Improve a comment.
+                See the erratum for page 1363.
+
+2012-09-27
+        svsem/Makefile
+                Fixed a bug in the Makefile that causes svsem_demo.c
+                not to be built.
+                (Thanks to Jinnan Wang.)
+
+2012-09-30
+        timers/real_timer.c
+                Use NULL instead of 0 for last argument of setitimer() call.
+                See the erratum for page 484.
+                (Thanks to Trevor Woerner.)
+
+2012-10-02
+        Makefile.inc
+                Add "-Wno-unused-but-set-variable" to compiler flags
+                (the IMPL_CFLAGS macro), to prevent compilation warnings
+                in three of the example programs.  (Those warnings do not
+                correspond to real problems in the code.) The
+                "-Wunused-but-set-variable" flag was added (and turned on
+                by default) in gcc 4.6, which was released on 2011-03-35
+                (i.e., after TLPI was written).
+
+2012-10-15
+        loginacct/dump_utmpx.c
+        loginacct/utmpx_login.c
+        loginacct/view_lastlog.c
+                Revert the changes of 2012-08-03. These were made overlooking
+                the fact that in the 'utmpx' structure, 'tv_sec' is defined as
+                being of type 'int32_t', not 'time_t', so that the 2012-08-03
+                changes in fact cause warnings on 64-bit systems.
+                As a consequence, three (as yet unapplied) errata
+                for pages 824, 829, and 831 are removed.
+
+2012-10-18
+        procexec/demo_clone.c
+                Minor fix to a comment (s/will affect/may affect/).
+                Declare the variable that holds return status of write()
+                as 'ssize_t'.
+                (Thanks to Trevor Woerner.)
+
+2012-12-17
+        sockets/i6d_ucase_sv.c
+                Fix typo in a comment.
+                (Only in "dist" version of code.)
+                (Thanks to Kanak Kshetri.)
+        sockets/i6d_ucase_cl.c
+                Fix typo in a comment.
+                (Only in "dist" version of code.)
+
+2012-12-24
+        procexec/demo_clone.c
+                Add a comment at the top of the program clarifying that the
+                user must select a valid set of flags for the clone() call.
+                (Thanks to Jeffrey Thompson.)
+
+2013-01-02
+        altio/poll_pipes.c
+                Fix typos in two errExit() string arguments.
+                See the erratum for page 1340.
+
+2013-02-11
+        sockets/id_echo_sv.c
+                Remove unneeded use of the variable 'addrlen'.
+                See the erratum for page 1241.
+
+2013-03-09
+        procpri/sched_set.c
+                Fix a bug in the handling of the command-line arguments.
+                See the erratum for page 743.
+
+2013-03-10
+        procpri/Makefile
+                Move demo_sched_fifo from GEN_EXE to LINUX_EXE.
+                (Thanks to Antonio Jose Rodrigues.)
+        timers/Makefile
+                Remove demo_timerfd from GEN_EXE target.
+                (Thanks to Antonio Jose Rodrigues.)
+
+2013-03-11
+        sysinfo/t_uname.c
+                Make definition of _GNU_SOURCE conditional on __linux__.
+                See the erratum for page 230.
+
+2013-03-18
+        threads/detached_attrib.c
+                Fix a typo in a string:
+                        errExitEN(s, "pthread_attr_getdetachstate");
+                    ==>
+                        errExitEN(s, "pthread_attr_setdetachstate");
+
+                Interestingly, this error was not present in the printed
+                version of the code (page 628 of TLPI).
+                (Thanks to Kanak Kshetri.)
+
+2013-04-05
+        svmsg/Makefile
+                Fix a typo that meant that 'svmsg_send' was not compiled.
+                (Thanks to George Yoshida.)
+
+2013-06-05
+        xattr/xattr_view.c
+                Fix error-handling code for usage diagnostic.
+                See the erratum for page 317.
+
+2013-07-11
+        timers/itimerspec_from_str.c
+                Change itimerspecFromStr() so that it does not modify
+                its string argument.
+                See the errata for pages 502 and 503.
+
+2013-09-13
+        procexec/acct_on.c
+                Add missing argument to the call to usageErr();
+                See the erratum for page 592.
+                (Thanks to Liu Jiaming.)
+
+2013-09-17
+        mmap/mmcopy.c
+                Correct argument pasted to msync() (s/src/dst/).
+                (Thanks to Robert P. J. Day.)
+
+2013-09-18
+        filebuff/write_bytes.c
+                Minor to changes to comments at top of the program.
+        filebuff/Makefile
+                Add entries to produce the non-vanilla flavors of the
+                write_bytes program:
+                    write_bytes_fdatasync  (do fdatasync() after each write)
+                    write_bytes_fsync      (do fsync() after each write)
+                    write_bytes_o_fsync    (open the file with O_SYNC)
+
+2013-09-22
+        procpri/t_setpriority.c
+                Fix typo in a diagnostic message.
+                See the erratum for page 737.
+
+2013-09-23
+        procpri/demo_sched_fifo.c
+                s/useCPU("child ")/useCPU("parent")/ near the end of
+                the program.
+                (Thanks to Liu Jiaming.)
+
+2013-09-23
+        README
+                Fixed a few typos.
+                (Thanks to Robert P. J. Day.)
+
+2013-10-18
+        svmsg/svmsg_file_client.c
+                Fix typo in a comment.
+        svmsg/svmsg_file_client.c
+                Remove a redundant msgctl(IPC_RMID) operation.
+                See the erratum for page 961.
+                (Thanks to Liu Jiaming.)
+
+2013-10-22
+        pipes/popen_glob.c
+                s/==/=/ inside a printf() string.
+                See the erratum for page 905.
+                (Thanks to Liu Jiaming.)
+
+2013-10-22
+        mmap/mmcat.c
+        mmap/mmcopy.c
+                Add code to check for a zero-length input file.
+                See the erratum for page 1023.
+                (Thanks to Liu Jiaming.)
+
+2013-10-25
+        filelock/t_flock.c
+                Fix an error in the message printed by usageErr().
+                See the erratum for page 1121.
+                (Thanks to Liu Jiaming.)
+
+2013-10-30
+        mmap/mmcat.c
+        mmap/mmcopy.c
+                Fix a typo syntax error introduced in 2013-10-22 edits.
+                (Thanks to Yongzhi Pan.)
+
+2013-10-30
+        pipes/pipe_ls_wc.c
+                Fix a typo in comment at top of the program.
+                (Only in "dist" version of code.)
+
+2013-11-01
+        sockets/ud_ucase.h
+                Fix a wordo in comment.
+                See the erratum for page 1171.
+                (Thanks to Liu Jiaming.)
+
+2013-11-07
+        sockets/id_echo_cl.c
+                Fix a typo in usageErr() error message.
+                See the erratum for page 1242.
+                (Thanks to Liu Jiaming.)
+
+2013-11-11
+        altio/poll_pipes.c
+                Fix a bogus comment, and a glitch in a printf() call.
+                See the erratum for page 1341.
+                (Thanks to Liu Jiaming.)
+        altio/self_pipe.c
+                Fix a division error in the last printf() call
+                (divide by 1000, not 10000).
+                (Thanks to Liu Jiaming.)
+        altio/t_select.c
+                Fix a division error in the last printf() call
+                (divide by 1000, not 10000).
+                See the erratum for page 1336.
+                (Thanks to Liu Jiaming.)
+2013-11-5
+        dirs_links/nftw_dir_tree.c
+                Fix wordo in a comment
+                (Only in "dist" version of code.)
+        dirs_links/view_symlink.c
+                Added a comment explaining use of lstat().
+                (Only in "dist" version of code.)
+
+2013-11-25
+        pmsg/mq_notify_thread.c
+                Remove an unnecessary call to pthread_exit().
+                See the erratum for page 1082.
+
+2013-12-04
+        threads/thread_incr_mutex,c
+                Add "volatile" qualifier to declaration of 'glob'
+                See the erratum for page 636.
+                (Thanks to Arnaud Frugier.)
+
+2013-12-05
+        sockets/is_echo_sv.c
+        sockets/is_echo_v2_sv.c
+        sockets/scm_cred_recv.c
+        sockets/scm_rights_recv.c
+        sockets/socknames.c
+        sockets/us_xfr_sv.c
+        sockets/us_xfr_v2_sv.c
+                Change last argument of accept() from 'NULL' to '0'.
+
+2013-12-05
+        sockets/i6d_ucase_cl.c
+        sockets/ud_ucase_cl.c
+                Change last argument of recvfrom() from 'NULL' to '0'.
+
+2014-01-02
+        shlibs/dynload.c
+                Add a comment explaining SUSv4 TC1 changes that permit more
+                natural casts of function pointers returned by dlsym().
+                See the "update" erratum for page 864.
+                (Only in "dist" version of code.)
+
+2014-03-12
+        Makefile.inc
+                Add "-D_DEFAULT_SOURCE" to IMPL_CFLAGS. This avoids the
+
+                        # warning "_BSD_SOURCE and _SVID_SOURCE are
+                        deprecated, use _DEFAULT_SOURCE"
+
+                warnings that are produced when compiling code that 
+                defines _SVID_SOURCE or _BSD_SOURCE against glibc headers
+                from version 2.20 onward.
+        sysinfo/procfs_user_exe.c
+                Move inclusion of our header files (ugid_functions.h and 
+                tlpi_hdr.h) to follow other #include lines (as is done in
+                all other code).
+        vmem/madvise_dontneed.c
+                Fix a typo in a comment.
+        threads/thread_cleanup.c
+                Add mutex locking around assignment to 'glob'; see the
+                erratum for page 679.
+                (Only in "dist" version of code.)
+                (Thanks to Jingtian Zhang.)
+
+2014-05-21
+        inotify/demo_inotify.c
+                Properly align 'buf' on an 8-byte boundary.
+                See the erratum for page 383.
+                (Thanks to Matt Wojciak and Heinrich Schuchardt.)
+
+2014-05-31
+        Makefile
+                Add 'filebuff' and 'syslim' directories
+
+2014-06-20
+        timers/timed_read.c
+                Fix an off-by-one error in the read() call.
+
+2014-07-09
+        inotify/inotify_dtree.c
+        inotify/rand_dtree.c
+                New files: an application that provides a thorough-going
+                demonstration of the use of inotify for monitoring directory
+                subtrees, and an associated test program.
+
+2014-07-10
+        pmsg/Makefile
+        timers/Makefile
+                Minor fixes
+
+2014-07-24
+        sockets/i6d_ucase_cl.c
+        sockets/ud_ucase_cl.c
+                Change last argument of recvfrom() from "0" to "NULL".
+                (With this change, the code now matches that shown in the book.)
+        sockets/is_echo_sv.c
+        sockets/socknames.c
+        sockets/us_xfr_sv.c
+                Change last argument of accept() from "0" to "NULL".
+                (With this change, the code now matches that shown in the book.)
+        sockets/is_echo_v2_sv.c
+        sockets/scm_cred_recv.c
+        sockets/scm_rights_recv.c
+        sockets/us_xfr_v2_sv.c
+                Change last argument of accept() from "0" to "NULL".
+
+2014-11-05
+        pmsg/pmsg_create.c
+                Change the default value assigned to 'attr.mq_msgsize'.
+                See the erratum for page 1069.
+
+2014-11-12
+        acl/Makefile
+                Simplify Makefile by including 'libacl' in LDLIBS.
+        cap/Makefile
+                Remove crufty, unneeded rule; and simplify the Makefile
+                by including 'libcrypt' in LDLIBS.
+        pmsg/Makefile
+                Remove unneeded rule for building 'mq_notify_thread'.
+        psem/Makefile
+                Remove unneeded rule
+        progconc/Makefile
+                Remove unneeded rule for building 'syscall_speed'.
+        timers/Makefile
+                Most of the programs in this directory must be linked
+                against the realtime library, librt; simplify the Makefile
+                by linking all of the programs against that library.
+
+2014-11-14
+        Makefile.inc
+                Remove "-Wno-unused-but-set-variable" from IMPL_CFLAGS.
+                Remove redundant "-Wpointer-arith", which is anyway enabled
+                by -pedantic.
+                Remove unneeded "-Wno-format-y2k".
+                Remove unneeded "-Wno-unused-parameter".
+        progconc/syscall_speed.c
+                Minor change so that -Wunused-but-set-variable does not
+                give a warning.
+        signals/demo_SIGFPE.c
+                Minor change so that -Wunused-but-set-variable does not
+                give a warning.
+        signals/t_sigsuspend.c
+                Minor change so that -Wunused-but-set-variable does not
+                give a warning.
+                (Only in "dist" version of code.)
+
+2014-11-15
+        lib/*
+                Various files in this directory that were hard links
+                to files that were also linked in other directories
+                are now symbolic links.
+
+2014-11-22
+        threads/pthread_barrier_demo.c
+                New program demonstrating use of POSIX threads barriers API.
+        threads/thread_incr_rwlock.c
+                New program demonstrating use of POSIX threads rwlocks.
+        threads/thread_incr_spinlock.c
+                New program demonstrating use of POSIX threads spinlocks.
+        threads/thread_incr_mutex.c
+                Update header comments to refer to new spinlocks and
+                rwlocks programs.
+        threads/Makefile
+                Update to include targets for new program.
+
+2014-11-29
+        altio/poll_pipes.c
+                Change the 'timeout' argument in the poll() call from -1 to 0.
+                (See the erratum for page 1341.)
+
+2014-11-30
+        procexec/execlp.c
+                Minor comment and whitespace fixes.
+
+2014-12-01
+        pmsg/mq_notify_sigwaitinfo.c
+                Minor layout fix and removal of a redundant comment.
+        pmsg/mq_notify_sig.c
+        pmsg/mq_notify_thread.c
+                Remove a redundant comment.
+                (Only in "dist" version of code.)
+        pmsg/mq_notify_via_signal.c
+        pmsg/mq_notify_via_thread.c
+                New files demonstrating message queue notification via
+                signals and via threads.
+        pmsg/mq_notify_sigwaitinfo.c
+        pmsg/mq_notify_sig.c
+        pmsg/mq_notify_thread.c
+                Add comments noting that these programs do not handle the case
+                where a message is already on the queue by the time the first
+                attempt is made to register for message notification, along
+                with reference to code examples that address this point.
+
+2014-12-03
+        sockets/list_host_addresses.c
+                A new small program demonstrating the use of getifaddrs(3).
+        socket/Makefile
+                Add list_host_addresses.c.
+
+2014-12-09
+        threads/thread_lock_speed.c
+                A new program allowing the performance of mutexes and
+                spin locks to be compared in a few different scenarios.
+
+2014-12-12
+        dirs_links/file_type_stats.c
+                Handle non-stat()-able files correctly.
+        dirs_links
+                Rework so that 'all' target includes examples using nftw()
+
+2014-12-17
+        README
+                The source code licensing for the "main" program examples
+                has changed from GNU Affero GPLv3 or later to plain
+                GNU GPLv3 or later.
+
+2015-01-26
+       filelock/i_fcntl_locking.c
+                Added support for the OFD locking commands (F_OFD_SETLK,
+                F_OFD_SETLKW, F_OFD_GETLKW) that were added to Linux in
+                version 3.15.
+                (Only in "dist" version of code.)
+
+2015-01-28
+       cap/check_password_caps.c
+                Fix a typo in a comment.
+                (Only in "dist" version of code.)
+
+2015-01-30
+       threads/thread_multijoin.c
+                Fix minor whitespace error.
+                (See the erratum for page 651.)
+
+2015-03-13
+        shlibs/dynload.c
+                Switch to using the more natural cast permitted by
+                POSIX.1-2008 TC1 (2013). See also the erratum for page 864.
+                (Only in "dist" version of code.)
+
+2015-03-13
+        shlibs/dynload.c
+                Tweak comment on dlsym() cast permitted by
+                POSIX.1-2008 TC1 (2013).
+                (Only in "dist" version of code.)
+
+2015-03-25
+        namespaces/Makefile
+        namespaces/demo_userns.c
+        namespaces/demo_uts_namespaces.c
+        namespaces/hostname.c
+        namespaces/multi_pidns.c
+        namespaces/ns_child_exec.c
+        namespaces/ns_exec.c
+        namespaces/ns_run.c
+        namespaces/orphan.c
+        namespaces/pidns_init_sleep.c
+        namespaces/simple_init.c
+        namespaces/t_setns_userns.c
+        namespaces/unshare.c
+        namespaces/userns_child_exec.c
+        namespaces/userns_setns_test.c
+                Add various new namespaces-related programs, covered in
+                my article series on LWN.net, starting at
+                https://lwn.net/Articles/531114/
+
+2015-03-25
+        Makefile
+        README
+                Adjusted for addition of "namespaces" subdirectory
+
+2015-04-21
+        inotify/rand_dtree.c
+                Add "#define _XOPEN_SOURCE 500" so that the program
+                builds cleanly from the command line. (It already built
+                fine using the Makefile.)
+        namespaces/README
+                Add a README explaining the origin of these programs.
+        sockets/scm_cred_recv.c
+        sockets/scm_cred_send.c
+        sockets/scm_rights_recv.c
+        sockets/scm_rights_send.c
+                Add a comment explaining use of a union to force alignment.
+
+2015-05-09
+        sysinfo/procfs_pidmax.c
+                lseek() to start of /proc/sys/kernel/pidmax.c file before
+                writing to it. (See the erratum for page 228.)
+
+2015-09-09
+        seccomp/libseccomp_demo.c
+        seccomp/seccomp_control_open.c
+        seccomp/seccomp_deny_open.c
+        seccomp/seccomp_perf.c
+                Added some seccomp examples. For more information see my
+                slides on seccomp at http://man7.org/conf and Jake Edge's
+                LWN.net write-up of one of my seccomp presentations at
+                http://lwn.net/Articles/656307/.
+
+2015-10-28
+        pmsg/mq_notify_via_thread.c
+                Rework code to remove a race condition.
+
+2015-11-05
+        signal/intquit.c
+        signal/ouch.c
+        signal/sig_receiver.c:
+                Add a comment explaining that sigaction() is preferred over
+                signal() when establishing signal handlers.
+                (Only in "dist" version of code.)
+
+2016-04-01
+        procexec/t_execle.c
+                Add an argument to the execle() call.
+
+2016-04-14
+        sockets/is_seqnum_sv.c
+        sockets/is_seqnum_v2_sv.c
+                Remove unneeded '&' in argument to write().
+
+2016-04-20
+        files/t_stat.c
+                Use <sys/sysmacros.h> instead of <sys/types.h>
+                to get the definitions of major() and minor().
+
+2016-04-29
+        */Makefile
+                Fix misnamed macro (LPLIB --> TLPI_LIB).
+                (Thanks to Ivo Tisch.)
+        lib/Makefile
+                Better dependency checking
+
+2016-05-05
+        psem/Makefile
+                Fix the target logic for psem_timedwait, so that it builds
+                correctly on systems where the vDSO doesn't export
+                clock_gettime(). (the x86 vDSO does export clock_gettime(),
+                which hid the error when building there.)
+
+2016-05-11
+        namespaces/userns_child_exec.c
+                Check that a command line argument is supplied.
+
+2016-05-13
+        shlibs/dynload.c
+                Remove unneeded check for NULL symbol value.
+                (See the erratum for page 865.)
+
+2016-06-05
+        filesys/t_mount.c
+                Support MS_LAZYTIME and MS_RELATIME flags
+                (Only in "dist" version of code.)
+
+2016-06-28
+        namespaces/unshare.c
+                Fix typo in usage() message.
+
+2016-07-01
+        psem/psem_timedwait.c
+        threads/thread_multijoin.c
+                Use slightly better text ('num-secs' vs 'nsecs') in
+                "usage" message.
+
+2016-07-25
+       sockets/ud_ucase_sv.c
+       sockets/us_xfr_sv.c
+                Add a length check for the server socket pathname.
+                (Only in "dist" version of code.)
+                (See the errata for pages 1168 and 1172.)
+
+2016-12-14
+        namespaces/userns_overview.go
+                Add a Go program that introspects the user namespace
+                hierarchy of the system.
+
+2017-04-19
+        sockets/us_abstract_bind.c
+                Fix a wording error in a comment (\0abc ==> /0xyz).
+
+2017-05-03
+        namespaces/userns_child_exec.c
+                Close unneeded file descriptor before doing execve().
+
+2017-06-09
+        loginacct/dump_utmpx.c
+        loginacct/view_lastlog.c
+                Fix handling of 'time_t' fields for cases where
+                fields may actually be smaller than 'time_t'.
+                (See the errata for pages 825 and 831.)
+
+2017-06-12
+        threads/thread_lock_speed.c
+                Add '-q' command-line option to cause the program to operate
+                quietly.
+
+2017-07-14
+        namespaces/ns_child_exec.c
+                Instead of '&argv[0]', use the simpler equivalent 'argv'
+
+2017-08-15
+        getopt/t_getopt.c
+                Add '__attribute__ ((__noreturn__))' to declaration of
+                usageError() to prevent "this statement may fall through"
+                warnings from "gcc -Wimplicit-fallthrough" in switch()
+                statement in main().
+                (Only in "dist" version of code.)
+
+2017-08-15
+        inotify/rand_dtree.c
+                Eliminate compiler warning about redefinition of
+                _XOPEN_SOURCE.
+
+2017-10-01
+        threads/thread_lock_speed.c
+                Add a alarm timer to prevent runaway/forgotten process
+                from burning CPU time forever
+
+2017-10-02
+        inotify/inotify_dtree.c
+                Remove some superfluous signal-related code.
+                (Thanks to Mirko Parthey.)
+
+2017-10-16
+        namespaces/multi_pidns.c
+                Allocate stacks for the child processes on the heap rather
+                than in static memory. Marcos Paulo de Souza pointed out
+                that the children were being killed by SIGSEGV after they
+                had completed the sleep() calls. (Some further investigation
+                showed that all children except the *last* are killed with
+                SIGSEGV.) It appears that they are killed after the child
+                start function returns.  The problem goes away if the
+                children are allocated stacks in separate memory areas by
+                calling malloc() (which is the change made in this patch)
+                or in separate statically allocated buffers.
+
+                The reason that the children were killed is based on (my
+                misunderstanding of) the subtleties of the magic done
+                in the glibc clone() wrapper function. (See, for example,
+                the x86-64 implementation in the glibc source file
+                sysdeps/unix/sysv/linux/x86_64/clone.S.)  The
+                previous code was relying on the fact that the parent's
+                memory was duplicated in the child during the clone() system
+                call, and the assumption that that duplicated memory could be
+                used in the child.  However, before executing the clone()
+                system call, the clone() wrapper function saves some
+                information (that will be used by the child) onto the stack.
+                This happens in the address space of the parent, before the
+                memory is duplicated in the system call.  Since the previous
+                code was making use of the same statically allocated buffer
+                (i.e., the same address as was used for the parent's stack)
+                for the child stack, the consequence was that the steps in
+                the clone() wrapper function were corrupting the stack of the
+                *parent* process, which ultimately resulted in (all but the
+                last of) the child processes crashing.
+
+2017-10-17
+        namespaces/demo_userns.c
+        namespaces/demo_uts_namespaces.c
+        namespaces/ns_child_exec.c
+        namespaces/pidns_init_sleep.c
+        namespaces/userns_cap_sig_expt.c
+        namespaces/userns_child_exec.c
+        namespaces/userns_setns_test.c
+                Allocate child stack on heap, rather than statically.
+                Although this is not strictly necessary in these programs
+                (since only one clone() child is created in each of the
+                programs), using dynamically allocated memory is good
+                pedagogical practice, to prevent problems such as were
+                revealed in the namespaces/multi_pidns.c program.
+
+2017-11-10
+        pipes/fifo_seqnum_client.c
+                Fix a small typo in an error diagnostic message.
+                See the erratum for page 915.
+                (Thanks to Matthew Meffan.)
+
+2017-11-13
+        seccomp/seccomp_deny_open.c
+                Extend the filter to also deny openat() calls.  This means
+                the filter will also work with glibc 2.26 and later, where
+                the wrapper function for open() now calls openat().
+        seccomp/seccomp_control_open.c
+                Extend the filter to also handle openat() calls.  This means
+                the filter will also work with glibc 2.26 and later, where
+                the wrapper function for open() now calls openat().
+
+2017-11-18
+        seccomp/seccomp_logging.c
+                Add a new program to provide a simple demonstration of
+                the feature added in Linux 4.14 to log allowed system
+                calls to the audit log.
+
+2017-11-25
+        dirs_links/nftw_dir_tree.c
+                Check that the file being visited is stat()-able before
+                inspecting (sbuf->st_mode & S_IFMT).
+                See the erratum for page 361.
+
+2017-11-29
+        namespaces/userns_child_exec.c
+                Add '-r' option as synonym for '-z'. This is for consistency
+                with unshare(1), where '-r' is used to create the 'root'
+                mappings.
+
+2017-12-05
+        pmsg/mq_notify_thread.c
+        pmsg/mq_notify_via_thread.c
+                Add "#include <signal.h>". See the erratum for page 1082.
+
+2018-03-01
+        seccomp/seccomp_multiarch.c
+                Add a new program that tests system call numbers for the same
+                system call for different Intel architectures. This can be
+                used to demonstrate that execve() can be used to switch the
+                architecture of the program that a process is running, and
+                thus why *every* invocation of a seccomp filter must begin
+                with a test to verify the architecture (since the
+                architecture may change during the life of a
+                process/life of the seccomp filter).
+
+2018-03-01
+        shlibs/dynload.c
+                Nest use of pragma in push/pop, so that its scope is
+                just a single line.
+                (Only in "dist" version of code.)
+
+2018-03-07
+        seccomp/seccomp_arg64.c
+                Add a program that shows how to deal with 64-bit
+                system call arguments from within a seccomp filter.
+
+2018-03-19
+        [Fix some errors reported by cppcheck(1); thanks to Benedikt Krieger]
+        dirs_links/list_files_readdir_r.c
+                Fix a memory leak in error return path.
+        procexec/execlp.c
+                Fix some memory leaks.
+        tty/ttyname.c
+                Correctly handle NULL return from realloc().
+
+2018-05-03
+        xattr/xattr_view.c
+                Fix a casting error when printing EA value in hex.
+                (See the erratum for page 318.)
+
+2018-05-03
+        namespaces/userns_functions.c
+        namespaces/userns_functions.h
+                Place some useful functions for working with user namespaces
+                into a separate source file.
+
+2018-05-03
+        namespaces/t_setns_userns.c
+        namespaces/unshare.c
+        namespaces/userns_child_exec.c
+        namespaces/userns_setns_test.c
+                Drop private implementations of display_creds_and_caps()/
+                update_map()/proc_setgroups_write() in favor of versions
+                in namespaces/userns_functions.c.
+
+2018-05-03
+        cap/cap_text.c
+                A simple program to help the user understand text-form
+                capabilities. The program takes a text-form capability
+                as an argument and outputs the corresponding bit-mask
+                representation of the capability sets.
+
+2018-05-09
+        namespaces/userns_setns_test.c
+                Various minor refactoring.
+
+2018-05-09
+        namespaces/demo_userns.c
+                Correctly free memory allocated by libcap APIs.
+
+2018-05-13
+        pmsg/mq_notify_siginfo.c
+                Demonstrate POSIX message queue notification using signals
+                (an improved version of the pmsg/mq_notify_sig.c program
+                shown in the book).
+        vdso/gettimeofday.c
+        vdso/Makefile
+                A short program to demonstrate the performance benefits of
+                implementing some traditional system calls as user-space
+                interfaces in the VDSO.
+
+2018-06-19
+        seccomp/seccomp_multiarch.c
+                Fix typos in comments.
+        files/t_chown.c
+                Fix typo in an error message. (See the erratum for page 294.)
+
+2018-06-24
+        cap/view_cap_xattr.c
+                Add a new program that can be used to obtain a "raw" view of
+                the 'security.capability' attribute attached to a file.
+                (This is useful for verifying the contents of that attribute
+                while experimenting with the namespaced file capabilities
+                feature added in Linux 4.14.)
+        namespaces/cred_launcher.c
+                Launch a program after first changing the process's
+                credentials as per command-line options.
+
+2018-06-27
+        namespaces/userns_child_exec.c
+                Add a '-s <uid>' command-line option to specify that the
+                program should change its UIDs before doing the exec().
+                This is useful for some experiments with user namespaces.
+                (In particular, it was added for doing experiments with the
+                namespaced file capabilities feature added in Linux 4.14.)
+
+                Add '-a' option to push all possible capabilities into
+                ambient set before executing command.
+
+                Add a '-b' option to set securebits flags before executing
+                command.
+
+2018-06-29
+        cap/cap_functions.c
+        cap/cap_functions.h
+                Add files with useful helper functions for working with
+                capabilities.
+        namespaces/userns_child_exec.c
+                Add missing header file.
+                Remove some unneeded header files.
+                Minor reworking of code command-line option processing.
+
+2018-07-01
+        namespaces/show_creds.c
+                A simple program that prints its credentials and capabilities.
+                (Useful for some experiments with user namespaces.)
+
+2018-07-11
+        seccomp/seccomp_arg64.c
+        seccomp/seccomp_control_open.c
+        seccomp/seccomp_deny_open.c
+        seccomp/seccomp_logging.c
+        seccomp/seccomp_multiarch.c
+        seccomp/seccomp_perf.c
+                Switch from SECCOMP_RET_KILL to SECCOMP_RET_KILL_PROCESS.
+                SECCOMP_RET_KILL_PROCESS has now been around for nearly a
+                year, so it seems reasonable to start using it.
+
+2018-07-12
+        Makefile.inc
+                Suppress the "-Wformat-truncation" warnings that recent
+                gcc(1) versions started generating. Really, the code that
+                generates the warnings should be fixed, but that would
+                require changes to the code printed in the book which,
+                for now, I prefer to avoid making.
+        cap/Makefile
+                Add 'view_cap_xattr' target.
+        namespaces/Makefile
+                Add 'cred_launcher' target.
+        sockets/scm_multi.h
+        sockets/scm_multi_recv.c
+        sockets/scm_multi_send.c
+        sockets/Makefile
+                New programs demonstrating how to send multiple pieces of
+                ancillary data over a UNIX domain socket.
+
+2018-07-16
+        sockets/scm_rights_recv.c
+                Remove some unneeded code.
+                Reorder some declarations and rename some variables/fields.
+                Tweak some comments.
+        sockets/scm_cred_recv.c
+                Remove some unneeded code.
+                Reorder some declarations and rename some variables/fields.
+                Tweak some comments.
+        sockets/scm_rights_send.c
+                Tweak some comments.
+                Reorder some declarations and rename some variables/fields.
+                Remove comments suggesting alternatives to the macros in
+                cmsg(3); those macros should really always be used.
+        sockets/scm_cred_send.c
+                Rename 'ucp' variable to 'ucredp' for consistency with
+                sockets/scm_cred_recv.c.
+                Rework code a little to improve layout/ease of reading.
+                Reorder some declarations and rename some variables/fields.
+                Tweak some comments.
+                Remove comments suggesting alternatives to the macros in
+                cmsg(3); those macros should really always be used.
+
+2018-07-16
+        sockets/unix_sockets.c
+        sockets/unix_sockets.h
+                Eliminate unixListen() function. It's simpler
+                just to have unixBind() plus listen().
+
+2018-07-16
+        sockets/unix_sockets.c
+                Fix a logic error in code determining which 'errno' value
+                is returned for a pathname that is too long.
+
+2018-07-16
+        sockets/scm_cred_recv.c
+        sockets/scm_multi_recv.c
+        sockets/scm_rights_recv.c
+        sockets/sock_stream_speed.c
+        sockets/us_xfr_v2_sv.c
+                Replace calls to unixListen() with unixBind() + listen()
+
+2018-07-17
+        sockets/scm_functions.c
+        sockets/scm_functions.h
+                New files defining functions for exchanging ancillary data
+                (a file descriptor) on UNIX domain sockets.
+
+2018-07-22
+        shlibs/demo_Bsymbolic/foo3.c
+                Add a missing declaration to prevent a compiler warning.
+        shlibs/demo_Bsymbolic/build.sh [removed]
+        shlibs/demo_Bsymbolic/Makefile
+                Remove build script in favor of a Makefile
+
+2018-07-23
+        cap/cap_functions.h
+        namespaces/userns_functions.h
+                Add #ifdef to prevent accidental double inclusion.
+        cap/cap_launcher.c
+                Add a new program that can be used to launch other programs
+                with specified capabilities.
+        cap/demo_file_caps.c
+                Add a new program that can be used for a simple
+                demonstration of file capabilities.
+        Makefile
+                Add 'vdso' directory to build list.
+        Makefile.inc
+                Tweak compiler options for clang(1).
+        shlibs/dynload.c
+                Expand comments on the use of #pragma and note that
+                the #pragma lines may need to be removed if building
+                with an old version gcc(1).
+
+2018-07-26
+        sockets/scm_multi_recv.c
+                Use more strictly correct code for calculating number of
+                received file descriptors.
+
+2018-07-31
+        namespaces/namespaces_of.go
+                Add a program that shows the namespace memberships of one or
+                more processes in the context of the user namespace hierarchy.
+
+2018-08-01
+        namespaces/Makefile
+        namespaces/ns_capable.c
+                Add a program that can be used to determine if a specified
+                PID has capabilities in a specified namespace.
+
+2018-08-10
+        namespaces/pid_namespaces.go
+                Add a new program to display the PID namespace hierarchy.
+
+2018-08-21
+        Makefile
+                Update comments to note that programs in 'seccomp'
+                directory are not built by default.
+        BUILDING
+                Fix a typo.
+                Note that programs in a few subdirectories are not build
+                by default.
+                Add a note on building the 'Go' programs in the source tarball.
+2018-09-04
+        cap/Makefile
+                Update a stale comment.
+                Remove 'view_cap_xattr' from list of built targets, since
+                it leads to build errors on systems that do not have
+                Linux 4.14 or later.
+
+2018-09-12
+        namespaces/userns_child_exec.c
+                Small tweak to "usage" message.
+        seccomp/seccomp_trap_sigsys.c
+                A simple example of a seccomp filter that uses SECCOMP_RET_TRAP
+                to cause a signal to be generated when a getppid() system call
+                is made.
+
+2018-09-17
+        altio/multithread_epoll_wait.c
+                Add an example that shows if multiple threads are using
+                epoll_wait() to wait on the same epoll file descriptor that has
+                a file descriptor in its interest list that was added with the
+                EPOLLET flag, then, when that file descriptor becomes ready,
+                only one of the waiting threads is woken up.
+        altio/epoll_flags_fork.c
+                Add an example program that allows experimentation with the
+                epoll EPOLLET and EPOLLEXCLUSIVE flags in a multiprocess
+                program.
+
+2018-10-03
+        namespaces/namespaces_of.go
+                Add a "--namespaces=<list>" option to select which namespace
+                types to display when displaying user namespace hierarchy.
+                Remove the "--userns-only" option, since it is synonymous with
+                "--namespaces=user".
+                For user namespaces, display the UID of the namespace creator.
+                Correctly diagnose EACCES error when running as non-root.
+                Switch function names to initial lower case, to make them
+                private.
+                Various other minor code tweaks.
+                Rename some functions.
+                Tweak various comments.
+
+2018-10-18
+        cgroups/view_v2_cgroups.go
+                Add a new program that can be used to display the state
+                (member processes and threads, enabled controllers,
+                cgroup type, and owner UID) of a cgroup subtree inside
+                the cgroups v2 "unified" hierarchy.
+        cgroups/remove_cgroup_hier.sh
+                Add a handy utility script that can be used to move all process
+                in a cgroups v2 hierarchy to the root cgroup and remove all
+                descendant cgroups. This can be useful if we want to properly
+                unmount a cgroups v1 hierarchy so that the corresponding
+                controller becomes available in cgroups v2 hierarchy.
+
+2018-10-22
+        cgroups/alloc_mem.c
+                Add a new program that can be used to for experiments with
+                the 'memory' cgroup controller.
+        cgroups/fork_bomb.c
+                Add a new program that can be used to for experiments with
+                the 'pids' cgroup controller.
+        cgroups/Makefile
+                Makefile for alloc_mem.c and fork_bomb.c
+        timers/cpu_burner.c
+        timers/cpu_multi_burner.c
+        timers/cpu_multithread_burner.c
+                Add various programs that burn CPU time. Among other purposes,
+                these programs are useful for experiments with the 'cpu'
+                cgroups controller.
+        cgroups/Makefile
+                Add 'cpu_burner', 'cpu_multi_burner', and
+                'cpu_multithread_burner' targets.
+        cgroups/view_v2_cgroups.go
+                Switch from use of SCHED_GETATTR to SCHED_GETSCHEDULER,
+                because older Go runtime does not know about SCHED_GETATTR.
+
+2018-10-23
+        cgroups/view_v2_cgroups.go
+                Add a more detailed usage message.
+        cgroups/move_RT_tasks_to_cgroup_root.sh
+                Add a new script that moves all processes that have a realtime
+                scheduling policy into the root cgroup of the cgroup v2
+                hierarchy. This is useful if we want to enable the 'cpu'
+                controller in the cgroups v2 hierarchy.
+
+2018-11-16
+        seccomp/seccomp_arg64.c
+        seccomp/seccomp_control_open.c
+        seccomp/seccomp_deny_open.c
+        seccomp/seccomp_logging.c
+        seccomp/seccomp_perf.c
+                Add check for x32 ABI.
+        seccomp/seccomp_logging.c
+                Add some comments.
+
+2018-11-18
+        timers/cpu_multithread_burner.c
+                Add an inner loop to burn CPU in user mode.
+
+2018-11-22
+        lib/error_functions.c
+                Add a pragma to suppress a "gcc -Wformat-truncation" warning.
+                (Only in "dist" version of code.)
+        inotify/inotify_dtree.c
+        inotify/rand_dtree.c
+                Some minor fixes to avoid "gcc -Wformat-truncation" warnings.
+
+2018-12-03
+        Makefile.inc
+                Remove unneeded '-lm' from IMPL_LDLIBS macro definition
+
+2018-12-11
+        namespaces/userns_child_exec.c
+                Fix an off-by-one error in check of value given to '-s' option.
+
+2019-02-01
+        seccomp/seccomp_trap_sigsys.c
+                Add x32 architecture check.
+
+2019-02-05
+        cap/cap_text.c
+                Fix some typos in comments.
+                (Thanks to Aleksandr Zasypkin.)
+
+2019-02-13
+        namespaces/userns_child_exec.c
+                Add '-h' option to push all possible capabilities into
+                inheritable set before executing command.
+
+2019-02-14
+        namespaces/namespaces_of.go
+                When displaying the user namespace hierarchy for all processes
+                on the system, include the UID and GID map of each namespace
+                in the output.
+
+2019-02-15
+        procexec/orphan.c
+        namespaces/orphan.c
+                Changes to allow for the fact that on systems with a modern
+                init(1) (e.g., systemd), an orphaned child may be adopted
+                by a "child subreaper" process whose PID is not 1.
+        timers/real_timer.c
+                Remove a duplicated variable initialization; see the
+                erratum for page 882. (Thanks to Cyrus Ramavarapu.)
+
+2019-02-17
+        namespaces/userns_child_exec.c
+                Make some command-line options options repeatable.
+                Add '-d' option to display credentials and capabilities.
+                Add '-S' option to set real/effective/saved-set UIDs.
+                Add '-x' option to set process capabilities.
+                Add '-w' option to sleep for specified number of seconds.
+                Add '-X' option to set/clear individual capability in any set.
+                Place command-line option values in a structure and parse
+                them in a dedicated function.
+                Some general code restructuring for better modularity.
+
+2019-02-18
+        lib/Makefile
+                Use some GNU make features to allow faster building.
+        lib/Makefile.std
+                Add a portable version of the Makefile, for systems
+                where GNU make is not installed.
+
+2019-02-22
+        namespaces/ns_capable.c
+                Rename 'search_ancestors()' to 'is_ancestor_userns()'.
+                Rename some variables for better readability and add some more
+                comments; some tweaks to comments and program output.
+
+2019-03-01
+        seccomp/seccomp_user_notification.c
+                A new program to demonstrate the seccomp "notify to user space"
+                feature added in Linux 5.0.
+
+2019-03-10
+        sockets/scm_functions.c
+                Add comments describing function return values.
+
+2019-03-14
+        sockets/scm_rights_send.c
+                Once the file descriptor has been sent, close it, to emphasize
+                the fact that it is no longer necessary to keep it open.
+
+2019-02-20
+        seccomp/dump_seccomp_filter.c
+                A new program to dump a process's seccomp filter(s).
+
+2019-02-21
+        seccomp/seccomp_launch.c
+                A new program to execute a binary after first loading a BPF
+                filter from a file.
+
+2019-03-25
+        acl/acl_update.c
+        cap/cap_text.c
+                Fix a minor error in a comment.
+
+2019-04-06
+        acl/acl_update.c
+                Remove crufty code accidentally added on 2019-03-25.
+
+2019-04-06
+        altio/multithread_epoll_wait.c
+        cap/cap_launcher.c
+        cgroups/alloc_mem.c
+        cgroups/fork_bomb.c
+        inotify/inotify_dtree.c
+        namespaces/simple_init.c
+        namespaces/userns_child_exec.c
+        namespaces/userns_functions.c
+        pmsg/mq_notify_siginfo.c
+        pmsg/mq_notify_via_signal.c
+        procpri/t_sched_setaffinity.c
+        seccomp/seccomp_perf.c
+        seccomp/seccomp_user_notification.c
+        sockets/scm_multi_recv.c
+        sockets/scm_multi_send.c
+        threads/pthread_barrier_demo.c
+        threads/thread_incr_rwlock.c
+        threads/thread_incr_spinlock.c
+        threads/thread_lock_speed.c
+        timers/cpu_multi_burner.c
+        vdso/gettimeofday.c
+                Use C99 style for declaring loop counters within the loop.
+
+2019-04-06
+        lib/tlpi_hdr.h
+                Include <stdbool.h> ("dist" version only).
+
+2019-04-06
+        sockets/scm_cred_recv.c
+        sockets/scm_cred_send.c
+        sockets/scm_multi_recv.c
+        sockets/scm_multi_send.c
+        sockets/scm_rights_recv.c
+        sockets/scm_rights_send.c
+                Use 'bool' type instead of 'Boolean'.
+
+2019-05-15
+        seccomp/seccomp_control_open.c
+                Remove use of SECCOMP_RET_DATA mask in SECCOMP_RET_ERRNO return.
+
+2019-05-16
+        seccomp/seccomp_multiarch.c
+                Fixed a bug in syscall number checking.
+                Thanks to Kevin Stravers.
+
+2019-05-23
+        Makefile.inc
+        altio/Makefile
+        filebuff/Makefile
+        seccomp/Makefile
+        shlibs/Makefile
+        signals/Makefile
+        users_groups/Makefile
+        vdso/Makefile
+                Fixed a bug that caused link commands to include libtlpi.a
+                twice.
+
+2019-06-26
+        namespaces/ns_exec.c
+        namespaces/ns_run.c
+                Open namespace symlink with O_CLOEXEC so that the file
+                descriptor is automatically closed when execing a program.
+
+2019-06-27
+        namespaces/Makefile
+                Simplify the makefile somewhat.
+
+2019-07-25
+        namespaces/userns_child_exec.c
+                Ensure that the process's dumpable flag is set to 1,
+                so as remove the need to install the binary with the
+                CAP_DAC_OVERRIDE capability.
+
+2019-07-26
+        seccomp/seccomp_bench.c
+                 Add a program to do some simple seccomp benchmarking.
+
+2019-09-06
+        BUILDING
+                 Explicitly note which shared libraries must be installed
+                 in order to build the code.
+
+2019-09-25
+        namespaces/ns_run.c
+                 Replace waitpid(-1,...) with call that explicitly specifies
+                 child's PID.
+
+2019-09-30
+        procexec/pdeath_signal.c
+                A test program for exploring (surprising corner cases in)
+                the behavior of the prctl(PR_SET_PDEATHSIG) feature.
+
+2019-11-04
+        lib/error_functions.c
+                Wrap pragma that suppresses "gcc -Wformat-truncation" warning
+                with a check to test that the gcc(1) version supports that
+                pragma.  (Only in "dist" version of code.)
+
+2019-11-06
+        fileio/bad_exclusive_open.c
+                Fix a typo in a comment. (Only in "dist" version of code.)
+
+2019-11-08
+        namespaces/demo_userns.c
+        namespaces/demo_uts_namespaces.c
+        namespaces/multi_pidns.c
+        namespaces/ns_child_exec.c
+        namespaces/pidns_init_sleep.c
+        namespaces/userns_child_exec.c
+        namespaces/userns_setns_test.c
+        procexec/demo_clone.c
+                Instead of using malloc() to allocate the stack for the
+                child process, use mmap() to create a private, anonymous
+                mapping with the MAP_STACK flag, which is described in the
+                mmap(2) manual page thus:
+
+                    MAP_STACK (since Linux 2.6.27)
+                        Allocate the mapping at an address suitable for  a
+                        process or thread stack.  This flag is currently a
+                        no-op, but is used in the glibc  threading  imple‐
+                        mentation  so  that  if some architectures require
+                        special treatment for stack  allocations,  support
+                        can later be transparently implemented for glibc.
+
+                (Thanks to Christian Brauner.)
+
+2019-11-12
+        namespaces/demo_userns.c
+        namespaces/demo_uts_namespaces.c
+        namespaces/multi_pidns.c
+        namespaces/ns_child_exec.c
+        namespaces/pidns_init_sleep.c
+        namespaces/userns_child_exec.c
+        namespaces/userns_setns_test.c
+                Rename a variable (child_stack --> stack).
+
+2019-11-15
+        Makefile.inc
+                Add -Wimplicit-fallthrough in IMPL_CFLAGS.
+
+2019-11-18
+        timers/cpu_multithread_burner.c
+                Only include a gettid() wrapper if glibc version is < 2.30.
+
+2019-11-21
+        signals/catch_rtsigs.c
+                Declare flag set by signal handler as type 'sig-atomic_t'.
+
+2019-11-22
+        BUILDING
+                Note that libseccomp-dev{el} is needed to build some code.
+
+2019-11-30
+        cgroups/alloc_mem.c
+                Refactor memory allocation code into separate function.
+                Allow multiple threads to be created.
+
+2019-12-15
+        fileio/seek_io.c
+                Fix a sign extension problem for the 'R' command.
+                See the erratum for page 85.
+                (Thanks to Philippe Brodeur)
+
+2020-01-05
+        cap/t_cap_get_file.c
+                A simple demo program for cap_get_file(3).
+        cap/t_cap_get_pid.c
+                A simple demo program for cap_get_pid(3).
+        cap/t_cap_set_file.c
+                A simple demo program for cap_set_file(3).
+
+2020-01-14
+        filebuff/copy.c
+                Remove this source file, which was an accidental duplicate
+                of a file in the 'fileio' directory.
+        procexec/necho.c
+                Remove this source file, which was an accidental duplicate
+                of a file in the 'proc' directory.
+        fileio/copy.c
+                Change the error text written by the fatal() call that follows
+                write() to more clearly indicate that two different cases are
+                being dealt with here: error on write() and partial write.
+                (Thanks to Hrvoje Nikšić; see also the erratum for page 71.)
+
+2020-02-06
+        sockets/scm_cred_recv.c
+        sockets/scm_cred_send.c
+        sockets/scm_functions.c
+        sockets/scm_multi_recv.c
+        sockets/scm_multi_send.c
+        sockets/scm_rights_recv.c
+        sockets/scm_rights_send.c
+                Use memcpy() to transfer data to/from CMSG_DATA() address.
+                (After a manual pages bug report from Rich Felker.)
+
+2020-02-06
+        sockets/scm_functions.c
+        sockets/scm_functions.h
+                Rearrange header file includes.
+
+2020-02-17
+        namespaces/namespaces_of.go
+                Add support for time namespaces.
+                Some comment tweaks.
+        namespaces/unshare.c
+                Add support for time namespaces.
+        namespaces/userns_setns_test.c
+                Add missing '.' in printf() "%.*s".
+
+2020-04-01
+        timers/clock_times.c
+                A new program that displays the values of some POSIX clocks.
+                (Useful for time namespace experiments.)
+
+2020-04-07
+        namespaces/namespaces_of.go
+                Correctly handle kernels that don't support time namespaces.
+                Simplify code that discovers available namespace symlinks.
+
+2020-04-22
+        namespaces/userns_child_exec.c
+                Fix bug in handling of -b (securebits) option.
+                Add support for setting remaining securebits flags.
+                Change option letters used to turn on inheritable and ambient
+                capabilities (-h ==> -i; -a ==> -A).
+        lib/cap_functions.c
+                Add a function to display a securebits mask.
+        caps/show_secbits.c
+                Add a program that display the securebits flags.
+
+2020-04-24
+        namespaces/ns_exec.c
+                Add a '-f' option to do a fork() after setns().
+        namespaces/namespaces_of.go
+                Fix bug introduced on 2020-04-07, which caused the "--pidns"
+                option to cease working.
+
+2020-05-01
+        namespaces/userns_child_exec.c
+                Remove '-z' option (which was just a synonym for '-r').
+                Improve error diagnostics for -S option.
+
+2020-05-07
+        time/t_stime.c
+                Removed this program. stime(2) is a deprecated interface
+                that is no longer supported in recent versions of glibc.
+
+2020-06-29
+        inotify/inotify_dtree.c
+                Reformat some comments.
+
+2020-07-03
+        filelock/i_fcntl_locking.c
+        procexec/execlp.c
+                Minor white space changes in source code layout.
+
+2020-07-17
+        namespaces/ns_exec.c
+                Add a comment explaining use of O_CLOEXEC flag.
+
+2020-09-11
+        timers/t_clock_nanosleep.c
+                Remove unneeded cast to (long) when printing 'request.tv_nsec'.
+
+2020-09-11
+        sockets/scm_multi_recv.c
+                Minor tweak to a variable name.
+        cap/view_cap_xattr.c
+        scm_cred_recv.c
+        sockets/scm_cred_send.c
+        sockets/scm_multi_recv.c
+        sockets/scm_multi_send.c
+        sockets/scm_rights_recv.c
+        sockets/scm_rights_send.c
+                Use better % specifier when printing 'size_t'/'ssize_t'.
+
+2020-09-18
+        cgroups/alloc_mem.c
+                Reorder command-line arguments, allowing 'sleep-usecs' to be
+                optional.
+                Improve "Usage" message.
+        mmap/t_remap_file_pages.c
+                Replace "0" with "NULL" in call to mmap().
+        threads/prod_condvar.c
+        threads/prod_no_condvar.c
+                Use a more expressive function name (threadFunc ==> producer).
+        pmsg/mq_notify_siginfo.c
+        pmsg/mq_notify_via_signal.c
+        pmsg/mq_notify_via_thread.c
+                Use a better printf() specifier for printing 'ssize_t'.
+
+2020-09-30
+        seccomp/seccomp_user_notification.c
+                Quite a bit of a rewrite, including a fix required
+                by a user-space breakage caused by kernel commit
+                2882d53c9c6f3b8311d225062522f03772cf0179.
+
+2020-10-07
+        threads/Makefile
+                Remove 'strerror_test', 'strerror_test_tsd', and
+                'strerror_test_tls' from the targets built by "make all". These
+                targets rely on symbols ('_sys_nerr' and '_sys_errlist') that,
+                since version 2.32, are no longer exported by glibc, and will
+                result in errors if built on systems that have that glibc
+                version or later.

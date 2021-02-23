@@ -1,0 +1,22 @@
+# Makefile.inc - common definitions used by all makefiles
+# HP-UX Version
+
+TLPI_DIR = ..
+TLPI_LIB = ${TLPI_DIR}/libtlpi.a
+TLPI_INCL_DIR = ${TLPI_DIR}/lib
+
+LINUX_LIBRT = -lrt
+LINUX_LIBDL = -ldl
+LINUX_LIBACL = -lacl
+LINUX_LIBCRYPT = -lcrypt
+LINUX_LIBCAP = -lcap
+
+IMPL_CFLAGS = -g -I${TLPI_INCL_DIR} -D_XOPEN_SOURCE_EXTENDED
+CFLAGS = ${IMPL_CFLAGS}
+IMPL_THREAD_FLAGS = -mt
+
+IMPL_LDLIBS = ${TLPI_LIB} -lm
+LDFLAGS = ${IMPL_LDLIBS}
+LDLIBS = ${IMPL_LDLIBS}
+
+RM = rm -f
