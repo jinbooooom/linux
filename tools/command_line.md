@@ -1,4 +1,4 @@
-## 简单命令
+# 简单命令
 
 - date  打印日期与时间
 - cal  打印日历
@@ -14,31 +14,43 @@ jinbo@fang:~/gitme/linux/test$ cal
 30 31 
 ```
 - df 查看磁盘驱动器的可用空间
-
 - pwd  打印当前目录
-
 - watch -n 5 nvidia-smi  # 查看显卡信息，每隔五秒刷新一次显示
-
 - cd 切换目录
-
 - touch xx.md 创建空文件 xx.md
-
 - top 动态显示当前耗费资源最多的进程信息
-
 - ping 测试网速
-
 - clear 清屏
-
 - reboot 重启
-
 - shutdown 关机
-
 - netstat 显示网络相关信息
-
 - ifconfig 显示或配置网络设备
+# 理论
+
+## Linux Source命令及脚本的执行方式解析
+
+当修改了/etc/profile文件，想让它立刻生效，而不用重新登录，这时就想到用source命令，如:source /etc/profile
+
+**source命令：**
+
+也称为“点命令”，也就是一个点符号（.）,是bash的内部命令。
+
+功能：使Shell读入指定的Shell程序文件并依次执行文件中的所有语句。source命令通常用于重新执行刚修改的初始化文件，使之立即生效，而不必注销并重新登录。
+
+**用法：**
+
+source filename 或 . filename
+
+**source filename 与 sh filename 及./filename执行脚本的区别：**
+
+- 当shell脚本具有可执行权限时，用sh filename与./filename执行脚本是没有区别的。./filename是因为当前目录没有在PATH中，所有"."是用来表示当前目录的。
+- sh filename 重新建立一个子shell，在子shell中执行脚本里面的语句，该子shell继承父shell的环境变量，但子shell新建的、改变的变量不会被带回父shell，除非使用export。
+- source filename：这个命令其实只是简单地读取脚本里面的语句依次在当前shell里面执行，没有建立新的子shell。那么脚本里面所有新建、改变变量的语句都会保存在当前shell里面。
+
 ## linux 常用命令
 
 ### ls
+
 - ls | wc -w :查看当前目录下有多少个文件及文件夹（不包括子文件夹）
 	- wc 统计文本中行数、字数、字符数，例如 `wc xx.md`（也等于 `wc -lwc xx.md`），打印 xx.md 文件里的行数、单词数、字符数
 - ls ~/ 列出来 home 下的文件夹，也等于 `ls /home/username`
@@ -307,7 +319,7 @@ jinbo    10410  1.2  6.4 7177276 518056 tty2   Sl+  21:05   0:57 /home/jinbo/sof
 ```
 ping www.baidu.com
 ```
-## 解决实际问题
+# 解决实际问题
 
 ### 拷贝服务器文件到本地目录
 
@@ -374,7 +386,7 @@ find . -type f -name *dvr*.c | xargs grep -wnr main
 
 功能很强大，用时查，暂不记录。
 
-## 推荐/参考链接
+# 推荐/参考链接
 
 - [Linux Tools Quick Tutorial](https://linuxtools-rst.readthedocs.io/zh_CN/latest/index.html) 
 
