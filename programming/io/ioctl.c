@@ -12,7 +12,7 @@ int main(void)
 	}
 
 //	ioctl(fd, CDROM_LOCKDOOR, 0);
-	if (!ioctl(fd, CDROMEJECT, NULL)) {
+	if (!ioctl(fd, CDROMEJECT, NULL)) { // 若成功弹出光驱
 		printf("eject cdrom succeed\n");
 	} else {
 		printf("eject cdrom failed\n");

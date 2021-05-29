@@ -24,3 +24,7 @@ int main(int argc, char *argv[])
 	close(srcfd);
 	close(destfd);
 }
+
+
+// build:gcc mycp.c -o exec/mycp
+// run:exec/mycp assets/test.txt assets/cp.txt
