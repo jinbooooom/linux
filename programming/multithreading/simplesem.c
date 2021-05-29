@@ -11,36 +11,44 @@
 // const int MAXSIZE = 10;
 int stack[MAXSIZE][2];
 int size = 0;
-sem_t sem;						// 其实 sem_t 就是长整型
+sem_t sem;											// 其实 sem_t 就是长整型
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;	// 编译时初始化锁为解锁状态
 
 void provide_data(void)
 {
+	printf("start provide_data\n");
 	for (int i = 0; i < MAXSIZE; ++i)
 	{
 		stack[i][0] = i;
 		stack[i][1] = i;
-		sem_post(&sem);				// 信号量加 1 
+		sem_post(&sem);								// 信号量加 1 
 	}
+	// 如果加了下面这两行，意味着执行 handle_data1 和 handle_data2需要 10个资源，但实际上只给了 8 个，那么线程会在打印 8 次 (Plus 或者 Multiple) 后，一直等待资源。
+	// sem_wait(&sem);	
+	// sem_wait(&sem);	
+	printf("exit provide_data\n");
 }
 
 void handle_data1(void)
 {
+	printf("start handle_data1\n");
 	int i;
-	while (pthread_mutex_lock(&mutex),((i = size++) < MAXSIZE))	// 访问前先上锁
+	while (pthread_mutex_lock(&mutex), ((i = size++) < MAXSIZE))	// 访问前先上锁，保护 size
 	{
-		pthread_mutex_unlock(&mutex);				// Q1：马上解锁？
-		sem_wait(&sem);						// 信号量减 1
+		pthread_mutex_unlock(&mutex);								// Q1：马上解锁？
+		sem_wait(&sem);												// 信号量减 1
 		printf("Plus: %d + %d = %d\n", stack[i][0], stack[i][1], stack[i][0] + stack[i][1]);
 	}
-	pthread_mutex_unlock(&mutex);					// Q2：解两次锁？
+	pthread_mutex_unlock(&mutex);									// Q2：解两次锁？
+	printf("exit handle_data1\n");
 }
 
 
 void handle_data2(void)
 {
+	printf("start handle_data2\n");
 	int i;
-	while (pthread_mutex_lock(&mutex),((i = size++) < MAXSIZE))
+	while (pthread_mutex_lock(&mutex), ((i = size++) < MAXSIZE))
 	{
 		pthread_mutex_unlock(&mutex);
 		sem_wait(&sem);
@@ -48,13 +56,20 @@ void handle_data2(void)
 	}
 	pthread_mutex_unlock(&mutex);
 	// int a = pthread_mutex_unlock(&mutex);
-	// printf("a = %d", a);
+	// printf("a = %d\n", a);
+	printf("exit handle_data2\n");
 }
 
 int main(int argc, char **argv)
 {
 	pthread_t thrd1, thrd2, thrd3;
 	sem_init(&sem, 0, 0);
+	/**
+	 * int sem_init (sem_t *__sem, int __pshared, unsigned int __value)
+	 * __sem：指向信号量结构的一个指针
+	 * __pshared：不为 0 时，信号量在进程间共享，否则只能为当前进程的所有线程共享
+	 * __value：信号量初值
+	*/
 	pthread_create(&thrd1, NULL, (void *)handle_data1, NULL);
 	pthread_create(&thrd2, NULL, (void *)handle_data2, NULL);
 	pthread_create(&thrd3, NULL, (void *)provide_data, NULL);
@@ -69,8 +84,10 @@ int main(int argc, char **argv)
 
 /* #####################################################################
 
-jinbo@fang:~/gitme/linux/programming/src$ gcc simplesem.c -lpthread -o simplesem.o
-jinbo@fang:~/gitme/linux/programming/src$ ./simplesem.o 
+// build && run
+gcc simplesem.c -lpthread -o exec/simplesem.o
+exec/simplesem.o 
+
 Plus: 0 + 0 = 0
 Plus: 2 + 2 = 4
 Plus: 3 + 3 = 6
