@@ -21,13 +21,13 @@ int main(int argc, char **argv)
 	printf("I'm in main function\n"); 		// 【Q1】
 	
 	ret = pthread_create(&thrd2, NULL, (void *)task2, (void *)&g2);
- 	cleanup(g1, g2);				// 【Q2】
-	getchar();
+ 	cleanup(g1, g2);						// 【Q2】
+	// getchar();
 
 	int tmp;	
-	if ((tmp = pthread_join(thrd1, &retval)) != 0)  // pthread_join 成功调用后，将 thrd1 的退出值存到 retval
+	if ((tmp = pthread_join(thrd1, &retval)) != 0)  // pthread_join 成功调用后，将 thrd1 的返回值存到 retval
 	{
-		switch (tmp)
+		switch (tmp) // 异常处理
 		{
 			case EINVAL:
 				printf("pthread_join return value is EINVAL: %d\n", tmp);
@@ -79,8 +79,12 @@ void cleanup(int counter1, int counter2)
 
 /* #####################################################################
 
-jinbo@fang:~/gitme/linux/programming/src$ gcc thrdcreat.c -lpthread -o thrdcreat.o
-jinbo@fang:~/gitme/linux/programming/src$ ./thrdcreat.o 
+build && run
+gcc thrdcast.c -lpthread -o exec/thrdcreat
+./exec/thrdcreat 
+
+// print
+
 I'm in main function   // Q1
 task1 count: 0
 task2 count: 0
