@@ -63,8 +63,10 @@ void cleanup(int counter1, int counter2)
 
 /*#######################################################################
 
-jinbo@fang:~/gitme/linux/programming/multithreading$ gcc thrdcancel.c -o thrdcancel.o -lpthread
-jinbo@fang:~/gitme/linux/programming/multithreading$ ./thrdcancel.o
+// build && run
+gcc thrdcancel.c -lpthread -o exec/thrdcancel
+exec/thrdcancel 
+
 task1 count: 0
 task2 count: 0
 task2 count: 1
