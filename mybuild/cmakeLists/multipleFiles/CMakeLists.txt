@@ -10,12 +10,13 @@ message("编译路径"${PROJECT_BINARY_DIR})
 set(CMAKE_CXX_STANDARD 11)
 
 aux_source_directory(. DIR_SRCS)
-file(GLOB_RECURSE HPP_LIST "*.h") #递归搜索
-message(${HPP_LIST})
+#file(GLOB_RECURSE HPP_LIST "*.h") #递归搜索
+#message(${HPP_LIST})
 
 add_subdirectory(math)
 add_subdirectory(str)
-include_directories(HPP_LIST)
+#include_directories(HPP_LIST)
+
 # 指定生成目标
 add_executable(demo ${DIR_SRCS})
 
