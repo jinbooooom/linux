@@ -184,7 +184,7 @@ add_executable(demo ${SRC_LIST})
 
 ### 条件控制
 
-#### if…elseif…else…endif
+#### if…else if…else…endif
 
 ```cmake
 逻辑判断和比较：

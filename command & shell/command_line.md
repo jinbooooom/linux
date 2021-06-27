@@ -69,7 +69,7 @@ jinbo@fang:~/gitme/linux$ ls | wc
       5       5      33
 ```
 ### file 用于确定文件的种类
-```markdown
+```shell
 # 比如 1.txt 其实是 1.JPEG 重命名的，执行命令 $ file 1.txt 显示：
 $ file 1.txt 
 1.txt: JPEG image data, JFIF standard 1.01, resolution (DPI), density 72x72, segment length 16, baseline, precision 8, 440x440, frames 3
