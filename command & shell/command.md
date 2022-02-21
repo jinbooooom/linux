@@ -436,6 +436,28 @@ u+x/u-x：为文件所有者增加/删除可执行权限
 
 u+x，go = rx：为文件所有者添加可执行权限，同时设置所属群组和其它用户具有读权限和可执行权限。
 
+## 文件
+
+### touch
+
+一般用来设定或是更新文件的修改时间，如果文件不存在就创建一个空文件
+
+### stat
+
+它是ls的增强版，该命令会将系统所掌握文件的所有信息以及属性全部显示出来
+
+```shell
+jinbo@fang:/media/jinbo/ltg/gitme/linux/command & shell$ stat command.md 
+  文件：command.md
+  大小：28031           块：56         IO 块：4096   普通文件
+设备：805h/2053d        Inode：26872       硬链接：1
+权限：(0777/-rwxrwxrwx)  Uid：( 1000/   jinbo)   Gid：( 1000/   jinbo)
+最近访问：2022-01-27 00:57:53.639296100 +0800
+最近更改：2022-01-28 21:53:43.614859100 +0800
+最近改动：2022-01-28 21:53:43.614859100 +0800
+创建时间：-
+```
+
 ## 文本处理
 
 ### less
@@ -454,6 +476,54 @@ u+x，go = rx：为文件所有者添加可执行权限，同时设置所属群�
 ```shell
 head -n 3 xx.txt  # 显示文件前 3 行
 tail -n 2 xx.txt  # 显示文件后 2 行	
+```
+
+### diff
+
+逐行比较文件
+
+### sed
+
+用于文本过滤和转换的流编辑器
+
+其中基本编辑指令
+
+- a ：新增， a 的后面可以接字串，而这些字串会在新的一行出现(当前行的下一行)
+- c ：取代， c 的后面可以接字串，这些字串可以取代 n1,n2 之间的行
+- d ：删除，因为是删除，所以 d 后面通常不接任何内容
+- i ：插入， i 的后面可以接字串，而这些字串会在新的一行出现(当前行的上一行)；
+- p ：打印，亦即将某个选择的数据印出。通常 p 会与参数 sed -n 一起运行
+- s ：取代，可以直接进行字符替换，通常 s 的动作可以搭配正则表达式。例如 `1,20s/old/new/g` 
+
+```shell
+$ cat 1.txt 
+abc
+abc
+abc
+# 将1.txt 里的第二行中的 b 替换为 Z, s代表的是替换，s前的数字代表的要处理第几行，比如这里就是只处理第 2 行。如果不加数字就是处理每一行。
+$ sed '2s/b/Z/' 1.txt 
+abc
+aZc
+abc
+# 注意 这里根本就没有改变 1.txt，因为不是就地更改，需要加 -i，可以通过 man sed 查看更多用法
+$ cat 1.txt 
+abc
+abc
+abc
+# 已经更改了并保存到原始文件。
+$ sed 's/b/Z/' 1.txt -i
+$ cat 1.txt 
+aZc
+aZc
+aZc
+# i 指令，每行前增加内容。例如在每行前加 123
+$ sed 'i123' 1.txt 
+123
+aZc
+123
+aZc
+123
+aZc
 ```
 
 ## 查找
@@ -654,7 +724,7 @@ find -name a* -not -name *b
 ```
 
 
-### 执行操作
+#### 执行操作
 
 - `-print`   匹配文件输出到标准输出，默认操作
 
@@ -688,10 +758,30 @@ $ file 1.txt
 1.txt: JPEG image data, JFIF standard 1.01, resolution (DPI), density 72x72, segment length 16, baseline, precision 8, 440x440, frames 3
 ```
 
-### 进程
+## 进程
 
-- ps #显示当前终端进程
-- ps x # 显示所有终端所控制的进程，TTY中的?表示没有控制终端，STAT是state的缩写，显示的是当前进程的状态,S表示睡眠状态，进程不在运行，而是在等待。
+### ps
+
+ps 只是显示在该命令被执行的时刻机器状态的一个快照
+
+- ps 显示**当前终端**进程
+
+  - -L 显示线程
+
+  - -p 显示指定 pid 进程
+
+  - -pid 显示属于 pid 的子进程
+
+  - `--forest` 树型显示, -f 显示进程树，但没有 --forest 直观
+
+    ```shell
+    jinbo@fang:/media/jinbo/ltg/gitme/linux/command & shell$ ps --forest
+      PID TTY          TIME CMD
+    13195 pts/1    00:00:00 bash
+    13464 pts/1    00:00:00  \_ ps # ps 是 bash 的子进程
+    ```
+
+- ps x 显示**所有终端**所控制的进程，TTY中的?表示没有控制终端，STAT是state的缩写，显示的是当前进程的状态,S表示睡眠状态，进程不在运行，而是在等待。
 
 ```shell
  PID TTY      STAT   TIME COMMAND
@@ -704,8 +794,15 @@ $ file 1.txt
  8296 pts/2    R+     0:00 ps -x
 ```
 
-- top # 动态查询进程信息
-  **使程序在后台运行**
+- ps aux 显示所有用户的进程信息
+
+### top 
+
+动态查询进程信息。它将按照进程活动的顺序，以列表形式持续更新显示系统进程的当前信息（默认每3s更新一次）。
+
+[Linux中top命令参数详解](https://blog.csdn.net/yjclsx/article/details/81508455)
+
+**使程序在后台运行**
 
 ```shell
 $ xlogo  # 显示一个包含X标识的可缩放窗口
@@ -740,13 +837,63 @@ jinbo    10346  0.0  0.0   4624  1616 tty2     S+   21:05   0:00 /bin/sh /home/j
 jinbo    10410  1.2  6.4 7177276 518056 tty2   Sl+  21:05   0:57 /home/jinbo/soft/studio/android-studio/jre/bin/java -classpath
 ```
 
-## 平时使用到的命令积累
+## 软件包管理
 
-### 拷贝服务器文件到本地目录
+每个linux的发行版，比如ubuntu，都会维护一个自己的软件仓库，我们常用的几乎所有软件都在这里面。这里面的软件绝对安全，而且绝对的能正常安装。
+
+在ubuntu下，会维护一个源列表，源列表里面都是一些网址信息，这每一条网址就是一个源，这个地址指向的数据标识着这台源服务器上有哪些软件可以安装使用。可以使用 `sudo gedit /etc/apt/sources.list` 查看和编辑源。
+
+在这个文件里加入或者注释（加#）掉一些源后，保存。这时候，我们的源列表里指向的软件就会增加或减少一部分。
+ 接一下要做的就是：
+
+```shell
+ sudo apt-get update 
+```
+
+这个命令，会访问源列表里的每个网址，并读取软件列表，然后保存在本地电脑。我们在软件包管理器里看到的软件列表，都是通过update命令更新的。
+
+update后，可能需要upgrade一下。
+
+```shell
+ sudo apt-get upgrade 
+```
+
+这个命令，会把本地已安装的软件，与刚下载的软件列表里对应软件进行对比，如果发现已安装的软件版本太低，就会提示更新。
+
+**总而言之，update是更新软件列表，upgrade是更新软件。**
+
+### 软件包常用命令
+
+- apt-cache search package 搜索包
+-  `apt-cache show package` 获取已安装包的相关信息，如说明、大小、版本等，它已经包括了下文中的`dpkg --status package`的状态信息。
+-  `sudo apt-get install package 安装包`
+-  `sudo apt-get install package --reinstall 重新安装包`
+-  `sudo apt-get -f install 修复安装"-f = --fix-missing"`
+- `sudo apt-get remove package 删除包`
+-  sudo apt-get remove package - - purge 删除包，包括删除配置文件等
+-  `sudo apt-get update 更新源`
+-  `sudo apt-get upgrade 更新已安装的包`
+-  sudo apt-get dist-upgrade 升级系统
+-  sudo apt-get dselect-upgrade 使用 dselect 升级
+-  apt-cache depends package 了解使用依赖
+-  apt-cache rdepends package 是查看该包被哪些包依赖
+-  sudo apt-get build-dep package 安装相关的编译环境
+-  apt-get source package 下载该包的源代码
+-  sudo apt-get clean && sudo apt-get autoclean 清理无用的包
+-  sudo apt-get check 检查是否有损坏的依赖
+- `dpkg --install package 安装软件包 package`
+- `dpkg --list 列出已安装的软件包`
+- `dpkg --status package` 查看软件包状态，如是否安装、描述、包大小、版本、网站链接等等。
+
+## 网络
+
+### 拷贝远程服务器文件到本地目录
 
 ```shell
 $ scp -r username@172.xx.xx.xx:~/worker/soft(远程目录) ./soft(当前目录下的 soft 目录)
 ```
+
+## 平时使用到的命令积累
 
 ### 用文件作为swap分区
 
@@ -780,12 +927,12 @@ sudo swapon /root/swapfile   #启用swap文件
 
 ## 推荐/参考链接
 
-- [Linux Tools Quick Tutorial](https://linuxtools-rst.readthedocs.io/zh_CN/latest/index.html) 
-
+- [Linux Tools Quick Tutorial](https://linuxtools-rst.readthedocs.io/zh_CN/latest/index.html) （鸟哥）
+-  [ Linux命令大全(手册) ](https://www.linuxcool.com)（快速查询）
 - [Linux常用命令（面试题）](https://blog.csdn.net/qq_40910541/article/details/80686362)
 - [深度学习中常用的linux命令](https://blog.csdn.net/ft_sunshine/article/details/91993590)
 - [linux 常用的 20 个命令](https://blog.csdn.net/q357010621/article/details/80248611)
-- [linux 命令大全](https://www.runoob.com/linux/linux-command-manual.html)
+- [linux 命令大全](https://www.runoob.com/linux/linux-command-manual.html)（菜鸟）
 
 
 
