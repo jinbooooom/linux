@@ -7,9 +7,11 @@ data/*
 **/*.o
 **/*.out
 
+main
 test
-t
 r
+s
+t
 
 **/.vscode/*
 **/.vscode
