@@ -16,7 +16,7 @@ info break，其中info 和 break分别可以简写为 i 和 b
 
 ### 显示源代码
 
-- `set listsize n`：设置每次显示的代码行数。如 n = 20，则显示断点处的前后10行（只对当前gdb有效）
+- `set listsize n`：设置每次显示的代码行数。如 n = 20，则显示断点处的前后10行（只对当前gdb有效） 
 - `list 或者 l`：显示当前暂停处的源代码，继续按l，则显示后面n行的源代码
 - `l -`：注意空格，显示当前暂停处的前n行源代码
 - `l 函数名`：显示函数处的源代码
@@ -1106,3 +1106,70 @@ Thread 1 "my_deadlock_exe" received signal SIGINT, Interrupt.
 (gdb) 
 ```
 
+## 调试动态库
+
+略
+
+## 内存检查
+
+编译时设置`-fsanitize=address`，可自动检查以下的内存问题。
+
+```shell
+g++ -fsanitize=address -g *.cpp -o my_memorycheck_exe -std=c++14 -lpthread
+```
+
+### 内存泄露
+
+```C++
+void new_test()
+{
+	int *test = new int[80];
+}
+void malloc_test()
+{
+	int *test =(int*) malloc(100);
+}
+int main()
+{
+	cout << "memory test" << endl;
+	malloc_test();
+	cout << "malloc test end" << endl;
+	new_test();
+	cout << "new test end" << endl;
+	return 0;
+}
+```
+
+例子中先调用malloc分配内存，再调用new分配内存，在报内存泄露时，先报new内存泄露，再报malloc内存泄露。比较两处的#0，可以直到malloc分配内存最终调用`libasan.so` 中的`__interceptor_malloc`，new调用的是`libasan.so`中的`operator new[]`。
+
+![image-20220706182406993](assets/gdb/image-20220706182406993.png)
+
+### 堆溢出
+
+测试函数：
+
+![image-20220706183625668](assets/gdb/image-20220706183625668.png)
+
+![image-20220706183517767](assets/gdb/image-20220706183517767.png)
+
+### 栈溢出
+
+测试函数：
+
+![image-20220706183916040](assets/gdb/image-20220706183916040.png)
+
+![image-20220706184102688](assets/gdb/image-20220706184102688.png)
+
+### 全局内存溢出
+
+![image-20220706184939924](assets/gdb/image-20220706184939924.png)
+
+### 释放后继续使用
+
+![image-20220706185309317](assets/gdb/image-20220706185309317.png)
+
+## 远程调试
+
+略
+
+## 转储文件调试
