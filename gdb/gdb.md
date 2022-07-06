@@ -728,9 +728,9 @@ $19 = 0x404233 "main"
 ## 线程管理
 
 - `info threads`：查看线程信息，可以简写为 `i threads`
-- `thread th_id`：切换到指定id的线程。这样就能查看该线程的调用栈信息(bt)和当前栈帧的局部变量信息(i locals)
+- `thread th_id`：切换到指定id的线程（可以将thread 简写为t）。这样就能查看该线程的调用栈信息(bt)和当前栈帧的局部变量信息(i locals)
 - `b line thread th1 [th2 ...]`：为线程th1，th2 ...的在代码第line行设置断点。
-- `thread apply th1 [th2...] command`：为线程 th1 th2 ...应用命令 command，这样就不用切换线程。如查看编号为 1，2线程的局部变量，可以用命令`thread apply 1 2 i locals`。如果是查看所有线程的局部变量信息，可以用`thread apply all i locals`
+- `thread apply th1 [th2...] command`：为线程 th1 th2 ...应用命令 command（可以将thread 简写为t），这样就不用切换线程。如查看编号为 1，2线程的局部变量，可以用命令`thread apply 1 2 i locals`。如果是查看所有线程的局部变量信息，可以用`thread apply all i locals`
 - `finish`：立即执行完当前的函数，但是并不是执行完整个应用程序。
 
 ```shell
@@ -981,5 +981,128 @@ __PRETTY_FUNCTION__ = "int main(int, char**)"
 test = 0x7ffff7fe45b0 <_dl_fini>
 test2 = 0x404815 <__libc_csu_init+69>
 test3 = {<test_1> = {_vptr.test_1 = 0x7fffffffc940, x = 4205480, y = 0}, <No data fields>}
+```
+
+## 死锁调试
+
+1. 当程序无输出时，ctrl+C终止，再bt查看调用堆栈
+2. 切换到指定栈帧，出现`89              t1.join();`，表明t1线程未结束，初步判断是死锁。
+3. `i thread`查看所有线程
+4. 使用`t 2`切换到线程2，用bt查看堆栈，切换到指定栈帧，出现`65              lock_guard<mutex> locker2(_mutex2);`
+5. 使用`t 3`切换到线程3，用bt查看堆栈，切换到指定栈帧，出现`78              lock_guard<mutex> locker1(_mutex1);`
+6. 对应代码，大致就能判断出来是两个线程互相等待对方释放锁
+
+```shell
+(gdb) r
+The program being debugged has been started already.
+Start it from the beginning? (y or n) y
+Starting program: /media/jinbo/ltg/gitme/linux/gdb/test_code/deadlock/my_deadlock_exe 
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[New Thread 0x7ffff7aa8700 (LWP 92920)]
+[New Thread 0x7ffff72a7700 (LWP 92921)]
+线程函数do_work_1开始
+线程函数do_work_2开始
+^C
+Thread 1 "my_deadlock_exe" received signal SIGINT, Interrupt.
+0x00007ffff7f99495 in __GI___pthread_timedjoin_ex (threadid=140737348536064, thread_return=0x0, abstime=0x0, block=<optimized out>) at pthread_join_common.c:89
+89      pthread_join_common.c: 没有那个文件或目录.
+(gdb) bt
+#0  0x00007ffff7f99495 in __GI___pthread_timedjoin_ex (threadid=140737348536064, thread_return=0x0, abstime=0x0, block=<optimized out>) at pthread_join_common.c:89
+#1  0x00007ffff7ec7d53 in std::thread::join() () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#2  0x0000000000401493 in main () at deadlock.cpp:89
+(gdb) f 2
+#2  0x0000000000401493 in main () at deadlock.cpp:89
+89              t1.join();
+(gdb) l
+84
+85      int main()
+86      {
+87              thread t1(do_work_1);
+88              thread t2(do_work_2);
+89              t1.join();
+90              t2.join();
+91              cout << "线程运行结束" << endl;
+92              return 0;
+93      }
+(gdb) i threads
+  Id   Target Id                                           Frame 
+* 1    Thread 0x7ffff7aa9740 (LWP 92919) "my_deadlock_exe" 0x0000000000401493 in main () at deadlock.cpp:89
+  2    Thread 0x7ffff7aa8700 (LWP 92920) "my_deadlock_exe" __lll_lock_wait () at ../sysdeps/unix/sysv/linux/x86_64/lowlevellock.S:103
+  3    Thread 0x7ffff72a7700 (LWP 92921) "my_deadlock_exe" __lll_lock_wait () at ../sysdeps/unix/sysv/linux/x86_64/lowlevellock.S:103
+(gdb) t 2
+[Switching to thread 2 (Thread 0x7ffff7aa8700 (LWP 92920))]
+#0  __lll_lock_wait () at ../sysdeps/unix/sysv/linux/x86_64/lowlevellock.S:103
+103     ../sysdeps/unix/sysv/linux/x86_64/lowlevellock.S: 没有那个文件或目录.
+(gdb) bt
+#0  __lll_lock_wait () at ../sysdeps/unix/sysv/linux/x86_64/lowlevellock.S:103
+#1  0x00007ffff7f9a714 in __GI___pthread_mutex_lock (mutex=0x406240 <_mutex2>) at ../nptl/pthread_mutex_lock.c:80
+#2  0x00000000004015c2 in __gthread_mutex_lock (__mutex=0x406240 <_mutex2>) at /usr/include/x86_64-linux-gnu/c++/8/bits/gthr-default.h:748
+#3  0x0000000000401698 in std::mutex::lock (this=0x406240 <_mutex2>) at /usr/include/c++/8/bits/std_mutex.h:103
+#4  0x0000000000401724 in std::lock_guard<std::mutex>::lock_guard (this=0x7ffff7aa7de0, __m=...) at /usr/include/c++/8/bits/std_mutex.h:162
+#5  0x00000000004012e4 in do_work_1 () at deadlock.cpp:65
+#6  0x0000000000401b9b in std::__invoke_impl<int, int (*)()> (__f=@0x418e78: 0x401268 <do_work_1()>) at /usr/include/c++/8/bits/invoke.h:60
+#7  0x00000000004019b9 in std::__invoke<int (*)()> (__fn=@0x418e78: 0x401268 <do_work_1()>) at /usr/include/c++/8/bits/invoke.h:95
+#8  0x0000000000402042 in std::thread::_Invoker<std::tuple<int (*)()> >::_M_invoke<0ul> (this=0x418e78) at /usr/include/c++/8/thread:244
+#9  0x0000000000402018 in std::thread::_Invoker<std::tuple<int (*)()> >::operator() (this=0x418e78) at /usr/include/c++/8/thread:253
+#10 0x0000000000401ffc in std::thread::_State_impl<std::thread::_Invoker<std::tuple<int (*)()> > >::_M_run (this=0x418e70) at /usr/include/c++/8/thread:196
+#11 0x00007ffff7ec7b2f in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#12 0x00007ffff7f97fa3 in start_thread (arg=<optimized out>) at pthread_create.c:486
+#13 0x00007ffff7ba760f in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:95
+(gdb) f 5
+#5  0x00000000004012e4 in do_work_1 () at deadlock.cpp:65
+65              lock_guard<mutex> locker2(_mutex2);
+(gdb) l
+60              std::cout << "线程函数do_work_1开始" << std::endl;
+61              lock_guard<mutex> locker1(_mutex1);
+62              //模拟做一些事情
+63              data1++;
+64              std::this_thread::sleep_for(std::chrono::seconds(1));
+65              lock_guard<mutex> locker2(_mutex2);
+66              data2++;
+67              std::cout << "线程函数do_work_1结束" << std::endl;
+68              return 0;
+69      }
+(gdb) n
+
+^C
+Thread 1 "my_deadlock_exe" received signal SIGINT, Interrupt.
+[Switching to Thread 0x7ffff7aa9740 (LWP 92919)]
+0x00007ffff7f99495 in __GI___pthread_timedjoin_ex (threadid=140737348536064, thread_return=0x0, abstime=0x0, block=<optimized out>) at pthread_join_common.c:89
+89      pthread_join_common.c: 没有那个文件或目录.
+(gdb) t 3
+[Switching to thread 3 (Thread 0x7ffff72a7700 (LWP 92921))]
+#0  __lll_lock_wait () at ../sysdeps/unix/sysv/linux/x86_64/lowlevellock.S:103
+103     ../sysdeps/unix/sysv/linux/x86_64/lowlevellock.S: 没有那个文件或目录.
+(gdb) bt
+#0  __lll_lock_wait () at ../sysdeps/unix/sysv/linux/x86_64/lowlevellock.S:103
+#1  0x00007ffff7f9a714 in __GI___pthread_mutex_lock (mutex=0x406200 <_mutex1>) at ../nptl/pthread_mutex_lock.c:80
+#2  0x00000000004015c2 in __gthread_mutex_lock (__mutex=0x406200 <_mutex1>) at /usr/include/x86_64-linux-gnu/c++/8/bits/gthr-default.h:748
+#3  0x0000000000401698 in std::mutex::lock (this=0x406200 <_mutex1>) at /usr/include/c++/8/bits/std_mutex.h:103
+#4  0x0000000000401724 in std::lock_guard<std::mutex>::lock_guard (this=0x7ffff72a6de0, __m=...) at /usr/include/c++/8/bits/std_mutex.h:162
+#5  0x00000000004013de in do_work_2 () at deadlock.cpp:78
+#6  0x0000000000401b9b in std::__invoke_impl<int, int (*)()> (__f=@0x418fc8: 0x401362 <do_work_2()>) at /usr/include/c++/8/bits/invoke.h:60
+#7  0x00000000004019b9 in std::__invoke<int (*)()> (__fn=@0x418fc8: 0x401362 <do_work_2()>) at /usr/include/c++/8/bits/invoke.h:95
+#8  0x0000000000402042 in std::thread::_Invoker<std::tuple<int (*)()> >::_M_invoke<0ul> (this=0x418fc8) at /usr/include/c++/8/thread:244
+#9  0x0000000000402018 in std::thread::_Invoker<std::tuple<int (*)()> >::operator() (this=0x418fc8) at /usr/include/c++/8/thread:253
+#10 0x0000000000401ffc in std::thread::_State_impl<std::thread::_Invoker<std::tuple<int (*)()> > >::_M_run (this=0x418fc0) at /usr/include/c++/8/thread:196
+#11 0x00007ffff7ec7b2f in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6
+#12 0x00007ffff7f97fa3 in start_thread (arg=<optimized out>) at pthread_create.c:486
+#13 0x00007ffff7ba760f in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:95
+(gdb) f 5
+#5  0x00000000004013de in do_work_2 () at deadlock.cpp:78
+78              lock_guard<mutex> locker1(_mutex1);
+(gdb) l
+73              std::cout << "线程函数do_work_2开始" << std::endl;
+74              lock_guard<mutex> locker2(_mutex2);
+75              //模拟做一些事情
+76              data2++;
+77              std::this_thread::sleep_for(std::chrono::seconds(1));
+78              lock_guard<mutex> locker1(_mutex1);
+79
+80              data1++;
+81              std::cout << "线程函数do_work_2结束" << std::endl;
+82              return 0;
+(gdb) 
 ```
 
