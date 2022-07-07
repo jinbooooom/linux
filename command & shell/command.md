@@ -72,7 +72,7 @@ Swap:       8389628           0     8389628
 
 ### du
 
-- du -h：递归打印当前目录下的文件夹及子文件大小
+- du -h：递归打印当前目录下的文件夹及子文件大小。-h 是指以人类可读的方式显示。
 
 - `du -h --max-depth=1`：也可以是 `du -sh *`。以当前目录为节点，只往目录树下查找一层，即当前目录下的文件夹（不包括子文件夹）的大小。
 
@@ -284,10 +284,8 @@ jinbo@fang:/media/jinbo/ltg/gitme/linux$ type foo
 foo 是“mkdir mydir; cd mydir; pwd”的别名
 jinbo@fang:/media/jinbo/ltg/gitme/linux$ foo
 /media/jinbo/ltg/gitme/linux/mydir
-jinbo@fang:/media/jinbo/ltg/gitme/linux/mydir$ 
+jinbo@fang:/media/jinbo/ltg/gitme/linux/mydir$ which foo # 在环境变量里找不到 foo 这个可执行文件，所以没有输出。
 ```
-
-
 
 ### ln 
 
