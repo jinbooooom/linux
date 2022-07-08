@@ -48,6 +48,8 @@ jinbo@fang:/media/jinbo/ltg/gitme/linux/command & shell$ date
 
 查看磁盘驱动器的可用空间
 
+`df -h`：以人类可读的方式显示
+
 ### history
 
 显示最近的命令
