@@ -85,6 +85,25 @@ Swap:       8389628           0     8389628
 
 更方便更详细的命令是`ncdu`
 
+```shell
+# du 命令的参数
+-a或-all：显示所有文件的大小，不仅仅是目录。
+-b或-bytes：显示目录或文件大小时，以byte为单位。
+-c或–total：除了显示所有目录或文件的大小外，同时也显示所有目录或文件的总和。
+-k或–kilobytes：以KB(1024bytes)为单位输出。
+-m或–megabytes：以MB为单位输出。
+-s或–summarize：仅显示总计，只列出最后加总的值。
+-h或–human-readable：以K，M，G为单位，提高信息的可读性。
+-x或–one-file-xystem：以一开始处理时的文件系统为准，若遇上其它不同的文件系统目录则略过。
+-L<符号链接>或–dereference<符号链接>：显示选项中所指定符号链接的源文件大小。
+-S或–separate-dirs：显示个别目录的大小时，并不含其子目录的大小。
+-X<文件>或–exclude-from=<文件>：在<文件>指定目录或文件。
+–exclude=<目录或文件>：略过指定的目录或文件。
+-D或–dereference-args ：显示指定符号链接的源文件大小。
+-H或–si：与-h参数相同，但是K，M，G是以1000为换算单位。
+-l或–count-links：重复计算硬件链接的文件。
+```
+
 ### cd 
 
 切换目录
@@ -332,7 +351,9 @@ ls: 无法访问'/no_exist_dir': 没有那个文件或目录
 bash版本提供了效率更高的第二种方法来实现上述的操作：
 
 ```shell
-ls -l /no_exist_dir &> err.lo
+ls -l /no_exist_dir &> err.log
+# 或者
+ls -l /no_exist_dir 2> err.log
 ```
 
 只用了一个标记符“&>”就把标准输出和标准错误都重定向到`err.log`中。
@@ -438,7 +459,7 @@ u+x，go = rx：为文件所有者添加可执行权限，同时设置所属群�
 
 ### touch
 
-一般用来设定或是更新文件的修改时间，如果文件不存在就创建一个空文件
+一般用来设定或是更新文件的修改时间，如果文件不存在就创建一个空文件，文件存在就更新时间。
 
 ### stat
 
@@ -501,6 +522,12 @@ jinbo@fang:deadlock$ nm my_deadlock_exe
 
 ## 文本处理
 
+- grep 更适合单纯的查找或匹配文本
+
+- sed 更适合编辑匹配到的文本
+
+- awk 更适合格式化文本，对文本进行较复杂格式处理
+
 ### less
 
 - less filename 可以用来查看文件内容，按 Q 可以退出 less 程序
@@ -523,9 +550,90 @@ tail -n 2 xx.txt  # 显示文件后 2 行
 
 逐行比较文件
 
+### uniq
+
+删除重复内容
+
+```shell
+$ echo "123
+> 123
+> ab
+> ab" | uniq
+# 打印
+123
+ab # 重复的 ab 被删除了
+```
+
+### tr
+
+字符替换
+
+```shell
+$ echo "123abc" | tr '[a-z]' '[A-Z]'
+123ABC
+$ echo "123abc" | tr '[1-2]' '[X-Y]'
+XY3abc
+```
+
+### [cut](https://www.jianshu.com/p/292e948d10c2)
+
+cut 以每一行为一个处理对象。它从文件的每一行剪切字节、字符和字段并将这些字节、字符和字段写至标准输出。
+
+如果不指定 File 参数，cut 命令将读取标准输入。必须指定 -b、-c 或 -f 标志之一。
+
+主要参数：
+
+-b ：输入每行第n个字符（半角，注意如果有中文将乱码）。
+
+-c ：输入每行第n个字符。
+
+-d ：自定义分隔符，默认为制表符。
+
+-f ：与-d一起使用，指定显示哪个区域。
+
+-n ：取消分割多字节字符（例如中文）。仅和-b标志一起使用。
+
+```shell
+jinbo@fang:t$ ls -l
+总用量 8
+-rwxrwxrwx 1 jinbo jinbo  853 7月   8 11:57 00_赋值.sh
+-rwxrwxrwx 1 jinbo jinbo 1616 7月   8 11:57 01_变量.sh
+jinbo@fang:t$ ls -l | cut -c 1-3,7,8,9 # 取每行的1~3和第7，8，9个字符
+总量
+-rwxrw
+-rwxrw
+jinbo@fang:t$ ls -l | cut -c 1-3,8,9 #由于utf-8一个中文占3个字节，所以去掉了第7个字符就乱码
+总��
+-rwrw
+-rwrw
+```
+
+域（fields -f）
+
+-b和-c只能在固定格式的文档中提取信息，而对于非固定格式的信息则束手无策。这时可以用-f和-d分割域。
+
+-d：设置分割符
+
+-f：提取指定的域
+
+```shell
+jinbo@fang:t$ cat /etc/passwd | head -n 5
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+sys:x:3:3:sys:/dev:/usr/sbin/nologin
+sync:x:4:65534:sync:/bin:/bin/sync
+jinbo@fang:t$ cat /etc/passwd | head -n 5 | cut -d ":" -f 1,3 # 以 ：作为分隔符，取第一个和第三个
+root:0
+daemon:1
+bin:2
+sys:3
+sync:4
+```
+
 ### sed
 
-用于文本过滤和转换的流编辑器
+*stream editor*的简称。用于文本过滤和转换的流编辑器
 
 其中基本编辑指令
 
@@ -542,7 +650,7 @@ abc
 abc
 abc
 # 将1.txt 里的第二行中的 b 替换为 Z, s代表的是替换，s前的数字代表的要处理第几行，比如这里就是只处理第 2 行。如果不加数字就是处理每一行。
-$ sed '2s/b/Z/' 1.txt 
+$ sed '2s/b/Z/' 1.txt # 注意 Z 后的斜杠不要忘了，不然报错：sed：-e 表达式 #1，字符 11：未终止的“s”命令
 abc
 aZc
 abc
@@ -565,9 +673,87 @@ aZc
 aZc
 123
 aZc
+# a 指令，第二行后面增加新行 test
+$ sed '2atest' 1.txt 
+abc
+abc
+test
+abc
+# i 指令，第二行前面增加新行 test
+$ sed '2itest' 1.txt 
+abc
+test
+abc
+abc
+# c 指令，用 test 取代第二行
+$ sed '2ctest' 1.txt 
+abc
+test
+abc
 ```
 
+### awk
+
+注意格式化输出时用printf而不是print，不然有问题。
+
+```shell
+jinbo@fang:test_text$ cat awk.txt 
+This's a test
+1 C/C++ Python Java C# Go
+2 Do    you    like    awk
+3 There are orange,apple,mongo
+4 qq, ww, ee, rr, tt, yy
+5 qq,ww,ee,rr,tt,yy
+jinbo@fang:test_text$ awk '{print $1, $4}' awk.txt  # 默认以空格作为分隔符，取第1列和第4列
+This's 
+1 Java
+2 like
+3 orange,apple,mongo
+4 ee,
+5 
+# 用","作为分隔符，取第1列和第3列，'{print $1 $3}' 中的$1与$3没有用","隔开，导致输出的内容拼接在一起。
+jinbo@fang:test_text$ awk -F "," '{print $1 $3}' awk.txt 
+This's a test
+1 C/C++ Python Java C# Go
+2 Do    you    like    awk
+3 There are orangemongo
+4 qq ee
+5 qqee
+# 用","作为分隔符，取第1列和第3列，'{print $1 $3}' 中的$1与$3用","隔开
+jinbo@fang:test_text$ awk -F "," '{print $1,$3}' awk.txt
+This's a test
+1 C/C++ Python Java C# Go 
+2 Do    you    like    awk 
+3 There are orange mongo
+4 qq  ee
+5 qq ee
+# 格式化输出。特别要注意这时候用的是printf而不是print，不然格式有问题。
+jinbo@fang:test_text$ awk -F " " '{printf "%-8s %-10s\n",$1,$4}' awk.txt
+This's             
+1        Java      
+2        like      
+3        orange,apple,mongo
+4        ee,       
+5   
+```
+
+
+
 ## 查找
+
+### 正则表达式
+
+pattern正则表达式主要参数：
+
+- \： 忽略正则表达式中特殊字符的原有含义。
+- ^：匹配正则表达式的开始行。
+- $: 匹配正则表达式的结束行。
+- \<：从匹配正则表达式的行开始。
+- \>：到匹配正则表达式的行结束。
+- [ ]：单个字符，如[A]即A符合要求 。
+- [ - ]：范围，如[A-Z]，即A、B、C一直到Z都符合要求 。
+- .   ：所有的单个字符。
+- \*   ：有字符，长度可以为0.
 
 ### grep
 
@@ -592,52 +778,67 @@ aZc
 | -n      | 显示匹配行及行号                       |
 | -h      | 查询多文件时不显示文件名               |
 
-
-#### 正则表达式
-
-pattern正则表达式主要参数：
-
-- \： 忽略正则表达式中特殊字符的原有含义。
-- ^：匹配正则表达式的开始行。
-- $: 匹配正则表达式的结束行。
-- \<：从匹配正则表达 式的行开始。
-- \>：到匹配正则表达式的行结束。
-- [ ]：单个字符，如[A]即A符合要求 。
-- [ - ]：范围，如[A-Z]，即A、B、C一直到Z都符合要求 。
-- .   ：所有的单个字符。
-- \*   ：有字符，长度可以为0.
-
 #### 实例
 
 - 忽略大小写搜索
 
-      grep -i "androiD"  logcat.txt   //从logcat.txt文件中，搜索包含android的文本行，不区分大小写
+  ```shell
+  grep -i "androiD"  logcat.txt   # 从logcat.txt文件中，搜索包含android的文本行，不区分大小写
+  ```
 
 - 遍历搜索，且不显示无匹配信息
 
-      grep -rs "android" .   //从当前目录下，遍历所有的文件，搜索包含android的文本行
+  ```shell
+  # 假设1.txt内容如下
+  $ cat 1.txt 
+  abc
+  test
+  abc
+  ```
 
-- 整字匹配搜索
-
-      grep -w "android" logcat.txt  //从logcat.txt文件中，搜索包含单词android的文本行
-      grep -w "android | ios" logcat.txt  //从logcat.txt文件中，搜索包含单词android或者ios的文本行
+  ```shell
+    $ grep -rs "a" .   # 从当前目录下，遍历所有的文件，搜索包含a的文本行
+  ./1.txt:abc
+  ./1.txt:abc
+  ```
 
 - 只列出文件名
 
-      grep -l "android" .
+  ```shell
+  $ grep -rl "a" .  # 从当前目录下，遍历所有的文件，搜索包含a的文本行，但只列出文件名
+  ./1.txt
+  ```
+
+- 整字匹配搜索
+
+  ```shell
+  grep -w "android" logcat.txt  # 从logcat.txt文件中，搜索包含单词android的文本行
+  grep -w "android | ios" logcat.txt  # 从logcat.txt文件中，搜索包含单词android或者ios的文本行
+  ```
 
 - 统计字符出现次数
 
-      grep -c "android" .
+  ```shell
+  $ grep -c "a" 1.txt
+  2
+  ```
 
 - 显示字符出现所在行
 
-      grep -n "android“
-      .
+  ```shell
+  $ grep -n "b" 1.txt 
+  1:abc
+  3:abc
+  ```
 
 - 显示多条件匹配
 
-      grep -E "android|linux“ .
+  ```shell
+  $ grep -E "a|t" 1.txt # 在文件 1.txt 搜索包含 a 和 t 字符串的行
+  abc
+  test
+  abc
+  ```
 
 ### find
 
@@ -674,7 +875,7 @@ find . -name demo
 
 
 ```shell
-find . -type f  |wc -l # 查看某目录文件个数
+find . -type f  | wc -l # 查看某目录文件个数
 ```
 
 #### 查找规则
@@ -689,9 +890,11 @@ find . -type f  |wc -l # 查看某目录文件个数
 (2)?  匹配任意的单个字符
 (3)[] 匹配括号内的任意一个字符
 
-    find /data -name dalvi*
-    find /data -name dalvik?cache
-    find /data -name dalvik-cach[abe]
+```shell
+find /data -name dalvi*
+find /data -name dalvik?cache
+find /data -name dalvik-cach[abe]
+```
 
 ##### 根据文件类型(type)
 
@@ -761,7 +964,12 @@ find -perm 777 # 查找权限为777的文件
 例如，查找当前路径下，以a开头，并排除掉以b结尾的文件或文件夹：
 
 ```shell
-find -name a* -not -name *b
+find -name "a*" -not -name "*b"  # a* 和 b* 最好有引号，不然可能会出错
+
+$ find -iname "*.sh" -not -name "0*.sh"
+./10_数组.sh
+./11_字符处理.sh
+./2.sh
 ```
 
 
@@ -835,7 +1043,12 @@ ps 只是显示在该命令被执行的时刻机器状态的一个快照
  8296 pts/2    R+     0:00 ps -x
 ```
 
-- ps aux 显示所有用户的进程信息
+- ps aux 显示所有用户的进程信息，一般后面会加grep搜索，如搜索火狐进程。
+
+  ```shell
+  ps -aux | grep -w firefox
+  jinbo     219412  5.2 13.1 8025636 526280 ?      Sl   7月07  77:19 /opt/apps/com.mozilla.firefox-zh/files/firefox
+  ```
 
 ### top 
 
@@ -891,7 +1104,7 @@ jinbo    10410  1.2  6.4 7177276 518056 tty2   Sl+  21:05   0:57 /home/jinbo/sof
  sudo apt-get update 
 ```
 
-这个命令，会访问源列表里的每个网址，并读取软件列表，然后保存在本地电脑。我们在软件包管理器里看到的软件列表，都是通过update命令更新的。
+这个命令，**会访问源列表里的每个网址，并读取软件列表，然后保存在本地电脑**。我们在软件包管理器里看到的软件列表，都是通过update命令更新的。
 
 update后，可能需要upgrade一下。
 
