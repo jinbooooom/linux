@@ -27,7 +27,30 @@ source filename 或 . filename
 ```shell
 jinbo@fang:/media/jinbo/ltg/gitme/linux/command & shell$ date
 2022年 01月 26日 星期三 22:29:55 CST
+jinbo@fang:command & shell$ date +%F
+2022-07-08
+jinbo@fang:command & shell$ date +"%F %T %w"
+2022-07-08 18:05:15 5
+jinbo@fang:command & shell$ date +"%Y/%m/%d"
+2022/07/08
+jinbo@fang:command & shell$ date +"%Y-%m-%d"
+2022-07-08
 ```
+
+可以用date --help 查看各参数的含义
+
+```shell
+%F    完整日期格式，等价于 %Y-%m-%d
+%T    时间，等于%H:%M:%S
+%w    一星期中的第几日(0-6)，0 代表周一
+%y    年份最后两位数位 (00-99)
+%Y    年份
+%m   month (01..12)
+%d    按月计的日期(例如：01)
+%D    按月计的日期；等于%m/%d/%y
+```
+
+
 
 ### cal  
 
