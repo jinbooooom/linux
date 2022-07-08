@@ -408,54 +408,104 @@ jinbo@fang:/media/jinbo/ltg/gitme/linux$ history | grep g++ | tail -n 5
  # 让 shell 立即执行第 2182 行历史命令
 ```
 
-### 更改文件权限
+### 打包
 
-八进制数字表示法
+#### tar
 
-- 文件类型
-- 权限属性
-- 权限属性实例
+tar包和gz包是两个不同的文件包，有三种不同后缀。.tar .gz .tar.gz。
 
-```
-drwxrwxr-x 3 jinbo jinbo  4096 11月 26 09:31 1a
----xrwxrwx 1 jinbo jinbo   482 11月 26 09:55 1a.txt
-drwxrwxr-x 4 jinbo jinbo  4096 11月 26 13:53 1b
-drwxrwxr-x 2 jinbo jinbo  4096 11月 26 14:17 1c
--rwxrwxrwx 1 jinbo jinbo   475 11月 26 09:56 1d.md
-drwxrwxr-x 2 jinbo jinbo  4096 11月 26 14:59 1e
--rwxrwxrwx 1 jinbo jinbo 28205 9月  16 10:56 1e.jpeg
--rwxrwxrwx 1 jinbo jinbo    23 11月 26 20:32 hello.py
-lrwxrwxrwx 1 jinbo jinbo     2 11月 26 15:00 link -> 1c
--rw-rw-r-- 1 jinbo jinbo   544 11月 26 16:13 ls.txt
--rw-rw-r-- 1 jinbo jinbo   960 11月 26 15:40 my_cat.txt
--rw-rw-r-- 1 jinbo jinbo     7 11月 26 20:30 sh.sh
--rw-rw-r-- 1 jinbo jinbo   800 11月 26 15:27 tree_output.txt
-```
+tar包：使用tar命令，打包文件或者文件夹，只打包，不压缩。
+
+gz包：使用gzip命令，只压缩文件，不打包，所以gz包操作不能对文件夹直接操作，如果要对文件夹下所有文件进行压缩，使用-r参数，gzip -r 文件夹路径。
+
+tar.gz：使用tar加-z参数，`tar -czvf filename.tar.gz dir/file`。打包压缩文件或者文件夹。
+
+**参数**
+
+- -z 表示压缩操作类型是 .tar.gz
+- -c 表示当前行为是打包
+- -x 表示当前行为是解压文件包
+- -v 参数要求显示命令执行过程
+- -f 指定打包后文件名
+- -C 解压到指定路径
 
 ```shell
-$ chmod 000 1a.txt
-$ cat 1a.txt
-cat: 1a.txt: 权限不够
-$ chmod 777 1a.txt
-cat 1a.txt  # 现在可以访问了
-$ chmod 000 1a  # 改变文件夹权限
-$ less 1a/1a.txt
-1a/1a.txt: 权限不够  # 虽然文件的权限是 -rwxrwxrwx，但文件夹的权限是 d---------，文件夹都不能进去，文件自然访问不了
+# 常用压缩打包命令：
+tar -czvf tarame.tar.gz dir/files
+# 常用解压缩命令：
+tar -xzvf tarname.tar.gz [-C 指定解压后文件存放地址]
 ```
 
-符号表示法
-u：所有者权限
+#### zip
 
-g：组权限
+从本地打包上传到服务器的压缩包，一般都是zip或者rar格式，而不是tar包格式。
 
-o：其他所有用户
-a：所有用户
+- -r 压缩文件夹，递归执行，压缩文件夹下所有文件
 
-u+x/u-x：为文件所有者增加/删除可执行权限
+- -q 不显示压缩过程，默认会在控制台打印压缩文件过程
 
-+x，也即 a+x
+- -d 压缩过程中剔除指定文件(从已经存在的压缩包中剔除)， -d参数后跟随的文件不打包到压缩包里。
 
-u+x，go = rx：为文件所有者添加可执行权限，同时设置所属群组和其它用户具有读权限和可执行权限。
+压缩文件夹且排除指定文件不压缩
+
+```shell
+jinbo@fang:tmp$ ls ./test
+005.tar.gz  1.txt  2.txt
+jinbo@fang:tmp$ zip -r testdir/1.zip test # 生成压缩包到指定路径 testdir/1.zip
+  adding: test/ (stored 0%)
+  adding: test/005.tar.gz (deflated 2%)
+  adding: test/1.txt (stored 0%)
+  adding: test/2.txt (stored 0%)
+jinbo@fang:tmp$ unzip testdir/1.zip -d ./testdir # 解压压缩包到指定路径，否则是当前路径
+Archive:  testdir/1.zip
+   creating: ./testdir/test/
+  inflating: ./testdir/test/005.tar.gz  
+ extracting: ./testdir/test/1.txt    
+ extracting: ./testdir/test/2.txt 
+ jinbo@fang:tmp$ ls testdir/test
+005.tar.gz  1.txt  2.txt
+ jinbo@fang:tmp$ zip -r testdir/1.zip test -d test/005.tar.gz # 从已生成的压缩包中剔除某些文件
+        zip warning: invalid option(s) used with -d; ignored.
+deleting: test/
+deleting: test/005.tar.gz
+jinbo@fang:tmp$ rm -rf testdir/test/
+jinbo@fang:tmp$ unzip testdir/1.zip -d ./testdir # 再次解压发现确实剔除了
+Archive:  testdir/1.zip
+ extracting: ./testdir/test/1.txt    
+ extracting: ./testdir/test/2.txt  
+ jinbo@fang:tmp$ ls testdir/test/
+1.txt  2.txt
+```
+
+如果压缩包不存在，用 -d不会生成压缩包
+
+```shell
+jinbo@fang:tmp$ zip -r testdir/2.zip test -d test/005.tar.gz 
+        zip warning: invalid option(s) used with -d; ignored.
+        zip warning: testdir/2.zip not found or empty
+
+zip error: Nothing to do! (testdir/2.zip)
+```
+
+unzip 参数
+
+- -n 解压后不覆盖已存在文件，如果压缩包文件中与解压路径有同名文件，跳过该文件
+
+- -v 控制台打印显示压缩包内容，但是不解压，-v参数只进行查看
+
+- -d 指定解压后文件存放路径
+
+unzip常直接使用，解压到当前路径，覆盖同名文件：
+
+```shell
+unzip file.zip
+```
+
+解压到指定路径，不覆盖已有同名文件：
+
+```shell
+unzip -n file.zip -d dirpath/
+```
 
 ## 文件
 
