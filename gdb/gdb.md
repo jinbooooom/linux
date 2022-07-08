@@ -1173,3 +1173,13 @@ int main()
 略
 
 ## 转储文件调试
+
+## 命令行总结
+
+![](assets/gdb/g1.jpg)
+
+![](assets/gdb/g2.jpg)
+
+![](assets/gdb/g3.jpg)
+
+![](assets/gdb/g4.jpg)

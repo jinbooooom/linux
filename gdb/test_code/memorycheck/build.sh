@@ -1,1 +1,1 @@
-g++ -fsanitize=address -g *.cpp -o my_memorycheck_exe -std=c++14 -lpthread
+g++ -fsanitize=address -g *.cpp -o my_memorycheck.out -std=c++14 -lpthread

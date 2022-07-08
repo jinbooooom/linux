@@ -1,4 +1,4 @@
-EXECUTABLE:= m_my_deadlock_exe
+EXECUTABLE:= m_my_deadlock.out
 
 LIBDIR:=
 LIBS:=pthread

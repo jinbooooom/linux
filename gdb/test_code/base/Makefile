@@ -1,4 +1,4 @@
-EXECUTABLE:= m_myexe
+EXECUTABLE:= m_myexe.out
 LIBDIR:=
 LIBS:=pthread
 INCLUDES:=.
