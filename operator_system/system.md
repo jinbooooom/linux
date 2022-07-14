@@ -88,6 +88,25 @@ int main()
 
 ![](assets/system/kPH7ZT.png)
 
+### 缓存与缓冲
+
+区别：两者操作的对象不一样。
+
+- buffer(缓冲)：是为了提高 内存和硬盘或其他I/0设备 之间的数据交换的速度而设计的。
+  当创建buffer对象时，会先创建一个缓冲区数组。然后当我们读一个文件时，先从硬盘中读到缓冲区，待缓冲区满后再进行传送，这样会大大减少读写次数，节省时间，提高效率。
+
+- cache(缓存)：是为了提高 cpu 和内存之间的数据交换速度而设计
+  高速缓冲存储器，读写速度很快，几乎与CPU一样。由于CPU的运算速度太快，内存的数据存取速度无法跟上CPU的速度，所以在cpu与内存间设置了cache 为 cpu 的数据快取区。当计算机执行程序时，数据与地址管理部件会预测可能要用到的数据和指令，并将这些数据和指令预先从内存中读出送到Cache。一旦需要时，先检查Cache，若有就从Cache中读取，若无再访问内存，现在的CPU还有一级cache，二级cache。简单来说，Cache 就是用来解决 CPU 与内存之间速度不匹配的问题，避免内存与辅助内存频繁存取数据，这样就提高了系统的执行效率。设置缓存的理论基础，是程序访问的局部性原理。缓存的功能均由硬件实现，对程序员是透明的。
+
+总之，buffer偏重于写，而cache偏重于读。
+
+相同点：两者都加快了系统的反应速度。
+
+参考：
+
+- [缓冲和缓存原文链接](https://blog.csdn.net/dangkun321/article/details/107161248)
+- [什么是缓冲区（buffer），什么是缓存（cache）](https://fuhanghang.blog.csdn.net/article/details/109756207?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-1-109756207-blog-113246221.pc_relevant_multi_platform_whitelistv2&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-1-109756207-blog-113246221.pc_relevant_multi_platform_whitelistv2&utm_relevant_index=1)
+
 ## 堆与栈的区别
 
 主要有6点区别：
