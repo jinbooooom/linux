@@ -53,6 +53,7 @@ func6() {
   do
     echo current \$1 is $1
     shift
+    shift
   done
 }
 func6 q w e r t
