@@ -50,8 +50,6 @@ jinbo@fang:command & shell$ date +"%Y-%m-%d"
 %D    按月计的日期；等于%m/%d/%y
 ```
 
-
-
 ### cal  
 
 打印日历
