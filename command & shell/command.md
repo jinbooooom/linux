@@ -146,6 +146,18 @@ top 动态显示当前耗费资源最多的进程信息
   - `ls -laF` 用长格式列出所有的文件夹并且在每一个列出的名字后面加上类型指示符（类如是目录名字后面会加一个斜杠），也可写成 `ls -l -a -F`
 - `ls -R`  连同子目录的内容一起列出（递归列出），等于该目录下的所有文件都会显示出来。也可以直接用 tree 命令(需要先安装 sudo apt install tree)。注意`ls -r` 与 ls 相同，但排序相反（--reverse）
 
+### tree
+
+```shell
+sudo apt install tree
+
+# 显示深度为3级：
+tree -L 3
+
+#只显示目录，不显示文件
+tree -d -L 3
+```
+
 ### mkdir 
 
 创建目录
@@ -832,8 +844,10 @@ pattern正则表达式主要参数：
 
 搜索文本的命令
 
-    命令格式: grep [options]... pattern [file]...
-    命令格式: grep 查找规则... 正则表达式 查看文件
+```shell
+命令格式: grep [options]... pattern [file]...
+命令格式: grep 查找规则... 正则表达式 查看文件
+```
 
 
 #### 查找规则
@@ -1116,7 +1130,7 @@ ps 只是显示在该命令被执行的时刻机器状态的一个快照
  8296 pts/2    R+     0:00 ps -x
 ```
 
-- ps aux 显示所有用户的进程信息，一般后面会加grep搜索，如搜索火狐进程。
+- ps -aux 显示所有用户的进程信息，一般后面会加grep搜索，如搜索火狐进程。
 
   ```shell
   ps -aux | grep -w firefox
