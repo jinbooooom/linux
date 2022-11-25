@@ -1234,7 +1234,7 @@ update后，可能需要upgrade一下。
 $ scp -r username@172.xx.xx.xx:~/worker/soft(远程目录) ./soft(当前目录下的 soft 目录)
 ```
 
-## 账号sudo 
+## 账号
 
 ### 创建新账号并给予sudo权限
 
