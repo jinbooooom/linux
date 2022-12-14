@@ -1,4 +1,43 @@
-## 开发工具
+## 开发
+
+### git ssh
+
+git clone支持https和git（即ssh）两种方式下载源码：
+
+- 使用https下载后，每次git pull需要再次输入账号密码，很麻烦。
+
+- 使用ssh的方式，配置一次 ssh，后面每次git push，git pull都不用再次输入账号密码。
+
+  ![image-20221214105956527](assets/developer/image-20221214105956527.png)
+
+下面就介绍一下如何配置git的ssh key，以便我们可以用git方式下载源码。
+
+```shell
+# 检查一下用户名和邮箱是否配置
+git config --global  --list 
+# 如果未配置，使用下面命令配置
+git config --global  user.name "你的用户名"
+git config --global user.email "你的邮箱"
+```
+
+生成密匙
+
+```shell
+ssh-keygen -t rsa -C "你的邮箱"
+```
+
+执行命令后需要进行3次或4次确认：
+
+1. 确认秘钥的保存路径（如果不需要改路径则直接回车）；
+2. 如果上一步置顶的保存路径下已经有秘钥文件，则需要确认是否覆盖（如果之前的秘钥不再需要则直接回车覆盖，如需要则手动拷贝到其他目录后再覆盖）；
+3. 创建密码（如果不需要密码则直接回车）；
+4. 确认密码；
+
+之后生成文件`.ssh/id_rsa.pub`，拷贝里面的`所有内容`复制到
+
+![image-20221214105752069](assets/developer/image-20221214105752069.png)
+
+再次尝试用git方式下载，可以看到已经可以正常下载了。
 
 ### Pycharm
 
