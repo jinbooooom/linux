@@ -1,0 +1,17 @@
+namespace TestFlat;
+
+struct KV {
+    key: ulong;
+    value: double;
+}
+
+table TestObj {
+    id:ulong;
+    picture_path:string;
+    picture_size:uint;
+    flag:ubyte = 0;
+    list:[ulong];
+    kv:KV;
+}
+
+root_type TestObj;
