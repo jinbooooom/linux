@@ -38,14 +38,14 @@ FlatBuffers为Google发布的一个跨平台，提供多种语言接口，注重
 
 ## Flatbuffers获取和安装
 
-Flatbuffers官方源码地址：
+[Flatbuffers官方源码地址](https://github.com/google/flatbuffers.git)：https://github.com/google/flatbuffers.git，该工程使用的版本是release1.11.0
 
-https://github.com/google/flatbuffers.git，该工程使用的版本是release1.11.0
+[官方文档地址](http://google.github.io/flatbuffers/flatbuffers_guide_use_cpp.html)：http://google.github.io/flatbuffers/flatbuffers_guide_use_cpp.html
 
 ```shell
 cd flatbuffers-1.11.0/
 # 执行cmake，选择安装目录，如果不指定会安装至系统目录
-cmake -DCMAKE_INSTALL_PREFIX:PATH=/home/path/to/flatbuffers -G “Unix Makefiles”
+cmake -DCMAKE_INSTALL_PREFIX:PATH=/home/path/to/flatbuffers -G "Unix Makefiles"
 # 执行源码编译
 make
 # 编译完成之后安装
@@ -109,31 +109,30 @@ table 的内存开销很小（因为 vtables 很小并且共享）访问成本�
 
 Schema文件以.fbs结尾，示例如下：
 
-namespace TestApp;
+```C
+namespace TestFlat;
 
 struct KV {
+    key: ulong;
+    value: double;
+}
 
- key: ulong;
-
- value: double;
-
+table Picture {
+    path:string;
+    size:uint;
+    data:[uint8];
 }
 
 table TestObj {
-
- id:ulong;
-
- name:string;
-
- flag:ubyte = 0;
-
- list:[ulong];
-
- kv:KV;
-
+    id:ulong;
+    picture:Picture;
+    flag:ubyte = 0;
+    list:[ulong];
+    kv:KV;
 }
 
 root_type TestObj;
+```
 
 ## 编译schema文件
 
