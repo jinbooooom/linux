@@ -10,6 +10,8 @@ namespace TestFlat {
 
 struct KV;
 
+struct Picture;
+
 struct TestObj;
 
 FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(8) KV FLATBUFFERS_FINAL_CLASS {
@@ -34,23 +36,95 @@ FLATBUFFERS_MANUALLY_ALIGNED_STRUCT(8) KV FLATBUFFERS_FINAL_CLASS {
 };
 FLATBUFFERS_STRUCT_END(KV, 16);
 
+struct Picture FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_PATH = 4,
+    VT_SIZE = 6,
+    VT_DATA = 8
+  };
+  const flatbuffers::String *path() const {
+    return GetPointer<const flatbuffers::String *>(VT_PATH);
+  }
+  uint32_t size() const {
+    return GetField<uint32_t>(VT_SIZE, 0);
+  }
+  const flatbuffers::Vector<uint8_t> *data() const {
+    return GetPointer<const flatbuffers::Vector<uint8_t> *>(VT_DATA);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_PATH) &&
+           verifier.VerifyString(path()) &&
+           VerifyField<uint32_t>(verifier, VT_SIZE) &&
+           VerifyOffset(verifier, VT_DATA) &&
+           verifier.VerifyVector(data()) &&
+           verifier.EndTable();
+  }
+};
+
+struct PictureBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_path(flatbuffers::Offset<flatbuffers::String> path) {
+    fbb_.AddOffset(Picture::VT_PATH, path);
+  }
+  void add_size(uint32_t size) {
+    fbb_.AddElement<uint32_t>(Picture::VT_SIZE, size, 0);
+  }
+  void add_data(flatbuffers::Offset<flatbuffers::Vector<uint8_t>> data) {
+    fbb_.AddOffset(Picture::VT_DATA, data);
+  }
+  explicit PictureBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  PictureBuilder &operator=(const PictureBuilder &);
+  flatbuffers::Offset<Picture> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<Picture>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<Picture> CreatePicture(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<flatbuffers::String> path = 0,
+    uint32_t size = 0,
+    flatbuffers::Offset<flatbuffers::Vector<uint8_t>> data = 0) {
+  PictureBuilder builder_(_fbb);
+  builder_.add_data(data);
+  builder_.add_size(size);
+  builder_.add_path(path);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<Picture> CreatePictureDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const char *path = nullptr,
+    uint32_t size = 0,
+    const std::vector<uint8_t> *data = nullptr) {
+  auto path__ = path ? _fbb.CreateString(path) : 0;
+  auto data__ = data ? _fbb.CreateVector<uint8_t>(*data) : 0;
+  return TestFlat::CreatePicture(
+      _fbb,
+      path__,
+      size,
+      data__);
+}
+
 struct TestObj FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
-    VT_PICTURE_PATH = 6,
-    VT_PICTURE_SIZE = 8,
-    VT_FLAG = 10,
-    VT_LIST = 12,
-    VT_KV = 14
+    VT_PICTURE = 6,
+    VT_FLAG = 8,
+    VT_LIST = 10,
+    VT_KV = 12
   };
   uint64_t id() const {
     return GetField<uint64_t>(VT_ID, 0);
   }
-  const flatbuffers::String *picture_path() const {
-    return GetPointer<const flatbuffers::String *>(VT_PICTURE_PATH);
-  }
-  uint32_t picture_size() const {
-    return GetField<uint32_t>(VT_PICTURE_SIZE, 0);
+  const Picture *picture() const {
+    return GetPointer<const Picture *>(VT_PICTURE);
   }
   uint8_t flag() const {
     return GetField<uint8_t>(VT_FLAG, 0);
@@ -64,9 +138,8 @@ struct TestObj FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint64_t>(verifier, VT_ID) &&
-           VerifyOffset(verifier, VT_PICTURE_PATH) &&
-           verifier.VerifyString(picture_path()) &&
-           VerifyField<uint32_t>(verifier, VT_PICTURE_SIZE) &&
+           VerifyOffset(verifier, VT_PICTURE) &&
+           verifier.VerifyTable(picture()) &&
            VerifyField<uint8_t>(verifier, VT_FLAG) &&
            VerifyOffset(verifier, VT_LIST) &&
            verifier.VerifyVector(list()) &&
@@ -81,11 +154,8 @@ struct TestObjBuilder {
   void add_id(uint64_t id) {
     fbb_.AddElement<uint64_t>(TestObj::VT_ID, id, 0);
   }
-  void add_picture_path(flatbuffers::Offset<flatbuffers::String> picture_path) {
-    fbb_.AddOffset(TestObj::VT_PICTURE_PATH, picture_path);
-  }
-  void add_picture_size(uint32_t picture_size) {
-    fbb_.AddElement<uint32_t>(TestObj::VT_PICTURE_SIZE, picture_size, 0);
+  void add_picture(flatbuffers::Offset<Picture> picture) {
+    fbb_.AddOffset(TestObj::VT_PICTURE, picture);
   }
   void add_flag(uint8_t flag) {
     fbb_.AddElement<uint8_t>(TestObj::VT_FLAG, flag, 0);
@@ -111,8 +181,7 @@ struct TestObjBuilder {
 inline flatbuffers::Offset<TestObj> CreateTestObj(
     flatbuffers::FlatBufferBuilder &_fbb,
     uint64_t id = 0,
-    flatbuffers::Offset<flatbuffers::String> picture_path = 0,
-    uint32_t picture_size = 0,
+    flatbuffers::Offset<Picture> picture = 0,
     uint8_t flag = 0,
     flatbuffers::Offset<flatbuffers::Vector<uint64_t>> list = 0,
     const KV *kv = 0) {
@@ -120,8 +189,7 @@ inline flatbuffers::Offset<TestObj> CreateTestObj(
   builder_.add_id(id);
   builder_.add_kv(kv);
   builder_.add_list(list);
-  builder_.add_picture_size(picture_size);
-  builder_.add_picture_path(picture_path);
+  builder_.add_picture(picture);
   builder_.add_flag(flag);
   return builder_.Finish();
 }
@@ -129,18 +197,15 @@ inline flatbuffers::Offset<TestObj> CreateTestObj(
 inline flatbuffers::Offset<TestObj> CreateTestObjDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
     uint64_t id = 0,
-    const char *picture_path = nullptr,
-    uint32_t picture_size = 0,
+    flatbuffers::Offset<Picture> picture = 0,
     uint8_t flag = 0,
     const std::vector<uint64_t> *list = nullptr,
     const KV *kv = 0) {
-  auto picture_path__ = picture_path ? _fbb.CreateString(picture_path) : 0;
   auto list__ = list ? _fbb.CreateVector<uint64_t>(*list) : 0;
   return TestFlat::CreateTestObj(
       _fbb,
       id,
-      picture_path__,
-      picture_size,
+      picture,
       flag,
       list__,
       kv);

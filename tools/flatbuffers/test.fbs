@@ -5,10 +5,15 @@ struct KV {
     value: double;
 }
 
+table Picture {
+    path:string;
+    size:uint;
+    data:[uint8];
+}
+
 table TestObj {
     id:ulong;
-    picture_path:string;
-    picture_size:uint;
+    picture:Picture;
     flag:ubyte = 0;
     list:[ulong];
     kv:KV;
