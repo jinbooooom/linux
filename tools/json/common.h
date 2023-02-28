@@ -20,6 +20,12 @@ struct object_t
     double value;
 };
 
+struct object_array_t
+{
+    std::string name;
+    object_t object;
+};
+
 struct data_t
 {
     double pi;
@@ -29,6 +35,7 @@ struct data_t
     answer_t answer;
     std::vector<int> list;
     object_t object;
+    std::vector<object_array_t> objectArray;
 };
 
 #endif
