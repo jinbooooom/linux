@@ -1264,6 +1264,52 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib # 这里使用命令直�
 # vim ~/.bashrc，在最后一行加上 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib，修改完成后 source 一下，/usr/local/lib就被添加到环境变量中。
 ```
 
+## 远程命令
+
+### [ssh 免密登录配置](https://blog.csdn.net/zhaozhao121a/article/details/125560685)
+
+加入两台机子192.168.88.1和192.168.88.2，让它们相互之间免密登录
+
+```shell
+# 进入.ssh目录
+cd ~/.ssh
+
+# 生成一对密钥，使用rsa通用密钥算法，这时只需要三次回车（不要设置密码）
+ssh-keygen -t rsa
+
+# 发送公钥，将公钥发送给其它的服务器，如将 192.168.88.2上的公钥发送给 192.168.88.1
+ssh-copy-id 192.168.88.1
+
+# 发送结束后会生成 authorized_keys 文件，文件内容与 id_rsa.pub 内容相同
+#免密登录测试
+ssh 192.168.88.1 # 使用默认的账户
+
+# 如果一个 ip 下有多个账户，想设置默认登录账户，在 .ssh 文件夹下创建一个文件 config，内容如下
+account@hostName:~/.ssh$ cat config 
+Host 192.168.49.238
+    HostName 192.168.49.238
+    User jinbo238
+  
+Host 192.168.49.219
+    HostName 192.168.49.219
+    User lynxi
+```
+
+#### 参考
+
+- [集群机器搭建多节点MPI运行环境](https://blog.csdn.net/liu_feng_zi_/article/details/108403321)
+
+### ssh 免密远程执行命令
+
+```shell
+sshpass -p 登录远程机器的密码 ssh -A -g 远程机器账户名@远程机器ip 在远程机器上执行的命令
+# 一般地。我们把在远程机器上执行的诸多命令都写在一个脚本里，这样只需要执行这一个脚本就可以了，如
+sshpass -p remote_passwd ssh -A -g jinbo@192.168.xx.xx sh /home/jinbo/execute_sh.sh
+# 其中，远程机器 jinbo@192.168.xx.xx:/home/jinbo/execute_sh.sh 下的内容可以是
+echo remote_passwd | sudo -S cp /home/jinbo/xx.so /usr/lib/
+# 由于cp xx.so 到 /usr/lib 下需要输入密码，为了避免远程执行这个脚本还需要输入 jinbo@192.168.xx.xx 的账号密码，所以用 echo remote_passwd | sudo -S 将上一个命令（即 echo）的 stdout 接到下一个命令（cp）的 stdin
+```
+
 ## 平时使用到的命令积累
 
 ### 用文件作为swap分区
