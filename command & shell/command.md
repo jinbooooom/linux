@@ -1250,6 +1250,20 @@ sudo adduser newaccount # 创建新用户 newaccount，按提示一路确认即�
 sudo adduser newaccount sudo # 给用户 newaccount添加sudo权限
 ```
 
+## 环境变量
+
+### LD_LIBRARY_PATH
+
+`LD_LIBRARY_PATH`表示可以在哪些目录中可以找到共享库。
+
+```shell
+# 第一种方式
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib # 这里使用命令直接修改LD_LIBRARY_PATH的值，当前终端有效，窗口关闭后　将失效。
+
+# 第二种方式
+# vim ~/.bashrc，在最后一行加上 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib，修改完成后 source 一下，/usr/local/lib就被添加到环境变量中。
+```
+
 ## 平时使用到的命令积累
 
 ### 用文件作为swap分区
