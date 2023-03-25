@@ -81,6 +81,30 @@ git remote set-url origin https://your_token@github.com/your_account/your_repo_n
 git remote set-url origin https://your_token@github.com/jinbooooom/git.git
 ```
 
+## github 配置ssh key
+
+```shell
+# 如果文件夹`.ssh`下没有ssh key，可以先用如下命令生成 ssh key
+ssh-keygen -t rsa -C "jinboom@foxmail.com"  # 接下来一路按回车就可以了
+
+# 获取 ssh key
+cd ~/.ssh
+cat id_rsa.pub
+# Ggithub 添加 ssh key
+```
+
+![image-20230325224914968](assets/README/image-20230325224914968.png)
+
+![image-20230325225106631](assets/README/image-20230325225106631.png)
+
+最后测试是否成功配置 ssh key
+
+```shell
+jinbo@fang:~/.ssh$ ssh -T git@github.com
+# 出现类似的结果说明成功
+Hi jinbooooom! You've successfully authenticated, but GitHub does not provide shell access.
+```
+
 ## 提交规范
 
 ### 配置 gitcommit_template
@@ -91,7 +115,7 @@ git remote set-url origin https://your_token@github.com/jinbooooom/git.git
 # 设置全局提交模板
 git config --global commit.template gitcommit_template
 # 设置文本编辑器
-git config -global core.editor vim
+git config --global core.editor vim
 ```
 
 每次提交时输入`git commit`会自动弹出模板，然后在模板中编辑即可。#注释部分不会展现在提交的 `commit` 中。
