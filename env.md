@@ -64,6 +64,13 @@ ssh-keygen -t rsa -C "你的邮箱"
 }
 ```
 
+### Linux 配置默认编辑器为 vim
+
+```shell
+# ~/.bashrc 添加
+export EDITOR=/usr/bin/vim
+```
+
 ### Pycharm
 
 官网下载安装包后，按下列方式安装并启动
