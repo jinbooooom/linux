@@ -35,15 +35,15 @@ ssh-keygen -t rsa -C "你的邮箱"
 
 之后生成文件`.ssh/id_rsa.pub`，拷贝里面的`所有内容`复制到
 
-![image-20230325224914968](assets/developer/image-20230325224914968.png)
+![image-20230325224914968](assets/env/image-20230325224914968.png)
 
-![image-20230325225106631](assets/developer/image-20230325225106631.png)
+![image-20230325225106631](assets/env/image-20230325225106631.png)
 
 再次尝试用git方式下载，可以看到已经可以正常下载了。
 
-### Windows + WSL2 + vscode 解决头文件不能跳转的问题
+### [Windows + WSL2 + vscode 解决头文件不能跳转的问题](https://code.visualstudio.com/docs/cpp/config-linux#_reusing-your-c-configuration)
 
-![image-20230327215522430](assets/developer/image-20230327215522430.png)
+![image-20230327215522430](assets/env/image-20230327215522430.png)
 
 将 `.vscode/c_cpp_properties.json`改成如下所示：
 
