@@ -8,7 +8,7 @@ git clone支持https和git（即ssh）两种方式下载源码：
 
 - 使用ssh的方式，配置一次 ssh，后面每次git push，git pull都不用再次输入账号密码。
 
-![image-20230327215159610](assets/developer/image-20230327215159610.png)
+![image-20230327215159610](assets/env/image-20230327215159610.png)
 
 下面就介绍一下如何配置git的ssh key，以便我们可以用git方式下载源码。
 
