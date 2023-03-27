@@ -1,6 +1,6 @@
 ## 开发
 
-### git ssh
+### github 配置ssh key
 
 git clone支持https和git（即ssh）两种方式下载源码：
 
@@ -8,7 +8,7 @@ git clone支持https和git（即ssh）两种方式下载源码：
 
 - 使用ssh的方式，配置一次 ssh，后面每次git push，git pull都不用再次输入账号密码。
 
-  ![image-20221214105956527](assets/developer/image-20221214105956527.png)
+![image-20230327215159610](assets/developer/image-20230327215159610.png)
 
 下面就介绍一下如何配置git的ssh key，以便我们可以用git方式下载源码。
 
@@ -35,9 +35,34 @@ ssh-keygen -t rsa -C "你的邮箱"
 
 之后生成文件`.ssh/id_rsa.pub`，拷贝里面的`所有内容`复制到
 
-![image-20221214105752069](assets/developer/image-20221214105752069.png)
+![image-20230325224914968](assets/developer/image-20230325224914968.png)
+
+![image-20230325225106631](assets/developer/image-20230325225106631.png)
 
 再次尝试用git方式下载，可以看到已经可以正常下载了。
+
+### Windows + WSL2 + vscode 解决头文件不能跳转的问题
+
+![image-20230327215522430](assets/developer/image-20230327215522430.png)
+
+将 `.vscode/c_cpp_properties.json`改成如下所示：
+
+```shell
+{
+  "configurations": [
+    {
+      "name": "Linux",
+      "includePath": ["${workspaceFolder}/**"],
+      "defines": [],
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "c11",
+      "cppStandard": "c++17",
+      "intelliSenseMode": "clang-x64"
+    }
+  ],
+  "version": 4
+}
+```
 
 ### Pycharm
 
