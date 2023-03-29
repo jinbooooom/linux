@@ -1,21 +1,12 @@
 # LINUX 
 
-目前还在学习阶段，虽然网上有很多教程，可做自己整理的笔记比看别人的教程有用的多。
+本仓库用于记录：
 
-计划包含的内容：
+- `linux` 操作系统的基本知识、`linux` 下的调试手段如`GDB`调试、`linux` 命令行与 `shell` 编程、`cmake` 使用等等
+- 网络与通信相关的笔记，如 tcp/ip 协议的笔记 、`InfiniBand`协议、`RDMA` 以及 `mpi` 的学习笔记
 
- - [linux 命令行](shell/command.md)
-  - [git](git/git.md)
-  - [Makefile](tools/Makefile.pdf)
-  - [VIM](tools/VIM.md)
-  - [gdb](gdb/gdb.md)
-- [linux 编程](programming/README.md)
-  - 多进程
-  - [多线程](programming/multithreading)
-  - 网络编程
-- [project](project)
-  - [简单并发服务器](project/tcpServerClient)
-- [操作系统](system/system.md)
+- ``linux C/C++``环境下开发时，常用的一些三方库的使用总结
+- 自己写的一些 common 库，文件操作、字符串操作、线程安全的 log 等
 
 --------------------------------------------------
 ## 操作系统总结
