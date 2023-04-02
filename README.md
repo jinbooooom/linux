@@ -1,12 +1,30 @@
 # LINUX 
 
-本仓库用于记录：
+### 本仓库用于记录：
 
 - `linux` 操作系统的基本知识、`linux` 下的调试手段如`GDB`调试、`linux` 命令行与 `shell` 编程、`cmake` 使用等等
 - 网络与通信相关的笔记，如 tcp/ip 协议的笔记 、`InfiniBand`协议、`RDMA` 以及 `mpi` 的学习笔记
 
 - ``linux C/C++``环境下开发时，常用的一些三方库的使用总结
 - 自己写的一些 common 库，文件操作、字符串操作、线程安全的 log 等
+
+### 文件夹说明
+
+```shell
+├── 3rdtools  # 常用的一些三方库的使用总结
+├── awesome.md  # 好用的学习网站、工具等
+├── cmake  # cmake 学习
+├── communication  # 网络通信相关，包含IB RDMA、TCP/IP协议，和 mpi 通信库的使用
+├── env.md # 记录开发中一些环境的配置
+├── gdb  # 总结一些 gdb 调试技巧
+├── git  # 总结的一些 git 命令
+├── programming  # 系统编程的一些实例
+├── project  # 一些完整的 demo
+├── shell  # shell 命令行和 shell 编程
+├── source  # 一些学习资源，如 pdf 书籍和源码
+├── system # linux 操作系统的学习笔记
+└── utils  # 自己写的一些常用的工具，尽可能功能单一、简洁，方便使用
+```
 
 --------------------------------------------------
 ## 操作系统总结
