@@ -1,4 +1,6 @@
 # LINUX 
+[![Stargazers repo roster for @jinbooooom/linux](https://reporoster.com/stars/jinbooooom/linux)](https://github.com/jinbooooom/linux/stargazers)
+[![Forkers repo roster for @jinbooooom/linux](https://reporoster.com/forks/jinbooooom/linux)](https://github.com/jinbooooom/linux/network/members)
 
 ### 本仓库用于记录：
 
