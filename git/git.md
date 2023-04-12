@@ -423,6 +423,35 @@ git format-patch commit_id1 commit_id2
 git am xxx.patch
 ```
 
+## 恢复删除的远程分支
+
+实际工作中，可能既删除了本地代码，也删除了远程分支，但还是可以恢复的。
+
+查看`reflog`，找到最后一次`commit id`
+
+```shell
+git reflog --date=iso
+```
+
+reflog是reference log的意思，也就是引用log，记录HEAD在各个分支上的移动轨迹。选项  --date=iso，表示以标准时间格式展示。这里
+
+为什么不用git log？git log是用来记录当前分支的commit  log，分支都删除了，找不到commit log了。但可以找到目标分支最后一次的`commit id`
+
+![image-20230412212235304](assets/git/image-20230412212235304.png)
+
+比如这里，我们将远程分支`master`删除了，但是我们找到了从分支`t`切换到`master`的这个移动轨迹`0342d3f HEAD@{2023-04-04 23:19:04 +0800}: checkout: moving from t to master`，那么可以根据`0342d3f`切出分支:
+
+```shell
+git checkout -b recovery 0342d3f
+Switched to a new branch 'recovery'
+```
+
+切出分支后，本地有分支了，再push到远程仓库就可以了
+
+```shell
+ git push origin recovery 
+```
+
 ## 推荐阅读
 
 - http://gityuan.com/2015/06/27/git-notes/
