@@ -2593,7 +2593,7 @@ struct ibv_cq *ibv_create_cq(struct ibv_context *context, int cqe, void *cq_cont
 * context——来自ibv_open_device的struct ibv_context。
 * cqe——CQ将支持的条目的最小值。取值为：1~dev_cap.max_cqe
 * cq_context——（可选）用户定义的上下文，将在cq->cq_context中可用。当使用动词ibv_get_cq_event()等待完成事件通知时，将返回此上下文。
-* channel——（可选）来自ibv_create_comp_channel的完成事件通道，用于指示新工作完成添加到此CQ中。NULL表示不使用完成事件通道。。
+* channel——（可选）来自ibv_create_comp_channel的完成事件通道，用于指示新工作完成添加到此CQ中。NULL表示不使用完成事件通道。
 * comp_vector——（可选）MSI-X完成向量。将用于发送完成事件的信号。如果将这些中断的IRQ关联掩码配置为将每个MSI-X中断分散到不同的核上处理，则可以使用此参数将完成工作负载分散到多个核上。值可以是0~context->num_comp_vectors。
 
 **输出参数：** 无。
