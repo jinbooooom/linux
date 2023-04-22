@@ -38,7 +38,6 @@ static const int JINBO_LOG_LEVEL_ERROR   = 4;
 static int getLogLevel()
 {
     char *env_log_level = getenv("JINBO_LOG_LEVEL");
-    printf("env_log_level=%s", env_log_level);
     //int level            = JINBO_LOG_LEVEL_WARNING;
     int level            = JINBO_LOG_LEVEL_DEBUG;
     if (env_log_level)
@@ -97,7 +96,7 @@ static void getTimeStr(char *t)
                 sprintf(logTxt, format, ##__VA_ARGS__);                                                           \
                 sprintf(fullTxt, "\033[1m\033[40;37m %s I [%s:%s:%d] %s \033[0m\n", logTime, FILE_NAME(__FILE__), \
                         FUNC_FORMAT, __LINE__, logTxt);                                                           \
-                fprintf(stdout, "%s", fullTxt);                                                                   \
+                fprintf(stderr, "%s", fullTxt);                                                                   \
             }                                                                                                     \
         } while (0);
 
@@ -110,7 +109,7 @@ static void getTimeStr(char *t)
                 sprintf(logTxt, format, ##__VA_ARGS__);                                                           \
                 sprintf(fullTxt, "\033[1m\033[40;32m %s D [%s:%s:%d] %s \033[0m\n", logTime, FILE_NAME(__FILE__), \
                         FUNC_FORMAT, __LINE__, logTxt);                                                           \
-                fprintf(stdout, "%s", fullTxt);                                                                   \
+                fprintf(stderr, "%s", fullTxt);                                                                   \
             }                                                                                                     \
         } while (0);
 
@@ -123,7 +122,7 @@ static void getTimeStr(char *t)
                 sprintf(logTxt, format, ##__VA_ARGS__);                                                           \
                 sprintf(fullTxt, "\033[1m\033[40;33m %s W [%s:%s:%d] %s \033[0m\n", logTime, FILE_NAME(__FILE__), \
                         FUNC_FORMAT, __LINE__, logTxt);                                                           \
-                fprintf(stdout, "%s", fullTxt);                                                                   \
+                fprintf(stderr, "%s", fullTxt);                                                                   \
             }                                                                                                     \
         } while (0);
 
@@ -136,7 +135,7 @@ static void getTimeStr(char *t)
                 sprintf(logTxt, format, ##__VA_ARGS__);                                                           \
                 sprintf(fullTxt, "\033[1m\033[40;31m %s E [%s:%s:%d] %s \033[0m\n", logTime, FILE_NAME(__FILE__), \
                         FUNC_FORMAT, __LINE__, logTxt);                                                           \
-                fprintf(stdout, "%s", fullTxt);                                                                   \
+                fprintf(stderr, "%s", fullTxt);                                                                   \
             }                                                                                                     \
         } while (0);
 
@@ -149,7 +148,7 @@ static void getTimeStr(char *t)
                 sprintf(logTxt, format, ##__VA_ARGS__);                                                           \
                 sprintf(fullTxt, "\033[1m\033[40;35m %s M [%s:%s:%d] %s \033[0m\n", logTime, FILE_NAME(__FILE__), \
                         FUNC_FORMAT, __LINE__, logTxt);                                                           \
-                fprintf(stdout, "%s", fullTxt);                                                                   \
+                fprintf(stderr, "%s", fullTxt);                                                                   \
             }                                                                                                     \
         } while (0);
 
