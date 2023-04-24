@@ -2,16 +2,16 @@
  * @Author: jinboom
  * @Date: 2023-04-22 17:04:55
  * @LastEditors: jinboom
- * @LastEditTime: 2023-04-22 22:08:39
- * @FilePath: /linux/mnt/d/gitme/linux/utils/memory/memoryPool/mpAlloc.cpp
+ * @LastEditTime: 2023-04-24 22:08:01
+ * @FilePath: /linux/utils/memory/memoryPool/mpAlloc.cpp
  * @Description:
  *
  */
 
 #include "mpAlloc.h"
 
-MpAlloc::MpAlloc(const size_t count, const size_t size)
-    : mCount(count), mBlockSize(size), mBaseAddress(nullptr), mEndAddress(nullptr)
+MpAlloc::MpAlloc(const size_t count, const size_t size, mem_alloc_type_t type)
+    : mCount(count), mBlockSize(size), mBaseAddress(nullptr), mEndAddress(nullptr), mMemHeaderSize((uint32_t)type)
 {
     if (count <= 0 || size <= 0)
     {
@@ -19,7 +19,7 @@ MpAlloc::MpAlloc(const size_t count, const size_t size)
         exit(-1);
     }
 
-    mTotalSize   = count * (size + MEM_HEADER_SIZE);
+    mTotalSize   = count * (size + mMemHeaderSize);
     mBaseAddress = new (std::nothrow) char[size];
     if (nullptr == mBaseAddress)
     {
@@ -31,16 +31,20 @@ MpAlloc::MpAlloc(const size_t count, const size_t size)
     memset(mBaseAddress, 0, mTotalSize);
 }
 
+MpAlloc::MpAlloc(const size_t count, const size_t size) : MpAlloc(count, size, MEM_FIXED_BLOCK) {}
+
+MpAlloc::MpAlloc(const size_t size) : MpAlloc(size, MEM_DYNAMIC_BLOCK) {}
+
 char *MpAlloc::Malloc()
 {
-    size_t unitSize = mBlockSize + MEM_HEADER_SIZE;
+    size_t unitSize = mBlockSize + mMemHeaderSize;
     char *pHeader   = mBaseAddress;
     for (; pHeader < mEndAddress; pHeader += unitSize)
     {
         if (!(*pHeader))
         {
             *pHeader = (char)1;
-            return pHeader + MEM_HEADER_SIZE;
+            return pHeader + mMemHeaderSize;
         }
     }
 
@@ -65,5 +69,5 @@ error_t MpAlloc::Free(char *vp)
 
 bool MpAlloc::isInvalidPointer(char *vp)
 {
-    return !(vp > mBaseAddress && vp < mEndAddress);
+    return !(vp > mBaseAddress && vp < mEndAddress) && !((vp - mBaseAddress - 1) % mBlockSize);
 }

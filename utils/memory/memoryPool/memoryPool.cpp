@@ -2,7 +2,7 @@
  * @Author: jinboom
  * @Date: 2023-04-22 20:03:35
  * @LastEditors: jinboom
- * @LastEditTime: 2023-04-22 22:38:15
+ * @LastEditTime: 2023-04-24 21:36:06
  * @FilePath: /linux/utils/memory/memoryPool/memoryPool.cpp
  * @Description:
  *
@@ -32,7 +32,7 @@ MemoryPool::MemoryPool(/* args */)
     }
 }
 
-MemoryPool::MemoryPool(const size_t count, const size_t size)
+MemoryPool::MemoryPool(const size_t count, const size_t size): MemoryPool()
 {
     if (count <= 0 || size <= 0)
     {
@@ -66,7 +66,7 @@ char *MemoryPool::Malloc(size_t size)
     for (auto it = sDefaultMemCfg.begin(); it != sDefaultMemCfg.end(); ++it)
     {
         blockSize = it->first;
-        if (size >= blockSize)
+        if (size <= blockSize)
         {
             p = mAllocators[blockSize]->Malloc();
             if (p)
