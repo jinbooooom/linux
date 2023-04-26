@@ -1310,6 +1310,26 @@ echo remote_passwd | sudo -S cp /home/jinbo/xx.so /usr/lib/
 # 由于cp xx.so 到 /usr/lib 下需要输入密码，为了避免远程执行这个脚本还需要输入 jinbo@192.168.xx.xx 的账号密码，所以用 echo remote_passwd | sudo -S 将上一个命令（即 echo）的 stdout 接到下一个命令（cp）的 stdin
 ```
 
+## Linux服务器出现“No space left on device”错误
+
+确认查看服务器系统的磁盘使用情况是否是真的已经没有剩余空间，复制下面命令在服务器上运行，然后发现如果如下图所示那么表明sda3磁盘已经没有剩余空间存储满了。
+
+```shell
+df -lh
+```
+
+![image-20230426173922685](assets/command/image-20230426173922685.png)
+
+可以看到`/dev/sdd4`空间满了，对应的挂载目录是 `/`。
+
+进入该目录，执行`sudo ncdu`查看当前目录下目录占的空间大小。找到占用空间大的文件，删除即可。
+
+![image-20230426173950054](assets/command/image-20230426173950054.png)
+
+当磁盘空间未满时，依旧弹出`No space left on device`错误，这种情况下，很可能是小文件过多，导致 inode 急剧增加，消耗完 inode 区域的空间。
+
+如果真是如此，那么即使磁盘空间有剩余，但由于无法创建新的 inode 来存储文件的元信息，也就无法创建新文件。查看 inode的占用情况使用命令`df -ih`
+
 ## 平时使用到的命令积累
 
 ### 用文件作为swap分区
