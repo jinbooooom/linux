@@ -29,6 +29,15 @@
 #    define FUNC_FORMAT __func__
 #endif
 
+#define CHECK(cond)                                                                                                    \
+    do {                                                                                                               \
+        int error = cond;                                                                                              \
+        if (error) {                                                                                                   \
+            logd("%s failed!, error code = %d", #cond, error);                                                         \
+            return error;                                                                                              \
+        }                                                                                                              \
+    } while (0);
+
 static const int JINBO_LOG_LEVEL_NOTHING = 0;
 static const int JINBO_LOG_LEVEL_DEBUG   = 1;
 static const int JINBO_LOG_LEVEL_INFO    = 2;
