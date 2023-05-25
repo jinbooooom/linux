@@ -2,7 +2,7 @@
  * @Author: jinboom
  * @Date: 2023-04-22 20:03:35
  * @LastEditors: jinboom
- * @LastEditTime: 2023-04-25 23:57:30
+ * @LastEditTime: 2023-04-22 22:38:15
  * @FilePath: /linux/utils/memory/memoryPool/memoryPool.cpp
  * @Description:
  *
@@ -16,7 +16,7 @@ std::map<size_t, size_t> MemoryPool::sDefaultMemCfg = {
     {MEM_16B, 1},
 };
 
-MemoryPool::MemoryPool(/* args */) : mDynamicAllocator(nullptr)
+MemoryPool::MemoryPool(/* args */)
 {
     size_t size  = 0;
     size_t count = 0;
@@ -32,7 +32,7 @@ MemoryPool::MemoryPool(/* args */) : mDynamicAllocator(nullptr)
     }
 }
 
-MemoryPool::MemoryPool(const size_t count, const size_t size, mem_alloc_type_t type) : MemoryPool()
+MemoryPool::MemoryPool(const size_t count, const size_t size)
 {
     if (count <= 0 || size <= 0)
     {
@@ -40,16 +40,12 @@ MemoryPool::MemoryPool(const size_t count, const size_t size, mem_alloc_type_t t
         exit(-1);
     }
 
-    if (createAllocator(count, size, type))
+    if (createAllocator(count, size))
     {
         loge("create allocator(%lu) failed", size);
         exit(-1);
     }
 }
-
-MemoryPool::MemoryPool(const size_t count, const size_t size) : MemoryPool(count, size, MEM_FIXED_BLOCK) {}
-
-MemoryPool::MemoryPool(const size_t size) : MemoryPool(1, size, MEM_DYNAMIC_BLOCK) {}
 
 MemoryPool::~MemoryPool()
 {
@@ -70,7 +66,7 @@ char *MemoryPool::Malloc(size_t size)
     for (auto it = sDefaultMemCfg.begin(); it != sDefaultMemCfg.end(); ++it)
     {
         blockSize = it->first;
-        if (size <= blockSize)
+        if (size >= blockSize)
         {
             p = mAllocators[blockSize]->Malloc();
             if (p)
@@ -87,9 +83,9 @@ char *MemoryPool::Malloc(size_t size)
 error_t MemoryPool::Free(char *vp)
 {
     // TODO：
-    FixedAlloc *allocator = nullptr;
-    error_t ret           = getAllocator(vp, &allocator);
-    if (0 == ret)
+    MpAlloc *allocator = nullptr;
+    error_t ret        = getAllocator(vp, &allocator);
+    if (ret)
     {
         return allocator->Free(vp);
     }
@@ -101,7 +97,7 @@ error_t MemoryPool::Free(char *vp)
     return 0;
 }
 
-error_t MemoryPool::createAllocator(const size_t count, const size_t size, mem_alloc_type_t type)
+error_t MemoryPool::createAllocator(const size_t count, const size_t size)
 {
     if (count <= 0 || size <= 0)
     {
@@ -109,35 +105,26 @@ error_t MemoryPool::createAllocator(const size_t count, const size_t size, mem_a
         return -1;
     }
 
-    if (MEM_FIXED_BLOCK == type)
+    auto allocator = new MpAlloc(count, size);
+    if (nullptr == allocator)
     {
-        auto allocator = new FixedAlloc(count, size);
-        if (nullptr == allocator)
-        {
-            loge("create allocator(%lu) failed", size);
-            return -1;
-        }
-
-        if (mAllocators.find(size) == mAllocators.end())
-        {
-            mAllocators[size] = allocator;
-        }
-        else
-        {
-            // TODO: 对已经存在的分配器进行扩容
-        }
+        loge("create allocator(%lu) failed", size);
+        return -1;
     }
-    else if (MEM_DYNAMIC_BLOCK == type)
+
+    if (mAllocators.find(size) == mAllocators.end())
     {
-        mDynamicAllocator = new DynamicAlloc(size);
-        ;
-        return 0;
+        mAllocators[size] = allocator;
+    }
+    else
+    {
+        // TODO: 对已经存在的分配器进行扩容
     }
 
     return 0;
 }
 
-error_t MemoryPool::getAllocator(char *vp, FixedAlloc **palc)
+error_t MemoryPool::getAllocator(char *vp, MpAlloc **palc)
 {
     for (auto it = mAllocators.begin(); it != mAllocators.end(); ++it)
     {
