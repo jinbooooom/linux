@@ -1094,6 +1094,18 @@ $ file 1.txt
 1.txt: JPEG image data, JFIF standard 1.01, resolution (DPI), density 72x72, segment length 16, baseline, precision 8, 440x440, frames 3
 ```
 
+### file用于查看动态库是debug还是release
+
+```shell
+$ file xxx.so  # release
+xxx.so: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, BuildID[sha1]=d44438e1340a2aa769793480eab8debe70809d35, stripped
+
+$ file xxx.so  # debug 版本
+xxx.so: ELF 64-bit LSB shared object, x86-64, version 1 (GNU/Linux), dynamically linked, BuildID[sha1]=abc4a43105a3a9614843ba789d6e02af93e98139, with debug_info, not stripped
+```
+
+可以看到debug版本的动态库后面多了`with debug_info, not stripped`信息。
+
 ## 进程
 
 ### ps
