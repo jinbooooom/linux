@@ -6,6 +6,7 @@ data/*
 **/*.s
 **/*.o
 **/*.out
+*.h.gch
 
 main
 test
