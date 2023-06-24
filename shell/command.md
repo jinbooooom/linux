@@ -1355,6 +1355,49 @@ $ lsof -i:80
 ```
 参考[linux怎么查看端口被哪个进程占用](https://blog.csdn.net/weixin_44161444/article/details/130348488)
 
+## linux预留端口和临时端口
+
+在Linux上跑一个服务，需要指定一个监听端口（系统调用listen），当client请求服务时，系统为该请求建立 tcp连接，该连接的port值是一个随机数字。该数字的取值范围配置在本地临时端口配置(2个数: start, end)
+
+```shell
+# cat /proc/sys/net/ipv4/ip_local_port_range
+32768  60999
+```
+
+**预留端口配置(可支持逗号分隔的多个数字，比如10000, 10005-10010)**
+
+解决方法有2种：
+
+(1) 修改临时端口范围 ip_local_port_range，因为一个程序的端口问题修改一个机器的临时端口范围，明显减少了临时端口的使用量，代价大。
+
+(2) 修改预留端口ip_local_reserved_ports，即使没有发生冲突也可以预先设置，防止后续端口被占用。
+
+使用net.ipv4.ip_local_port_range参数，规划出一段端口段预留作为服务的端口，这种方法是可以解决当前问题，但是会有个问题，端口使用量减少了，当服务器需要消耗大量的端口号的话，比如反代服务器，就存在瓶颈了。 
+
+最好的做法是将服务监听的端口以逗号分隔全部添加到ip_local_reserved_ports中，TCP/IP协议栈从ip_local_port_range中随机选取源端口时，会排除ip_local_reserved_ports中定义的端口，因此就不会出现端口被占用了，服务无法启动。
+
+ip_local_reserved_ports正好可以辅助解决上述问题，将服务模块需要listen的端口全部添加到 ip_local_reserved_ports中，这样Linux tcp/ip协议栈从ip_local_port_range中选端口时，会跳过ip_local_reserved_ports中定义的端口。
+
+[【tcp】关于Linux预留端口内核参数ip_local_reserved_ports设置](https://www.jianshu.com/p/4359555fecdd)
+
+### 设置预留端口
+
+```shell
+# 查看预留端口
+cat /proc/sys/net/ipv4/ip_local_reserved_ports
+30000-32767
+
+# 修改配置文件，将预留端口范围设置为 28000-32767
+/etc/sysctl.conf 
+net.ipv4.ip_local_reserved_ports = 28000-32767
+# 让命令生效，执行 sudo sysctl -p 命令使新的内核参数生效
+sudo sysctl -p
+
+# 再次查看预留端口
+cat /proc/sys/net/ipv4/ip_local_reserved_ports
+28000-32767
+```
+
 ## 平时使用到的命令积累
 
 ### 用文件作为swap分区
