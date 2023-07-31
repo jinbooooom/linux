@@ -23,7 +23,7 @@ public:
 
     explicit LRU(size_t maxSize) : mMaxSize(maxSize) {}
     LRU() = delete;
-    ~LRU() = default;
+    ~LRU() = default; // 这里用户根据自己场景，必须使用立即清理资源，而非 put 函数中的延迟清理资源
 
     void put(const K &key, const V &value)
     {
@@ -31,13 +31,16 @@ public:
         mkvList.push_front(kv_pair_t(key, value));
         if (it != mCacheMap.end()) {
             mkvList.erase(it->second);
-            mCacheMap.erase(it);
+            mCacheMap.erase(it);     
         }
         mCacheMap[key] = mkvList.begin();
 
         if (mCacheMap.size() > mMaxSize) {
             auto last = mkvList.end();
             last--;
+            // 优化点：用户可以自定义一个延迟清理资源的函数，避免在访问量很大的 put 接口内做析构操作，影响性能
+            // 类似于构造时注册一个延迟清理资源函数 mLazyDelete(last->second); 
+            // 当然不考虑性能，或者清理资源耗时很少，立即清理也无妨
             mCacheMap.erase(last->first);
             mkvList.pop_back();
         }
