@@ -182,10 +182,7 @@ bool FileManager::readFile(const std::string &filePath, FileInfo_t &fileInfo)
         uint32_t readRet = fread(fileInfo.data.get(), 1, fileSize, fp);
         if (readRet <= 0)
         {
-            if (fileInfo.data.get() != nullptr)
-            {
-                delete fileInfo.data.get();
-            }
+            fileInfo.data = nullptr;
             fclose(fp);
             return false;
         }
