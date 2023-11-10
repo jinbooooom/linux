@@ -343,6 +343,51 @@ CMAKE_CXX_FLAGS：设置 C++ 编译选项，也可以通过指令 add_definition
 add_definitions(-DENABLE_DEBUG -DABC) # 参数之间用空格分隔
 ```
 
+## 其它
+
+### 使用cmake在同一个工程下编译多个so，如a.so, b.so，但 b.so依赖a.so
+
+要在同一个工程下使用CMake编译多个共享库（.so），其中一个依赖于另一个的话，可以按照以下步骤进行设置:
+
+1. 创建一个空的文件夹作为你的项目目录。
+2. 在该目录下创建一个`CMakeLists.txt`文件，并添加以下内容：
+
+```cmake
+cmake
+cmake_minimum_required(VERSION 3.12)
+project(my_project)
+
+# 设置 C++ 标准
+set(CMAKE_CXX_STANDARD 11)
+
+# 编译 a.so
+add_library(a SHARED a.cpp)
+
+# 编译 b.so，同时链接 a.so
+add_library(b SHARED b.cpp)
+target_link_libraries(b a)
+```
+
+上述示例中，假设你的源代码文件为 `a.cpp` 和 `b.cpp`。`add_library` 命令用于编译每个共享库，`target_link_libraries` 命令用于指定 `b.so` 依赖于 `a.so`。
+
+1. 在项目目录下，创建 `a.cpp` 和 `b.cpp` 源代码文件，并编写相关的代码。确保 `b.cpp` 文件中有对 `a.so` 的引用。
+2. 打开终端，进入到项目目录，并执行以下命令：
+
+```shell
+shell
+mkdir build
+cd build
+cmake ..
+make
+```
+
+这将会在 `build` 目录下生成 `a.so` 和 `b.so` 共享库。
+
+*`target_link_libraries(b a)` 和 `target_link_libraries(b -la)` 之间有一些区别。*
+
+1. `target_link_libraries(b a)`: 这种写法是将当前项目中的目标库（Target）链接到另一个目标库。在这个例子中，我们将当前项目中的 `a.so` 目标库链接到 `b.so` 目标库中。CMake 将自动解析目标库的名称，并根据它们的依赖关系来构建链接命令。
+2. `target_link_libraries(b -la)`: 这种写法是直接将一个已存在的库文件（例如 `liba.so`）链接到目标库 `b.so` 中。`-la` 表示链接器应该查找并链接名为 `liba.so` 的库文件。这样做可以用于链接系统提供的库或第三方库，而不是链接项目内部的目标库。
+
 # 项目示例
 
 ## 单个源文件
