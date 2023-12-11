@@ -1264,6 +1264,21 @@ sudo adduser newaccount sudo # 给用户 newaccount添加sudo权限
 
 ## 环境变量
 
+### export
+
+查看所有的环境变量
+
+```shell
+$ export ENV_TEST=1 # 设置环境变量 ENV_TEST
+$ export
+declare -x DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/1001/bus"
+declare -x DISPLAY="localhost:13.0"
+declare -x EDITOR="/usr/bin/vim"
+declare -x ENV_TEST="1"
+declare -x HOME="/home/jinbo"
+# 省略很多的环境变量
+```
+
 ### LD_LIBRARY_PATH
 
 `LD_LIBRARY_PATH`表示可以在哪些目录中可以找到共享库。
