@@ -1413,6 +1413,63 @@ cat /proc/sys/net/ipv4/ip_local_reserved_ports
 28000-32767
 ```
 
+## 查看动态库里的符号
+
+### nm
+
+- `nm -C`：该命令会以可读的形式显示符号名称，并将其与适当的类型进行关联。使用 `-C` 选项可以解码符号名称，使其更易于理解。这对于查看函数和变量名称非常有用。
+- `nm -D`：该命令会显示所有动态符号表中的符号，包括全局符号、局部符号以及其他动态符号，例如导出的符号和符号重定位等。使用 `-D` 选项时，`nm` 命令会打印所有动态符号的详细信息，包括符号类型、地址和标志等。
+
+总结来说，`nm -C` 主要用于查看共享对象文件中的函数和变量名称，而 `nm -D` 则提供了更详细的关于所有动态符号的信息
+
+```shell
+$ nm -C libopencv_imgproc.so | grep "cv::resize("
+0000000000497050 T cv::resize(cv::_InputArray const&, cv::_OutputArray const&, cv::Size_<int>, double, double, int)
+0000000001e54200 d cv::resize(cv::_InputArray const&, cv::_OutputArray const&, cv::Size_<int>, double, double, int)::__cv_trace_location_fn4155
+0000000001f1f358 b cv::resize(cv::_InputArray const&, cv::_OutputArray const&, cv::Size_<int>, double, double, int)::__cv_trace_location_extra_fn4155
+```
+
+```shell
+$ nm -D libopencv_imgproc.so | grep "resize"
+0000000000495536 T _ZN2cv3hal6resizeEiPKhmiiPhmiiddi
+0000000000497050 T _ZN2cv6resizeERKNS_11_InputArrayERKNS_12_OutputArrayENS_5Size_IiEEddi
+0000000000148ec6 W _ZNSt6vectorIdSaIdEE6resizeEm
+00000000002f2c0c W _ZNSt6vectorIfSaIfEE6resizeEmRKf
+00000000002ea1a0 W _ZNSt6vectorIhSaIhEE6resizeEm
+000000000012327a W _ZNSt6vectorIiSaIiEE6resizeEm
+00000000004ff0d8 W _ZNSt6vectorIlSaIlEE6resizeEm
+00000000003883b4 W _ZNSt6vectorImSaImEE6resizeEm
+00000000004febf6 W _ZNSt6vectorIN2cv10softdoubleESaIS1_EE6resizeEm
+00000000002ea110 W _ZNSt6vectorIPhSaIS0_EE6resizeEm
+0000000000123428 W _ZNSt6vectorItSaItEE6resizeEm
+
+# T：这个标记指示符号的类型为 "Text"，即该符号是一个函数或方法
+# W 是符号类型的一个标记，用于表示 "Weak"（弱）。在 C++ 中，符号可以被标记为强符号（Strong Symbol）或弱符号（Weak Symbol）。
+#  强符号（Strong Symbol）：通常是全局变量、函数定义等具有明确定义和唯一实例的符号。这些符号在链接时会被解析并分配内存，且不能有多个定义。
+# 弱符号（Weak Symbol）：与强符号相反，它们允许有多个定义，并且在链接时可以根据一定的优先级来决定使用哪个定义。如果有多个弱符号的定义存在，则最终只有一个定义会被选择并分配内存。
+```
+
+以`0000000000495536 T _ZN2cv3hal6resizeEiPKhmiiPhmiiddi`为例子
+
+- `_ZN`：这是一个前缀，用于指示以下字符是一个符号的全局唯一名称。
+- `2cv`：这是一个命名空间或类的名称。
+- `3hal`：这是另一个命名空间或类的名称。
+- `6resizeE`：这是函数或方法的名称，可能是 `resize`。
+- `iPKhmiiPhmiiddi`：这是函数或方法的参数类型信息。
+
+### c++filt
+
+`c++filt` 是一个用于解码 C++ 符号（mangled symbols）的命令行工具。在 C++ 中，为了支持函数重载和命名空间等特性，编译器会对符号进行名称修饰，生成所谓的符号表。这些修饰后的符号表称为 mangled symbols。
+
+`c++filt` 工具可以将这些 mangled symbols 转换回它们原始的可读形式，使得开发者能够更容易地理解和阅读这些符号。该工具通常用于调试或分析 C++ 程序，尤其是在打印崩溃堆栈信息时。
+
+```shell
+$ c++filt _ZN2cv3hal6resizeEiPKhmiiPhmiiddi
+cv::hal::resize(int, unsigned char const*, unsigned long, int, int, unsigned char*, unsigned long, int, int, double, double, int)
+$ c++filt _ZN2cv6resizeERKNS_11_InputArrayERKNS_12_OutputArrayENS_5Size_IiEEddi
+cv::resize(cv::_InputArray const&, cv::_OutputArray const&, cv::Size_<int>, double, double, int)
+```
+
 ## 平时使用到的命令积累
 
 ### 用文件作为swap分区
