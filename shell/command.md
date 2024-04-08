@@ -1470,6 +1470,100 @@ $ c++filt _ZN2cv6resizeERKNS_11_InputArrayERKNS_12_OutputArrayENS_5Size_IiEEddi
 cv::resize(cv::_InputArray const&, cv::_OutputArray const&, cv::Size_<int>, double, double, int)
 ```
 
+## 共享内存
+
+### 查看共享内存段的最大大小
+
+```shell
+$ ipcs -l
+
+------ Messages Limits --------
+max queues system wide = 32000
+max size of message (bytes) = 8192
+default max size of queue (bytes) = 16384
+
+------ Shared Memory Limits --------
+max number of segments = 4096
+max seg size (kbytes) = 18014398509465599
+max total shared memory (kbytes) = 18014398509481980
+min seg size (bytes) = 1
+
+------ Semaphore Limits --------
+max number of arrays = 32000
+max semaphores per array = 32000
+max semaphores system wide = 1024000000
+max ops per semop call = 500
+semaphore max value = 32767
+```
+
+这些限制的含义如下：
+
+- Messages Limits:
+  - `max queues system wide`: 系统范围内的最大消息队列数量。
+  - `max size of message (bytes)`: 消息的最大大小（以字节为单位）。
+  - `default max size of queue (bytes)`: 队列的默认最大大小（以字节为单位）。
+- Shared Memory Limits:
+  - `max number of segments`: 共享内存段的最大数量。
+  - `max seg size (kbytes)`: 单个共享内存段的最大大小（以KB为单位）。在此示例中，该值非常大，表示理论上没有明确的大小限制。
+  - `max total shared memory (kbytes)`: 系统中所有共享内存段总大小的最大限制（以KB为单位）。
+  - `min seg size (bytes)`: 单个共享内存段的最小大小（以字节为单位）。
+- Semaphore Limits:
+  - `max number of arrays`: 信号量数组的最大数量。
+  - `max semaphores per array`: 每个信号量数组中的最大信号量数量。
+  - `max semaphores system wide`: 系统范围内的最大信号量数量。
+  - `max ops per semop call`: 在单次`semop`调用中的最大操作数。
+  - `semaphore max value`: 信号量的最大值。
+
+这些限制反映了系统对消息队列、共享内存和信号量的资源限制。不同的系统和配置可能会有不同的限制值。在这个示例输出中，共享内存段的最大大小（`max seg size`）显示为一个非常大的值，表示运行时没有明确的大小限制。
+
+### 释放系统中的共享内存
+
+```shell
+$ free -h
+              total        used        free      shared  buff/cache   available
+Mem:          125Gi        44Gi       2.9Gi        12Gi        78Gi        69Gi
+Swap:         8.0Gi       516Mi       7.5Gi
+
+# 上述命令可以看到共享内存占用了 12G 空间
+```
+
+列出当前系统中的共享内存段。查找你想要释放的共享内存段的ID
+
+```shell
+$ipcs -m
+
+------ Shared Memory Segments --------
+key        shmid      owner      perms      bytes      nattch     status      
+0x00000000 32791      zabbix     600        576        6          dest         
+0x00000000 32792      zabbix     600        5329056    6          dest         
+0xffffffff 32808      jinbo.fang 666        12884901888 1   
+```
+
+- `key`: 共享内存段的键值。它是一个用于标识共享内存的唯一值。
+- `shmid`: 共享内存段的ID。系统使用这个ID来管理和识别共享内存段。
+- `owner`: 拥有该共享内存段的用户。
+- `perms`: 共享内存段的权限。权限以八进制表示。
+- `bytes`: 共享内存段的大小（以字节为单位）。
+- `nattch`: 当前附加到该共享内存段的进程数量。
+- `status`: 共享内存段的状态。
+
+根据共享内存段的ID，使用`ipcrm`命令释放该共享内存段。
+
+```shell
+$ ipcrm -m 32808
+$ ipcs -m
+
+------ Shared Memory Segments --------
+key        shmid      owner      perms      bytes      nattch     status      
+0x00000000 32791      zabbix     600        576        6          dest         
+0x00000000 32792      zabbix     600        5329056    6          dest  
+
+$ free -h
+              total        used        free      shared  buff/cache   available
+Mem:          125Gi        44Gi        14Gi        29Mi        66Gi        81Gi
+Swap:         8.0Gi       516Mi       7.5Gi
+```
+
 ## 平时使用到的命令积累
 
 ### 用文件作为swap分区
