@@ -105,6 +105,32 @@ public:
     }
 };
 
+template <typename ScopedPadder>
+class jinbo_formatter final : public flag_formatter {
+public:
+    explicit jinbo_formatter(padding_info padinfo)
+        : flag_formatter(padinfo) {}
+
+    void format(const details::log_msg &msg, const std::tm &, memory_buf_t &dest) override {
+        ScopedPadder p(32, padinfo_, dest);
+        fmt_helper::append_string_view("jinbo", dest);
+    }
+};
+
+template <typename ScopedPadder>
+class host_formatter final : public flag_formatter {
+public:
+    explicit host_formatter(padding_info padinfo)
+        : flag_formatter(padinfo) {}
+
+    void format(const details::log_msg &msg, const std::tm &, memory_buf_t &dest) override {
+        ScopedPadder p(32, padinfo_, dest);
+        char hname[128];
+        gethostname(hname, sizeof(hname));
+        fmt_helper::append_string_view(hname, dest);
+    }
+};
+
 // log level appender
 template <typename ScopedPadder>
 class level_formatter final : public flag_formatter {
@@ -1160,6 +1186,14 @@ SPDLOG_INLINE void pattern_formatter::handle_flag_(char flag, details::padding_i
 
         case ('$'):  // color range end
             formatters_.push_back(details::make_unique<details::color_stop_formatter>(padding));
+            break;
+
+         case ('J'):  // Jinbo
+            formatters_.push_back(details::make_unique<details::jinbo_formatter<Padder>>(padding));
+            break;
+
+        case ('W'):  // Jinbo host Name
+            formatters_.push_back(details::make_unique<details::host_formatter<Padder>>(padding));
             break;
 
         case ('@'):  // source location (filename:filenumber)
