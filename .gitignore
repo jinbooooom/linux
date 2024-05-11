@@ -15,7 +15,7 @@ s
 t
 tmp
 t.cpp
-mylogs
+build
 
 **/.vscode/*
 **/.vscode
