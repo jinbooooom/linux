@@ -1,3 +1,60 @@
+# MPI
+
+## 基本概念
+
+MPI 主要有两大类库：OpenMPI和MPICH（包括MPICH、MPICH2、MPICH3、IntelMPI、MVAPICH、MVAPICH2）
+
+### 编译器
+
+1、OpenMPI、MPICH、MVAPICH等编译命令（不分编译器）：
+mpicc、mpicxx、mpif77、mpif90、mpic++、mpiCC
+
+2、IntelMPI 编译命令（分编译器）：
+GNU编译器：mpicc、mpicxx、mpifc（mpigcc、mpigcc、mpif77、mpif90）
+Intel编译器：mpiicc、mpiicpc、mpiifort
+
+### mpich、mvapich、openmpi 之间的区别
+
+MPICH、MVAPICH和OpenMPI是三种常见的开源MPI（消息传递接口）实现。虽然它们都用于在并行计算中进行进程间通信，但它们有一些区别：
+
+1. MPICH：
+   - MPICH是最早的开源MPI实现之一。
+   - 它专注于提供基本的MPI功能，以便在不同系统上可移植。
+   - MPICH支持多种网络设备和传输层协议。
+2. MVAPICH：
+   - MVAPICH是基于MPICH的MPI实现的分支，专注于使用InfiniBand和RoCE等高性能网络设备。
+   - 它针对高性能计算（HPC）环境进行了优化，提供了与高速网络和互连技术紧密集成的特性。
+   - MVAPICH支持基于RDMA（远程直接内存访问）的通信，并提供了一些性能优化和扩展功能。
+3. OpenMPI：
+   - OpenMPI是一个综合性的开源MPI实现，旨在提供高性能、灵活性和可扩展性。
+   - 它整合了来自不同MPI实现的各种特性，并提供了许多高级功能，如动态进程管理和线程支持。
+   - OpenMPI支持多种网络设备和传输层协议，包括InfiniBand、Ethernet和Myrinet等。
+
+总的来说，MPICH是一种基本的、可移植的MPI实现，MVAPICH专注于高性能网络设备的优化，而OpenMPI提供了丰富的功能和灵活性。
+
+## 资料
+
+[mpi 教程](https://mpitutorial.com/)
+
+官网：
+
+- MPI standard : [http://www.mpi-forum.org/docs/docs.html](
+
+- [MPICH](https://www.mpich.org/)
+
+- [MPICH on InfiniBand](http://mvapich.cse.ohio-state.edu/)
+- [Open MPI ](http://www.open-mpi.org/)
+
+资料
+
+- [mpich 用户文档](https://www.mpich.org/documentation/manpages/)
+
+- [mvapich 用户文档](http://mvapich.cse.ohio-state.edu/support/) Full User Guide MVAPICH2 2.3.7 ([HTML](http://mvapich.cse.ohio-state.edu/static/media/mvapich/mvapich2-userguide.html), [PDF](http://mvapich.cse.ohio-state.edu/static/media/mvapich/mvapich2-userguide.pdf))        
+
+- [openmpi 用户文档](https://docs.open-mpi.org/en/v5.0.x/man-openmpi/index.html)
+
+- [INVAID 里的 MVAPICH 资料](https://developer.nvidia.com/mvapich)
+
 ### 使用 gdb 调试 mpi 程序
 
 ```C
