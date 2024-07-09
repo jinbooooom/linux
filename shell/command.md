@@ -1596,6 +1596,51 @@ sudo swapon /root/swapfile   #启用swap文件
 
 [用`free -m`查看内存使用情况](https://blog.csdn.net/makang456/article/details/78694120)
 
+## clang 格式化
+
+要使用脚本按 `.clang_format` 格式对仓库中的所有文件进行格式化，您可以按照以下步骤进行操作：
+
+1. 确保您的系统已安装 Clang 格式化工具。如果尚未安装，可以通过 Clang 官方网站或包管理器获取。
+
+2. 创建一个 Bash 脚本（例如 `format_repo.sh`），并在该脚本中编写以下代码：
+```bash
+#!/bin/bash
+
+# 设置要格式化的文件扩展名
+file_extension=".c"
+
+# 遍历仓库内的所有文件
+for file in $(find /path/to/repository -name "*$file_extension")
+do
+    # 检查文件是否存在 .clang_format 文件
+    if [ -f "$file.clang_format" ]; then
+        # 使用 clang-format 命令进行格式化
+        clang-format -i -style=file "$file"
+        echo "Formatted file: $file"
+    else
+        echo "No .clang_format found for file: $file"
+    fi
+done
+```
+在上述命令 `clang-format -i -style=file "$file"` 中，`-i` 参数用于直接修改源文件而不生成新文件，`-style=file` 参数告诉 `clang-format` 使用指定的样式文件进行格式化。
+
+请确保 `.clang_format` 文件位于当前目录或适当的路径下，以便 `clang-format` 可以找到并使用它。如果指定的文件路径不正确或没有 `.clang_format` 文件，`clang-format` 将会使用默认的格式样式进行格式化。
+
+请将 `/path/to/repository` 替换为实际的仓库路径，并根据需要调整文件扩展名（`file_extension`）和其他参数。
+
+3. 保存脚本文件并赋予执行权限：
+```bash
+chmod +x format_repo.sh
+```
+
+4. 执行脚本：
+```shell
+./format_repo.sh
+```
+这将遍历仓库中指定扩展名的所有文件，并使用 `.clang_format` 文件中指定的格式样式进行格式化。格式化后的文件将直接覆盖原始文件，因此请确保在执行脚本之前进行备份或版本控制。
+
+请注意，这仅是一个简单的示例脚本，您可能需要根据实际需求进行调整。另外，确保谨慎使用格式化工具，并在执行脚本之前先对文件进行备份，以防止意外数据丢失。
+
 ## 推荐/参考链接
 
 - [Linux Tools Quick Tutorial](https://linuxtools-rst.readthedocs.io/zh_CN/latest/index.html) （鸟哥）
