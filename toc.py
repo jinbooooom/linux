@@ -23,12 +23,12 @@ def githubUrl(url):
     return url
 
 if __name__ == "__main__":
-    osConf = fileConfigElement("## 操作系统总结", "system/system.md")
-    shellConf = fileConfigElement("## shell 编程总结", "shell/shell.md")
-    cmdConf = fileConfigElement("## shell 命令行总结", "shell/command.md")
-    gdbConf = fileConfigElement("## gdb 总结", "gdb/gdb.md")
-    gitConf = fileConfigElement("## git 总结", "git/git.md")
-    netConf = fileConfigElement("## 计算机网络总结", "communication/tcp_ip/network.md")
+    osConf = fileConfigElement("## 操作系统总结", "document/system/system.md")
+    shellConf = fileConfigElement("## shell 编程总结", "document/shell/shell.md")
+    cmdConf = fileConfigElement("## shell 命令行总结", "document/shell/command.md")
+    gdbConf = fileConfigElement("## gdb 总结", "tools/gdb/gdb.md")
+    gitConf = fileConfigElement("## git 总结", "tools/git/git.md")
+    netConf = fileConfigElement("## 计算机网络总结", "document/tcp_ip/network.md")
 
     rootReadmePath = "README.md"
     repoLink = "https://github.com/jinbooooom/linux/blob/master/"
