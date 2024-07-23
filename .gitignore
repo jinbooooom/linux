@@ -8,14 +8,13 @@ data/*
 **/*.out
 *.h.gch
 
-main
-test
 r
 s
 t
 tmp
 t.cpp
 build
+main
 
 **/.vscode/*
 **/.vscode
