@@ -1,8 +1,8 @@
 
 
 #include "threadpool.h"
-#include "../log/log.hpp"
-#include "../base/base.h"
+#include "log.hpp"
+#include "base.h"
 
 #include <sys/syscall.h>
 #include <sys/types.h>

@@ -1,7 +1,7 @@
 #ifndef __JINBO_THREAD_POOL_H__
 #define __JINBO_THREAD_POOL_H__
 
-#include "../base/base.h"
+#include "base.h"
 
 #include <algorithm>
 #include <atomic>
