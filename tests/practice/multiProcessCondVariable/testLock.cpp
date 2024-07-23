@@ -64,6 +64,6 @@ first in
 sizeof = 128, cona = 0x7eff86948008, mutex = 0x7eff86948038
 sizeof = 128, cona = 0x7eff86948008, mutex = 0x7eff86948038
 2024/07/10 18:03:36.865238 2252032704 38501 [testLock.cpp:main:28] signal Process exit, data[0] = 156266
- 
+
 2024/07/10 18:03:36.866217 2252032704 38502 [testLock.cpp:main:48] wait Process exit, data[0] = 200000
 */

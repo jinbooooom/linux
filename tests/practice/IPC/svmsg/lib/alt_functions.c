@@ -10,18 +10,17 @@
 
 /* Supplementary program for Chapter 3 */
 
-#include <stdio.h>
-#include <fcntl.h>
 #include "alt_functions.h"
+#include <fcntl.h>
+#include <stdio.h>
 
 /* A very minimal implementation of strsignal()... */
 
 #define BUF_SIZE 100
 
-char *
-ALT_strsignal(int sig)
+char *ALT_strsignal(int sig)
 {
-    static char buf[BUF_SIZE];          /* Not thread-safe */
+    static char buf[BUF_SIZE]; /* Not thread-safe */
 
     snprintf(buf, BUF_SIZE, "SIG-%d", sig);
     return buf;
@@ -29,10 +28,9 @@ ALT_strsignal(int sig)
 
 /* A very minimal implementation of hstrerror()... */
 
-char *
-ALT_hstrerror(int err)
+char *ALT_hstrerror(int err)
 {
-    static char buf[BUF_SIZE];          /* Not thread-safe */
+    static char buf[BUF_SIZE]; /* Not thread-safe */
 
     snprintf(buf, BUF_SIZE, "hstrerror-%d", err);
     return buf;
@@ -40,8 +38,7 @@ ALT_hstrerror(int err)
 
 /* posix_openpt() is simple to implement */
 
-int
-ALT_posix_openpt(int flags)
+int ALT_posix_openpt(int flags)
 {
     return open("/dev/ptmx", flags);
 }

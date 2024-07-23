@@ -1,8 +1,8 @@
 /*
  * 《操作系统导论》５.1
  * fork 系统调用示例程序
- * 
-*/
+ *
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,11 +17,11 @@ int main(int argc, char **argv)
         fprintf(stderr, "fork failed\n");
         exit(1);
     }
-    else if (rc == 0)   // 子进程的返回值是 0
+    else if (rc == 0)  // 子进程的返回值是 0
     {
         printf("hello, I am child (pid:%d)\n", (int)getpid());  // getpid() 获取目前进程的进程描述符 PID
     }
-    else if (rc > 0)   // 父进程的返回值是子进程的进程描述符
+    else if (rc > 0)  // 父进程的返回值是子进程的进程描述符
     {
         printf("hello, I am parent of %d (pid:%d)\n", rc, (int)getpid());
     }
@@ -33,7 +33,7 @@ int main(int argc, char **argv)
 
 /*
 jinbo@fang:~/gitme/linux/programming/multiprocessing$ gcc -o fork fork.c
-jinbo@fang:~/gitme/linux/programming/multiprocessing$ ./fork 
+jinbo@fang:~/gitme/linux/programming/multiprocessing$ ./fork
 hello world (pid:17883)
 hello, I am parent of 17884 (pid:17883)
 hello, I am child (pid:17884)

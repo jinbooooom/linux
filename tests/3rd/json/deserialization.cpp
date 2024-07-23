@@ -59,8 +59,9 @@ int main()
 
     for (int i = 0; i < data.objectArray.size(); ++i)
     {
-        printf("objectArray[%d]: name = %s, object.currency = %s, object.value = %lf\n", i, data.objectArray[i].name.c_str(),
-               data.objectArray[i].object.currency.c_str(), data.objectArray[i].object.value);
+        printf("objectArray[%d]: name = %s, object.currency = %s, object.value = %lf\n", i,
+               data.objectArray[i].name.c_str(), data.objectArray[i].object.currency.c_str(),
+               data.objectArray[i].object.value);
     }
 
     return 0;

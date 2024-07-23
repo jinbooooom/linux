@@ -6,17 +6,14 @@
 template <typename F>
 class ResourceGuard
 {
-public:
+  public:
     explicit ResourceGuard(F f) : mF(f){};
-    ResourceGuard() = delete;
-    ResourceGuard(const ResourceGuard &) = delete;
+    ResourceGuard()                                 = delete;
+    ResourceGuard(const ResourceGuard &)            = delete;
     ResourceGuard &operator=(const ResourceGuard &) = delete;
-    ~ResourceGuard()
-    {
-        mF;
-    }
+    ~ResourceGuard() { mF; }
 
-private:
+  private:
     F mF;
 };
 

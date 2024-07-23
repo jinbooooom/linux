@@ -7,11 +7,13 @@ int main(int argc, char **argv)
     int value = -1;
 
     lru.put(7, 777);
-    if (!lru.get(1, value)) {
+    if (!lru.get(1, value))
+    {
         std::cout << "get key = 1 failed\n";
     }
 
-    for (int i = 0; i < 9; ++i) {
+    for (int i = 0; i < 9; ++i)
+    {
         lru.put(i, i);
     }
 

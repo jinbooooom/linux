@@ -8,14 +8,15 @@
  *
  */
 
-#include <unordered_map>
 #include <map>
+#include <unordered_map>
 #include "mpAlloc.h"
 
-typedef enum {
-    MEM_4B    = 4,
-    MEM_8B    = 8,
-    MEM_16B    = 16
+typedef enum
+{
+    MEM_4B  = 4,
+    MEM_8B  = 8,
+    MEM_16B = 16
 
 } mem_block_size_t;
 
@@ -35,11 +36,9 @@ class MemoryPool
     error_t createAllocator(const size_t count, const size_t size);
     error_t getAllocator(char *vp, MpAlloc **allocator);
 
-
-
   private:
-     std::unordered_map<size_t /*size*/, MpAlloc *> mAllocators;
+    std::unordered_map<size_t /*size*/, MpAlloc *> mAllocators;
 
-    public:
-  static std::map<size_t /*size*/, size_t /*count*/> sDefaultMemCfg;
+  public:
+    static std::map<size_t /*size*/, size_t /*count*/> sDefaultMemCfg;
 };

@@ -14,15 +14,13 @@
 
 static int clientId;
 
-static void
-removeQueue(void)
+static void removeQueue(void)
 {
     if (msgctl(clientId, IPC_RMID, NULL) == -1)
         errExit("msgctl");
 }
 
-int
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     struct requestMsg req;
     struct responseMsg resp;
@@ -33,8 +31,7 @@ main(int argc, char *argv[])
         usageErr("%s pathname\n", argv[0]);
 
     if (strlen(argv[1]) > sizeof(req.pathname) - 1)
-        cmdLineErr("pathname too long (max: %ld bytes)\n",
-                (long) sizeof(req.pathname) - 1);
+        cmdLineErr("pathname too long (max: %ld bytes)\n", (long)sizeof(req.pathname) - 1);
     /*FIXME: above: should use %zu here, and remove (long) cast */
 
     /* Get server's queue identifier; create queue for response */
@@ -52,11 +49,11 @@ main(int argc, char *argv[])
 
     /* Send message asking for file named in argv[1] */
 
-    req.mtype = 1;                      /* Any type will do */
+    req.mtype    = 1; /* Any type will do */
     req.clientId = clientId;
     strncpy(req.pathname, argv[1], sizeof(req.pathname) - 1);
     req.pathname[sizeof(req.pathname) - 1] = '\0';
-                                        /* Ensure string is terminated */
+    /* Ensure string is terminated */
 
     if (msgsnd(serverId, &req, REQ_MSG_SIZE, 0) == -1)
         errExit("msgsnd");
@@ -67,16 +64,18 @@ main(int argc, char *argv[])
     if (msgLen == -1)
         errExit("msgrcv");
 
-    if (resp.mtype == RESP_MT_FAILURE) {
-        printf("%s\n", resp.data);      /* Display msg from server */
+    if (resp.mtype == RESP_MT_FAILURE)
+    {
+        printf("%s\n", resp.data); /* Display msg from server */
         exit(EXIT_FAILURE);
     }
 
     /* File was opened successfully by server; process messages
        (including the one already received) containing file data */
 
-    totBytes = msgLen;                  /* Count first message */
-    for (numMsgs = 1; resp.mtype == RESP_MT_DATA; numMsgs++) {
+    totBytes = msgLen; /* Count first message */
+    for (numMsgs = 1; resp.mtype == RESP_MT_DATA; numMsgs++)
+    {
         msgLen = msgrcv(clientId, &resp, RESP_MSG_SIZE, 0, 0);
         if (msgLen == -1)
             errExit("msgrcv");
@@ -84,7 +83,7 @@ main(int argc, char *argv[])
         totBytes += msgLen;
     }
 
-    printf("Received %ld bytes (%d messages)\n", (long) totBytes, numMsgs);
+    printf("Received %ld bytes (%d messages)\n", (long)totBytes, numMsgs);
     /*FIXME: above: should use %zd here, and remove (long) cast (or perhaps
        better, make totBytes size_t, and use %zu)*/
 

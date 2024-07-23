@@ -15,17 +15,17 @@
 #define loge(format, ...) SPDLOG_LOGGER_ERROR(&logger, format, ##__VA_ARGS__)
 #define logc(format, ...) SPDLOG_LOGGER_CRITICAL(&logger, format, ##__VA_ARGS__)
 
-int main() {
-    int valude = 99;
+int main()
+{
+    int valude  = 99;
     size_t size = 100;
-    void *p = &size;
+    void *p     = &size;
 
     auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
     console_sink->set_level(spdlog::level::trace);
     console_sink->set_pattern("%^%W %Y-%m-%d %H:%M:%S.%e %^%L %t %P [%s:%!:%#] %v%$");
 
-    auto file_sink =
-        std::make_shared<spdlog::sinks::basic_file_sink_mt>("mylogs/multisink.txt", true);
+    auto file_sink = std::make_shared<spdlog::sinks::basic_file_sink_mt>("mylogs/multisink.txt", true);
     file_sink->set_level(spdlog::level::trace);
     file_sink->set_pattern("%^%W %Y-%m-%d %H:%M:%S.%e %^%L %t %P [%s:%!:%#] %v%$");
 
@@ -52,5 +52,5 @@ int main() {
 /**
  g++ testSpdlog.cpp -I ../../3rdtools/include/
  ./a.out
- * 
+ *
  */

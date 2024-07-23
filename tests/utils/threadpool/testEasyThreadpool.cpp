@@ -10,7 +10,8 @@ void funVoid()
 
 void funVoidInt(int time)
 {
-    if (time > 0) {
+    if (time > 0)
+    {
         std::this_thread::sleep_for(std::chrono::milliseconds(time));
         logw(" ======= funVoidInt sleep %dms", time);
     }
@@ -18,7 +19,8 @@ void funVoidInt(int time)
 
 int funIntInt(int time)
 {
-    if (time > 0) {
+    if (time > 0)
+    {
         std::this_thread::sleep_for(std::chrono::milliseconds(time));
         logw(" ======= funVoidInt sleep %dms", time);
     }
@@ -26,7 +28,8 @@ int funIntInt(int time)
     return time;
 }
 
-struct funOperator {
+struct funOperator
+{
     int operator()(int n)
     {
         logi("funOperator param: n = %d", n);
@@ -36,7 +39,7 @@ struct funOperator {
 
 class A
 {
-public:
+  public:
     // 函数必须是 static 的才能使用线程池
     static int fun1(int n = 0)
     {
@@ -57,11 +60,11 @@ auto main() -> int
     A a;
 
     logmark("========= test basic =========");
-    std::future<void> fvi = pool.commit(funVoidInt, 3000);
-    std::future<int> fo = pool.commit(funOperator{}, 0);
-    std::future<int> fAf1 = pool.commit(a.fun1, 9999);
+    std::future<void> fvi         = pool.commit(funVoidInt, 3000);
+    std::future<int> fo           = pool.commit(funOperator{}, 0);
+    std::future<int> fAf1         = pool.commit(a.fun1, 9999);
     std::future<std::string> fAf2 = pool.commit(A::fun2, 9998, "mult args", 'C');
-    std::future<std::string> fh = pool.commit([]() -> std::string {
+    std::future<std::string> fh   = pool.commit([]() -> std::string {
         logd("lambda test");
         return "lambda test";
     });
@@ -74,10 +77,12 @@ auto main() -> int
     // std::this_thread::sleep_for(std::chrono::milliseconds(2000));
     const int testCnt = 8;
     std::vector<std::future<int>> results;
-    for (int i = 0; i < testCnt; ++i) {
+    for (int i = 0; i < testCnt; ++i)
+    {
         results.emplace_back(pool.commit(funIntInt, i * 500));
     }
-    for (int i = 0; i < testCnt; ++i) {
+    for (int i = 0; i < testCnt; ++i)
+    {
         logd("i = %d, result = %d", i, results[i].get());
     }
 

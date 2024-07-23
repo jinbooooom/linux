@@ -2,24 +2,24 @@
 #define __RING_BUFFER_HPP__
 
 /**
- * Description: This file is used to implement the ring buffer, 
- * which is thread-safe. 
+ * Description: This file is used to implement the ring buffer,
+ * which is thread-safe.
  * Author: Jinboom
  * Date: 2021/8
  */
 
-#include <thread>
 #include <mutex>
+#include <thread>
 
 using byte_t = unsigned char;
 
 class RingBuffer
 {
-public:
+  public:
     RingBuffer(int id, int len);
     ~RingBuffer();
 
-private:
+  private:
     int mId;
     byte_t *mBuf;
     int mFront;
@@ -28,10 +28,10 @@ private:
 
     std::mutex mMutex;
 
-public:
+  public:
     /**
      * std::vector style interface
-    */
+     */
     int size();
     int capacity();
     void resize(int len);
@@ -41,7 +41,7 @@ public:
     int get(byte_t *data, int len);
 
     int free_size();
-    void show(); // for debug
+    void show();  // for debug
     int get_id() const;
 };
 

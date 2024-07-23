@@ -1,18 +1,25 @@
 
 
 #include "threadpool.h"
-#include "log.hpp"
 #include "base.h"
+#include "log.hpp"
 
 #include <sys/syscall.h>
 #include <sys/types.h>
 #include <unistd.h>
 
-
-WorkThread::WorkThread(int index, ThreadType_t type, TaskQueue *poolTaskQ, std::vector<WorkThread *> *poolThreads,
+WorkThread::WorkThread(int index,
+                       ThreadType_t type,
+                       TaskQueue *poolTaskQ,
+                       std::vector<WorkThread *> *poolThreads,
                        ThreadPoolConfig *config)
-    : mIndex(index), mType(type), mStatus(THREAD_NOT_INIT), mIsBusy(false), mCommonTaskQ(poolTaskQ),
-      mPthreads(poolThreads), mCfg(config)
+    : mIndex(index),
+      mType(type),
+      mStatus(THREAD_NOT_INIT),
+      mIsBusy(false),
+      mCommonTaskQ(poolTaskQ),
+      mPthreads(poolThreads),
+      mCfg(config)
 {
 
     // init(); // init 由外部线程池在创建工作线程后，再统一执行
@@ -21,8 +28,9 @@ WorkThread::WorkThread(int index, ThreadType_t type, TaskQueue *poolTaskQ, std::
 WorkThread::~WorkThread()
 {
     mStatus = THREAD_STOP;
-    mTTL = -999;
-    if (mWorkThread.joinable()) {
+    mTTL    = -999;
+    if (mWorkThread.joinable())
+    {
         mWorkThread.join();
     }
 
@@ -31,14 +39,15 @@ WorkThread::~WorkThread()
 
 Error_t WorkThread::init()
 {
-    if (unlikely((THREAD_NOT_INIT) != mStatus)) {
+    if (unlikely((THREAD_NOT_INIT) != mStatus))
+    {
         loge("invalid thread status %d, maybe has init", mStatus);
         return ERRORPARAM;
     }
 
-    mStatus = THREAD_INIT;
-    mHelpRange = mCfg->helpRange;
-    mTTL = mCfg->maxTTL;
+    mStatus     = THREAD_INIT;
+    mHelpRange  = mCfg->helpRange;
+    mTTL        = mCfg->maxTTL;
     mWorkThread = std::move(std::thread(&WorkThread::run, this));
     // setSchedParam();
     // setAffinity(mIndex);
@@ -58,10 +67,13 @@ Error_t WorkThread::init()
 
 bool WorkThread::shrinkage()
 {
-    if (likely(mIsBusy)) {
+    if (likely(mIsBusy))
+    {
         mTTL++;
         mTTL = std::min(mTTL, mCfg->maxTTL);
-    } else {
+    }
+    else
+    {
         mTTL--;
     }
 
@@ -70,19 +82,24 @@ bool WorkThread::shrinkage()
 
 Error_t WorkThread::run()
 {
-    if (likely(THREAD_INIT == mStatus)) {
+    if (likely(THREAD_INIT == mStatus))
+    {
         mStatus = THREAD_RUNNING;
-    } else {
+    }
+    else
+    {
         loge("current thread not init");
         return ERRORPARAM;
     }
 
-    if (unlikely(nullptr == mPthreads)) {
+    if (unlikely(nullptr == mPthreads))
+    {
         loge("invalid thread pool");
         return ERRORPARAM;
     }
 
-    if (unlikely(std::any_of(mPthreads->begin(), mPthreads->end(), [](WorkThread *thd) { return nullptr == thd; }))) {
+    if (unlikely(std::any_of(mPthreads->begin(), mPthreads->end(), [](WorkThread *thd) { return nullptr == thd; })))
+    {
         loge("core thread is null");
         return ERRORPARAM;
     }
@@ -90,14 +107,16 @@ Error_t WorkThread::run()
     uint32_t tid = static_cast<uint32_t>(syscall(SYS_gettid));
     logd("thread index = %d, tid = %u", mIndex, tid);
 
-    while (THREAD_RUNNING == mStatus || !mTaskQ.empty()) {
+    while (THREAD_RUNNING == mStatus || !mTaskQ.empty())
+    {
 #if CV_NOTIFY
         {
             std::unique_lock<std::mutex> lock{mQueueLock};
             // 加了超时时间是因为，如果过了超时时间还没有接到分给本线程的任务，就可以协助其他线程
             mTaskCv.wait_for(lock, std::chrono::microseconds(15),
                              [this] { return !(THREAD_RUNNING == mStatus) || !mTaskQ.empty(); });
-            if (unlikely(!(THREAD_RUNNING == mStatus) && mTaskQ.empty())) {
+            if (unlikely(!(THREAD_RUNNING == mStatus) && mTaskQ.empty()))
+            {
                 // 当不处于运行状态时，依旧执行，直到任务队列为空才结束线程
                 return 0;
             }
@@ -119,7 +138,8 @@ void WorkThread::processTask()
     // static auto time = std::chrono::duration<double, std::micro>(t2 - t1).count();
 
     Task_t task;
-    if (popTask(task) || popCommonTask(task) || popOtherTask(task)) {
+    if (popTask(task) || popCommonTask(task) || popOtherTask(task))
+    {
         // getTask = true;
         // if (1 == mIndex) {
         //     auto t2 = std::chrono::steady_clock::now();
@@ -128,13 +148,18 @@ void WorkThread::processTask()
         //     yieldCnt = 0;
         // }
         mIsBusy = true;
-        if (likely(task)) {
+        if (likely(task))
+        {
             task();
-        } else {
+        }
+        else
+        {
             loge("thread%d task is empty()", mIndex);
         }
         mIsBusy = false;
-    } else {
+    }
+    else
+    {
         // if (getTask && (1 == mIndex)) {
         //     t1 = std::chrono::steady_clock::now();
         //     getTask = false;
@@ -159,19 +184,24 @@ bool WorkThread::popCommonTask(Task_t &tasks)
 
 bool WorkThread::popOtherTask(Task_t &task)
 {
-    if (unlikely(nullptr == mCfg || (int) mPthreads->size() < mCfg->thNum)) {
+    if (unlikely(nullptr == mCfg || (int)mPthreads->size() < mCfg->thNum))
+    {
         logw("param invalid: cfg = %p, thread size(%lu) < mCfg->thNum(%d)", mCfg, mPthreads->size(), mCfg->thNum);
         return false;
     }
 
-    if (unlikely(THREAD_RUNNING != mStatus)) {
+    if (unlikely(THREAD_RUNNING != mStatus))
+    {
         return false;
     }
 
-    for (int i = 0; i < mHelpRange; i++) {
-        if (mTaskQ.empty()) {
+    for (int i = 0; i < mHelpRange; i++)
+    {
+        if (mTaskQ.empty())
+        {
             int curIndex = (mIndex + i + 1) % mCfg->thNum;
-            if (unlikely(nullptr != (*mPthreads)[curIndex]) && ((*mPthreads)[curIndex])->mTaskQ.tryHelp(task)) {
+            if (unlikely(nullptr != (*mPthreads)[curIndex]) && ((*mPthreads)[curIndex])->mTaskQ.tryHelp(task))
+            {
                 // loge("thread task = %d, thread%d got task from thread%d", mTaskQ.size(), mIndex, curIndex);
                 return true;
             }
@@ -183,14 +213,15 @@ bool WorkThread::popOtherTask(Task_t &task)
 
 Error_t WorkThread::setSchedParam()
 {
-    int priority = THREAD_CORE == mType ? calcPriority(mCfg->priority) : sMinPriority;
-    int schedule = calcSchedule(mCfg->schedule);
+    int priority      = THREAD_CORE == mType ? calcPriority(mCfg->priority) : sMinPriority;
+    int schedule      = calcSchedule(mCfg->schedule);
     auto threadHandle = mWorkThread.native_handle();
     sched_param param = {priority};
-    int ret = pthread_setschedparam(threadHandle, schedule, &param);
-    if (0 != ret) {
+    int ret           = pthread_setschedparam(threadHandle, schedule, &param);
+    if (0 != ret)
+    {
         logw("set thread schedule failed, %s: threadHandle = %lu, schedule = %d, priority = %d", strerror(ret),
-              threadHandle, schedule, priority);
+             threadHandle, schedule, priority);
         return ret;
     }
 
@@ -199,11 +230,13 @@ Error_t WorkThread::setSchedParam()
 
 Error_t WorkThread::setAffinity(int index)
 {
-    if (!mCfg->bindCpu) {
+    if (!mCfg->bindCpu)
+    {
         return 0;
     }
 
-    if (mCfg->cpuNum == 0 || index < 0) {
+    if (mCfg->cpuNum == 0 || index < 0)
+    {
         loge("invalid param: cpu num = %d, index = %d", mCfg->cpuNum, index);
         return ERRORPARAM;
     }
@@ -212,8 +245,9 @@ Error_t WorkThread::setAffinity(int index)
     CPU_ZERO(&mask);
     CPU_SET(index % mCfg->cpuNum, &mask);
     auto threadHandle = mWorkThread.native_handle();
-    int ret = pthread_setaffinity_np(threadHandle, sizeof(cpu_set_t), &mask);
-    if (0 != ret) {
+    int ret           = pthread_setaffinity_np(threadHandle, sizeof(cpu_set_t), &mask);
+    if (0 != ret)
+    {
         logw("set thread affinity failed, %s", strerror(ret));
         return ret;
     }
@@ -241,8 +275,8 @@ Threadpool::Threadpool(ThreadPoolConfig cfg) noexcept : mStatus(THREAD_POOL_NOT_
 Threadpool::Threadpool(int threadNum) noexcept : mStatus(THREAD_POOL_NOT_INIT)
 {
     ThreadPoolConfig cfg = sDefaultThreadCfg;
-    cfg.thNum = threadNum;
-    mCfg = cfg;
+    cfg.thNum            = threadNum;
+    mCfg                 = cfg;
 
     init();
 }
@@ -252,13 +286,16 @@ Threadpool::~Threadpool()
     mStatus = THREAD_POOL_STOP;
     logi("prepare clean resource");
 
-    if (mMonitor.joinable()) {
+    if (mMonitor.joinable())
+    {
         mMonitor.join();
     }
     logi("exit monitor thread");
 
-    for (auto &x : mCoreThreads) {
-        if (likely(x)) {
+    for (auto &x : mCoreThreads)
+    {
+        if (likely(x))
+        {
             delete x;
             x = nullptr;
         }
@@ -268,22 +305,25 @@ Threadpool::~Threadpool()
 
 Error_t Threadpool::init()
 {
-    if (THREAD_POOL_NOT_INIT != mStatus) {
+    if (THREAD_POOL_NOT_INIT != mStatus)
+    {
         loge("thread pool has init, can't init again.\n");
         return ERRORPARAM;
     }
 
     mCoreThreads.reserve(mCfg.thNum);
-    for (int i = 0; i < mCfg.thNum; i++) {
+    for (int i = 0; i < mCfg.thNum; i++)
+    {
         auto pth = new WorkThread(i, WorkThread::THREAD_CORE, &mPoolTasksQ, &mCoreThreads, &mCfg);
         mCoreThreads.emplace_back(pth);
     }
 
-    for (int i = 0; i < mCfg.thNum; i++) {
+    for (int i = 0; i < mCfg.thNum; i++)
+    {
         CHECK_ERROR(mCoreThreads[i]->init());
     }
 
-    mStatus = THREAD_POOL_INIT;
+    mStatus  = THREAD_POOL_INIT;
     mMonitor = std::move(std::thread(&Threadpool::monitor, this));
     return 0;
 }
@@ -297,11 +337,16 @@ int Threadpool::dispatch(int index)
 {
     int realIdx = index;
     // if (likely(index < mCfg.thNum || index >= 0)) {
-    if (likely(index >= 0)) {
+    if (likely(index >= 0))
+    {
         realIdx = index % mCfg.thNum;
-    } else if (sCommonThreadIndex == index) {
+    }
+    else if (sCommonThreadIndex == index)
+    {
         realIdx = sCommonThreadIndex;
-    } else {
+    }
+    else
+    {
         realIdx = sCommonThreadIndex;
     }
 
@@ -320,50 +365,58 @@ bool Threadpool::createAssistantThread(int index)
 
 Error_t Threadpool::monitor()
 {
-    int theBusiestThreadIndex = mCfg.thNum - 1;  // 0;
+    int theBusiestThreadIndex   = mCfg.thNum - 1;  // 0;
     int theBusiestThreadTaskCnt = 0;
-    const int onceSleepTimeMs = 20;
-    const int sleepCnt = mCfg.monitorIntervalMs / onceSleepTimeMs + !!(mCfg.monitorIntervalMs % onceSleepTimeMs);
+    const int onceSleepTimeMs   = 20;
+    const int sleepCnt  = mCfg.monitorIntervalMs / onceSleepTimeMs + !!(mCfg.monitorIntervalMs % onceSleepTimeMs);
     uint64_t monitorCnt = -1;
 
-    while (THREAD_POOL_INIT >= mStatus && mCfg.enableMonitor) {
+    while (THREAD_POOL_INIT >= mStatus && mCfg.enableMonitor)
+    {
         monitorCnt++;
-        while (mCfg.enableMonitor && THREAD_POOL_INIT != mStatus) {
+        while (mCfg.enableMonitor && THREAD_POOL_INIT != mStatus)
+        {
             // 如果没有 init，则等待 init 完成
             logi("wait threadpool init");
             std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         }
 
         int sleepCntTmp = sleepCnt;
-        while (mCfg.enableMonitor && THREAD_POOL_INIT == mStatus && sleepCntTmp--) {
+        while (mCfg.enableMonitor && THREAD_POOL_INIT == mStatus && sleepCntTmp--)
+        {
             // 将一个长的时间间隔拆分成多个小的时间间隔去休眠，是为了保证当线程池状态改变时，监控线程可以快速退出
             std::this_thread::sleep_for(std::chrono::milliseconds(onceSleepTimeMs));
         }
 
         int assistantThreadNum = mAssistantThreads.size();
-        int leftSize = std::min(mCfg.maxThreadNum - mCfg.thNum - assistantThreadNum,
-                                mCfg.maxAssistantThreadNum - assistantThreadNum);
-        leftSize = std::max(0, leftSize);
-        if (unlikely(0 == leftSize)) {
-            if (0 == monitorCnt % 50) {
-                logw("The number of assistant threads reaches the maximum: maxThreadNum = %d, "
-                      "maxAssistantThreadNum = %d, current number of assistant threads = %d",
-                      mCfg.maxThreadNum, mCfg.maxAssistantThreadNum, assistantThreadNum);
+        int leftSize           = std::min(mCfg.maxThreadNum - mCfg.thNum - assistantThreadNum,
+                                          mCfg.maxAssistantThreadNum - assistantThreadNum);
+        leftSize               = std::max(0, leftSize);
+        if (unlikely(0 == leftSize))
+        {
+            if (0 == monitorCnt % 50)
+            {
+                logw(
+                    "The number of assistant threads reaches the maximum: maxThreadNum = %d, "
+                    "maxAssistantThreadNum = %d, current number of assistant threads = %d",
+                    mCfg.maxThreadNum, mCfg.maxAssistantThreadNum, assistantThreadNum);
             }
             continue;
         }
 
         // 如果核心线程都在执行，则表示忙碌
         theBusiestThreadIndex = theBusiestThreadTaskCnt = 0;
-        bool busy = true;
-        for (auto &pth : mCoreThreads) {
-            if (theBusiestThreadTaskCnt < pth->mTaskQ.size()) {
+        bool busy                                       = true;
+        for (auto &pth : mCoreThreads)
+        {
+            if (theBusiestThreadTaskCnt < pth->mTaskQ.size())
+            {
                 // logd("theBusiestThreadTaskCnt(%d) <= pth->mTaskQ.size()(%d), "
                 //        "theBusiestThreadIndex(%d),pth->mIndex(%d)",
                 //        theBusiestThreadTaskCnt, pth->mTaskQ.size(), theBusiestThreadIndex, pth->mIndex);
 
                 theBusiestThreadTaskCnt = pth->mTaskQ.size();
-                theBusiestThreadIndex = pth->mIndex;
+                theBusiestThreadIndex   = pth->mIndex;
             }
 
             busy &= WorkThread::THREAD_RUNNING == pth->mStatus && pth->mIsBusy && !pth->mTaskQ.empty();
@@ -372,16 +425,19 @@ Error_t Threadpool::monitor()
         };
 
         // 当核心线程全部 busy，或者公共任务池的任务足够多时，就创建辅助线程分担压力
-        if (busy || mPoolTasksQ.size() >= getThreadNum()) {
+        if (busy || mPoolTasksQ.size() >= getThreadNum())
+        {
             createAssistantThread(theBusiestThreadIndex);
         }
 
-        for (auto iter = mAssistantThreads.begin(); iter != mAssistantThreads.end();) {
+        for (auto iter = mAssistantThreads.begin(); iter != mAssistantThreads.end();)
+        {
             (*iter)->shrinkage() ? mAssistantThreads.erase(iter++) : iter++;
         }
     }
 
-    for (auto iter = mAssistantThreads.begin(); iter != mAssistantThreads.end();) {
+    for (auto iter = mAssistantThreads.begin(); iter != mAssistantThreads.end();)
+    {
         mAssistantThreads.erase(iter++);
     }
 

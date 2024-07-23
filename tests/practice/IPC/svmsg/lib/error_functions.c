@@ -10,13 +10,13 @@
 
 /* Listing 3-3 */
 
-#include <stdarg.h>
 #include "error_functions.h"
+#include <stdarg.h>
+#include "ename.c.inc" /* Defines ename and MAX_ENAME */
 #include "tlpi_hdr.h"
-#include "ename.c.inc"          /* Defines ename and MAX_ENAME */
 
 #ifdef __GNUC__
-__attribute__ ((__noreturn__))
+__attribute__((__noreturn__))
 #endif
 static void
 terminate(Boolean useExit3)
@@ -37,9 +37,7 @@ terminate(Boolean useExit3)
         _exit(EXIT_FAILURE);
 }
 
-static void
-outputError(Boolean useErr, int err, Boolean flushStdout,
-        const char *format, va_list ap)
+static void outputError(Boolean useErr, int err, Boolean flushStdout, const char *format, va_list ap)
 {
 #define BUF_SIZE 500
     char buf[BUF_SIZE], userMsg[BUF_SIZE], errText[BUF_SIZE];
@@ -47,27 +45,25 @@ outputError(Boolean useErr, int err, Boolean flushStdout,
     vsnprintf(userMsg, BUF_SIZE, format, ap);
 
     if (useErr)
-        snprintf(errText, BUF_SIZE, " [%s %s]",
-                (err > 0 && err <= MAX_ENAME) ?
-                ename[err] : "?UNKNOWN?", strerror(err));
+        snprintf(errText, BUF_SIZE, " [%s %s]", (err > 0 && err <= MAX_ENAME) ? ename[err] : "?UNKNOWN?",
+                 strerror(err));
     else
         snprintf(errText, BUF_SIZE, ":");
 
     snprintf(buf, BUF_SIZE, "ERROR%s %s\n", errText, userMsg);
 
     if (flushStdout)
-        fflush(stdout);       /* Flush any pending stdout */
+        fflush(stdout); /* Flush any pending stdout */
     fputs(buf, stderr);
-    fflush(stderr);           /* In case stderr is not line-buffered */
+    fflush(stderr); /* In case stderr is not line-buffered */
 }
 
-void
-errMsg(const char *format, ...)
+void errMsg(const char *format, ...)
 {
     va_list argList;
     int savedErrno;
 
-    savedErrno = errno;       /* In case we change it here */
+    savedErrno = errno; /* In case we change it here */
 
     va_start(argList, format);
     outputError(TRUE, errno, TRUE, format, argList);
@@ -76,8 +72,7 @@ errMsg(const char *format, ...)
     errno = savedErrno;
 }
 
-void
-errExit(const char *format, ...)
+void errExit(const char *format, ...)
 {
     va_list argList;
 
@@ -88,8 +83,7 @@ errExit(const char *format, ...)
     terminate(TRUE);
 }
 
-void
-err_exit(const char *format, ...)
+void err_exit(const char *format, ...)
 {
     va_list argList;
 
@@ -100,8 +94,7 @@ err_exit(const char *format, ...)
     terminate(FALSE);
 }
 
-void
-errExitEN(int errnum, const char *format, ...)
+void errExitEN(int errnum, const char *format, ...)
 {
     va_list argList;
 
@@ -112,8 +105,7 @@ errExitEN(int errnum, const char *format, ...)
     terminate(TRUE);
 }
 
-void
-fatal(const char *format, ...)
+void fatal(const char *format, ...)
 {
     va_list argList;
 
@@ -124,34 +116,32 @@ fatal(const char *format, ...)
     terminate(TRUE);
 }
 
-void
-usageErr(const char *format, ...)
+void usageErr(const char *format, ...)
 {
     va_list argList;
 
-    fflush(stdout);           /* Flush any pending stdout */
+    fflush(stdout); /* Flush any pending stdout */
 
     fprintf(stderr, "Usage: ");
     va_start(argList, format);
     vfprintf(stderr, format, argList);
     va_end(argList);
 
-    fflush(stderr);           /* In case stderr is not line-buffered */
+    fflush(stderr); /* In case stderr is not line-buffered */
     exit(EXIT_FAILURE);
 }
 
-void
-cmdLineErr(const char *format, ...)
+void cmdLineErr(const char *format, ...)
 {
     va_list argList;
 
-    fflush(stdout);           /* Flush any pending stdout */
+    fflush(stdout); /* Flush any pending stdout */
 
     fprintf(stderr, "Command-line usage error: ");
     va_start(argList, format);
     vfprintf(stderr, format, argList);
     va_end(argList);
 
-    fflush(stderr);           /* In case stderr is not line-buffered */
+    fflush(stderr); /* In case stderr is not line-buffered */
     exit(EXIT_FAILURE);
 }

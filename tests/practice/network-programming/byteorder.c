@@ -22,19 +22,19 @@
 
 int main(int argc, char **argv)
 {
-	unsigned num = 0xab127980;
-	unsigned char *pc;
+    unsigned num = 0xab127980;
+    unsigned char *pc;
 
-	printf("nums address is %p, and it's value is 0x %x \n\n", &num, num);
-	pc = (unsigned char *)&num;
-	for (size_t i = 0; i < 4; ++i)
-	{
-		printf("%p: 0x%x\n", pc, (unsigned int)*pc);
-		++pc;
-	}
+    printf("nums address is %p, and it's value is 0x %x \n\n", &num, num);
+    pc = (unsigned char *)&num;
+    for (size_t i = 0; i < 4; ++i)
+    {
+        printf("%p: 0x%x\n", pc, (unsigned int)*pc);
+        ++pc;
+    }
 
-	unsigned short port;
-	port = 0x6789;
-	printf("port number in   host  byteorder is 0x%x\n", port);
-	printf("port number in network byteorder is 0x%x\n", htons(port));
+    unsigned short port;
+    port = 0x6789;
+    printf("port number in   host  byteorder is 0x%x\n", port);
+    printf("port number in network byteorder is 0x%x\n", htons(port));
 }

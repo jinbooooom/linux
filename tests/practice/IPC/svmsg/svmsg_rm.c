@@ -10,12 +10,11 @@
 
 /* Listing 46-4 */
 
-#include <sys/types.h>
 #include <sys/msg.h>
+#include <sys/types.h>
 #include "tlpi_hdr.h"
 
-int
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     int j;
 

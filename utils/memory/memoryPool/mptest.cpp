@@ -27,6 +27,5 @@ int main()
     p3 = mp.Malloc();
     logi("p3 = %p", p3);
 
-
     return 0;
 }

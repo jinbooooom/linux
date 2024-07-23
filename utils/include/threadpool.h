@@ -3,6 +3,7 @@
 
 #include "base.h"
 
+#include <unistd.h>
 #include <algorithm>
 #include <atomic>
 #include <condition_variable>
@@ -10,37 +11,36 @@
 #include <functional>
 #include <future>
 #include <iostream>
+#include <list>
 #include <map>
 #include <queue>
 #include <stdexcept>
 #include <thread>
-#include <unistd.h>
-#include <list>
 #include <vector>
 
-
 #define CV_NOTIFY (1)
-using Task_t = std::function<void()>;
-static const int sSchedule = SCHED_OTHER;                          // SCHED_OTHER, SCHED_FIFO, SCHED_RR;
-static const int sMinPriority = sched_get_priority_min(SCHED_RR);  // 1
-static const int sMaxPriority = sched_get_priority_max(SCHED_RR);  // 99
-static const int sCpuNum = std::thread::hardware_concurrency();
+using Task_t                        = std::function<void()>;
+static const int sSchedule          = SCHED_OTHER;                       // SCHED_OTHER, SCHED_FIFO, SCHED_RR;
+static const int sMinPriority       = sched_get_priority_min(SCHED_RR);  // 1
+static const int sMaxPriority       = sched_get_priority_max(SCHED_RR);  // 99
+static const int sCpuNum            = std::thread::hardware_concurrency();
 static const int sCommonThreadIndex = -1;
 
-struct ThreadPoolConfig {
-    int thNum = 8;
-    int maxThreadNum = sCpuNum;
+struct ThreadPoolConfig
+{
+    int thNum                 = 8;
+    int maxThreadNum          = sCpuNum;
     int maxAssistantThreadNum = maxThreadNum;  // thNum * 2;
-    int helpRange = 2;
-    int priority = sMinPriority;
-    int schedule = sSchedule;
-    int maxTTL = 10;
-    int cpuNum = sCpuNum;
-    bool bindCpu = false;  // 当前任务不绑定 cpu 执行却更快
-    bool enableMonitor = false;
-    int monitorIntervalMs = 50;  // ms
+    int helpRange             = 2;
+    int priority              = sMinPriority;
+    int schedule              = sSchedule;
+    int maxTTL                = 10;
+    int cpuNum                = sCpuNum;
+    bool bindCpu              = false;  // 当前任务不绑定 cpu 执行却更快
+    bool enableMonitor        = false;
+    int monitorIntervalMs     = 50;  // ms
 
-    ThreadPoolConfig() = default;
+    ThreadPoolConfig()  = default;
     ~ThreadPoolConfig() = default;
 };
 
@@ -48,25 +48,23 @@ static ThreadPoolConfig sDefaultThreadCfg;
 
 class TaskQueue
 {
-public:
-    bool empty()
-    {
-        return mQ.empty();
-    }
+  public:
+    bool empty() { return mQ.empty(); }
 
-    int size()
-    {
-        return mQ.size();
-    }
+    int size() { return mQ.size(); }
 
     void push(Task_t &&task)
     {
-        while (true) {
-            if (mLock.try_lock()) {
+        while (true)
+        {
+            if (mLock.try_lock())
+            {
                 mQ.emplace_back(std::move(task));
                 mLock.unlock();
                 break;
-            } else {
+            }
+            else
+            {
                 std::this_thread::yield();
             }
         }
@@ -76,7 +74,8 @@ public:
     {
         bool result = false;
 
-        if (!mQ.empty()) {
+        if (!mQ.empty())
+        {
             task = std::move(mQ.front());
             mQ.pop_front();
             result = true;
@@ -88,8 +87,10 @@ public:
     bool tryPop(Task_t &task)
     {
         bool result = false;
-        if (mLock.try_lock()) {
-            if (!mQ.empty()) {
+        if (mLock.try_lock())
+        {
+            if (!mQ.empty())
+            {
                 task = std::move(mQ.front());
                 mQ.pop_front();
                 result = true;
@@ -103,8 +104,10 @@ public:
     bool tryHelp(Task_t &task)
     {
         bool result = false;
-        if (mLock.try_lock()) {
-            if (!mQ.empty()) {
+        if (mLock.try_lock())
+        {
+            if (!mQ.empty())
+            {
                 task = std::move(mQ.back());
                 mQ.pop_back();
                 result = true;
@@ -115,15 +118,16 @@ public:
         return result;
     }
 
-private:
+  private:
     std::deque<Task_t> mQ;
     std::mutex mLock;
 };
 
 class WorkThread
 {
-public:
-    typedef enum _ThreadStatus_t {
+  public:
+    typedef enum _ThreadStatus_t
+    {
         THREAD_NOT_INIT,
         THREAD_INIT,
         THREAD_RUNNING,
@@ -131,10 +135,17 @@ public:
         THREAD_MAX
     } ThreadStatus_t;
 
-    typedef enum _ThreadType_t { THREAD_CORE, THREAD_ASSISTANT } ThreadType_t;
+    typedef enum _ThreadType_t
+    {
+        THREAD_CORE,
+        THREAD_ASSISTANT
+    } ThreadType_t;
 
-public:
-    explicit WorkThread(int index, ThreadType_t type, TaskQueue *poolTaskQ, std::vector<WorkThread *> *poolThreads,
+  public:
+    explicit WorkThread(int index,
+                        ThreadType_t type,
+                        TaskQueue *poolTaskQ,
+                        std::vector<WorkThread *> *poolThreads,
                         ThreadPoolConfig *config);
 
     ~WorkThread();
@@ -143,7 +154,7 @@ public:
 
     bool shrinkage();
 
-protected:
+  protected:
     Error_t run();
 
     void processTask();
@@ -154,7 +165,7 @@ protected:
 
     bool popOtherTask(Task_t &task);
 
-protected:
+  protected:
     Error_t setSchedParam();
 
     Error_t setAffinity(int index);
@@ -163,7 +174,7 @@ protected:
 
     static int calcPriority(int priority);
 
-private:
+  private:
     int mIndex;
     ThreadType_t mType;
     ThreadStatus_t mStatus;
@@ -185,8 +196,9 @@ private:
 
 class Threadpool
 {
-public:
-    typedef enum _ThreadPoolStatus_t {
+  public:
+    typedef enum _ThreadPoolStatus_t
+    {
         THREAD_POOL_NOT_INIT,
         THREAD_POOL_INIT,
         THREAD_POOL_STOP,
@@ -217,14 +229,14 @@ public:
 
     int getThreadNum();
 
-protected:
+  protected:
     int dispatch(int index);
 
     bool createAssistantThread(int index);
 
     Error_t monitor();
 
-private:
+  private:
     ThreadPoolStatus_t mStatus;
     TaskQueue mPoolTasksQ;
     std::vector<WorkThread *> mCoreThreads;

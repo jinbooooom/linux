@@ -27,15 +27,17 @@ class EasyThreadpool
     std::atomic<int> mUnuseThreadNum;      // 空闲线程数量
     const bool mIsAutoGrow;
 
-public:
+  public:
     inline EasyThreadpool(int initSize = 8, int maxSize = 16, bool isAutoGrow = false)
         : mInitSize(initSize), mMaxSize(maxSize), mRun(true), mUnuseThreadNum(0), mIsAutoGrow(isAutoGrow)
     {
-        if (initSize <= 1) {
+        if (initSize <= 1)
+        {
             mInitSize = 1;
         }
 
-        if (mMaxSize < mInitSize) {
+        if (mMaxSize < mInitSize)
+        {
             mMaxSize = mInitSize;
         }
 
@@ -47,19 +49,22 @@ public:
     {
         mRun = false;
         mTaskCv.notify_all();
-        for (std::thread &thread : mPool) {
+        for (std::thread &thread : mPool)
+        {
             // thread.detach();
-            if (thread.joinable()) {
+            if (thread.joinable())
+            {
                 thread.join();
             }
         }
     }
 
-public:
+  public:
     template <class F, class... Args>
     auto commit(F &&f, Args &&...args) -> std::future<decltype(f(args...))>
     {
-        if (!mRun) {
+        if (!mRun)
+        {
             throw std::runtime_error("commit on thread pool is stopped.");
         }
 
@@ -83,7 +88,8 @@ public:
     template <class F>
     void commitVoid(F &&task)
     {
-        if (!mRun) {
+        if (!mRun)
+        {
             throw std::runtime_error("commit on thread pool is stopped.");
         }
 
@@ -97,30 +103,27 @@ public:
     }
 
     // number of idle threads
-    int unuseCount()
-    {
-        return mUnuseThreadNum;
-    }
+    int unuseCount() { return mUnuseThreadNum; }
 
     // the number of threads
-    int count()
-    {
-        return mPool.size();
-    }
+    int count() { return mPool.size(); }
 
-private:
+  private:
     void addThread(int size)
     {
         // 增加线程数量,但不超过最大数量 mMaxSize
-        for (; mPool.size() < (size_t) mMaxSize && size > 0; --size) {
+        for (; mPool.size() < (size_t)mMaxSize && size > 0; --size)
+        {
             mPool.emplace_back([this] {  // work thread
                 // 防止 mRun 为 false 时立即结束, 此时任务队列可能不为空，导致任务队列的任务没有执行完
-                while (true) {
+                while (true)
+                {
                     Task_t task;
                     {
                         std::unique_lock<std::mutex> lock{mQueueLock};
                         mTaskCv.wait(lock, [this] { return !mRun || !mTaskQ.empty(); });
-                        if (!mRun && mTaskQ.empty()) {
+                        if (!mRun && mTaskQ.empty())
+                        {
                             // 当 mRun 为 false 时，依旧执行，直到任务队列为空才结束线程
                             return;
                         }
@@ -144,4 +147,4 @@ private:
     }
 };
 
-#endif // __JINBO_EASY_THREAD_POOL_H__
+#endif  // __JINBO_EASY_THREAD_POOL_H__

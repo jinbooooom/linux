@@ -1,7 +1,7 @@
-#include <cstring>
-#include <iostream>
 #include <sys/ipc.h>
 #include <sys/shm.h>
+#include <cstring>
+#include <iostream>
 
 #define SHM_SIZE 1024
 
@@ -14,14 +14,16 @@ int main()
     // 连接到共享内存段
     int shmid = shmget(key, SHM_SIZE, 0666);
     // int shmid = shmget(key, SHM_SIZE, IPC_CREAT | 0666);
-    if (shmid < 0) {
+    if (shmid < 0)
+    {
         std::cout << "无法连接到共享内存" << std::endl;
         return 1;
     }
 
     // 连接到共享内存段
-    char *sharedMemory = (char *) shmat(shmid, NULL, 0);
-    if (sharedMemory == (char *) -1) {
+    char *sharedMemory = (char *)shmat(shmid, NULL, 0);
+    if (sharedMemory == (char *)-1)
+    {
         std::cout << "无法连接到共享内存" << std::endl;
         return 1;
     }

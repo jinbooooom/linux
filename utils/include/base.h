@@ -6,4 +6,4 @@
 #include "error.h"
 #include "likely.h"
 
-#endif //__JINBO_BASE_H__
+#endif  //__JINBO_BASE_H__

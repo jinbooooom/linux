@@ -10,80 +10,79 @@ sharedi = tmp;，此语句将 task1 中的 tmp = 1001 赋值给 sharedi 而不�
 
 */
 
-
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <pthread.h>
 
 void task1(void);
 void task2(void);
 void task3(void);
-int sharedi = 0;
-pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER; // 初始化锁为解锁状态
+int sharedi           = 0;
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;  // 初始化锁为解锁状态
 
 int main(int argc, char **argv)
 {
-	pthread_t thrd1, thrd2, thrd3;
-	int ret;
-	ret = pthread_create(&thrd1, NULL, (void *)task1, NULL);
-	ret = pthread_create(&thrd2, NULL, (void *)task2, NULL);
-	pthread_join(thrd1, NULL);
-	pthread_join(thrd2, NULL);
-	printf("sharedi = %d\n", sharedi);
+    pthread_t thrd1, thrd2, thrd3;
+    int ret;
+    ret = pthread_create(&thrd1, NULL, (void *)task1, NULL);
+    ret = pthread_create(&thrd2, NULL, (void *)task2, NULL);
+    pthread_join(thrd1, NULL);
+    pthread_join(thrd2, NULL);
+    printf("sharedi = %d\n", sharedi);
 
-	return 0;
+    return 0;
 }
 
 void task1(void)
 {
-	long i, tmp;
-	for (i = 0; i < 1000000; ++i)
-	{
-		// /* 【1】
-		if (pthread_mutex_lock(&mutex) != 0)  // 上锁成功返回 0
-		{
-			perror("pthread_mutex_lock");
-			exit(EXIT_FAILURE);
-		}
-		// */ 
-		
-		tmp = sharedi;	// 关键区不应该被打断，采用锁的机制对关键区的保护
-		++tmp;
-		sharedi = tmp;
-		
-		// /* 【2】
-		if (pthread_mutex_unlock(&mutex) != 0)  // 解锁成功返回 0
-		{
-			perror("pthread_mutex_unlock");
-			exit(EXIT_FAILURE);
-		}
-		// */ 
-	}
+    long i, tmp;
+    for (i = 0; i < 1000000; ++i)
+    {
+        // /* 【1】
+        if (pthread_mutex_lock(&mutex) != 0)  // 上锁成功返回 0
+        {
+            perror("pthread_mutex_lock");
+            exit(EXIT_FAILURE);
+        }
+        // */
+
+        tmp = sharedi;  // 关键区不应该被打断，采用锁的机制对关键区的保护
+        ++tmp;
+        sharedi = tmp;
+
+        // /* 【2】
+        if (pthread_mutex_unlock(&mutex) != 0)  // 解锁成功返回 0
+        {
+            perror("pthread_mutex_unlock");
+            exit(EXIT_FAILURE);
+        }
+        // */
+    }
 }
 
 void task2(void)
 {
-	long i, tmp;
-	for (i = 0; i < 1000000; ++i)
-	{
-		// /* 【3】
-		if (pthread_mutex_lock(&mutex) != 0)
-		{
-			perror("pthread_mutex_lock");
-			exit(EXIT_FAILURE);
-		}
-		// */
+    long i, tmp;
+    for (i = 0; i < 1000000; ++i)
+    {
+        // /* 【3】
+        if (pthread_mutex_lock(&mutex) != 0)
+        {
+            perror("pthread_mutex_lock");
+            exit(EXIT_FAILURE);
+        }
+        // */
 
-		tmp = sharedi;
-		++tmp;
-		sharedi = tmp;
-		
-		// /* 【4】
-		if (pthread_mutex_unlock(&mutex) != 0)
-		{
-			perror("pthread_mutex_unlock");
-			exit(EXIT_FAILURE);
-		}
-		// */
-	}
+        tmp = sharedi;
+        ++tmp;
+        sharedi = tmp;
+
+        // /* 【4】
+        if (pthread_mutex_unlock(&mutex) != 0)
+        {
+            perror("pthread_mutex_unlock");
+            exit(EXIT_FAILURE);
+        }
+        // */
+    }
 }

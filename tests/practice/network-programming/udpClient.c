@@ -2,17 +2,17 @@
 一个 UDP 客户端的例子，配合代码 udpServer.c 阅读
 */
 
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <netinet/in.h>
-#include <string.h>
-#include <strings.h>
 #include <arpa/inet.h>
 #include <ctype.h>
-#include <unistd.h> 
 #include <errno.h>
+#include <netinet/in.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <strings.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #define MAX_BUF_SIZE 1024
 
@@ -29,7 +29,7 @@ void udpc_requ(int sockfd, const struct sockaddr_in *addr, int len)
         printf("Waiting respond from server\n");
         bzero(buffer, MAX_BUF_SIZE);
         // 从网络上读数据，写到屏幕
-        n = recvfrom(sockfd, buffer, MAX_BUF_SIZE, 0, NULL, NULL);
+        n         = recvfrom(sockfd, buffer, MAX_BUF_SIZE, 0, NULL, NULL);
         buffer[n] = 0;
         printf("I have received from server ");
         fputs(buffer, stdout);
@@ -57,7 +57,7 @@ int main(int argc, char **argv)
     // 填充服务端的信息
     bzero(&addr, sizeof(struct sockaddr_in));
     addr.sin_family = AF_INET;
-    addr.sin_port = htons(port);
+    addr.sin_port   = htons(port);
     if (inet_aton(argv[1], &addr.sin_addr) < 0)
     {
         fprintf(stderr, "IP error: %s\n", strerror(errno));

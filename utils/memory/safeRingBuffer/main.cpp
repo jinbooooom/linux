@@ -1,10 +1,10 @@
-#include "ringBuffer.hpp"
 #include "../../log/log.hpp"
+#include "ringBuffer.hpp"
 
 #include <unistd.h>
 #include <thread>
 
-static const int MAX = 18;
+static const int MAX      = 18;
 static const int BUF_SIZE = 12;
 
 byte_t data[MAX]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17};
@@ -32,7 +32,7 @@ void write_data()
         }
         else
         {
-            //loge("[thread write_data] don't write data.");
+            // loge("[thread write_data] don't write data.");
         }
 
         data_w_pos += w_cnt;
@@ -50,7 +50,7 @@ void write_data()
 
 void read_data1()
 {
-    int r_cnt = 2;
+    int r_cnt   = 2;
     byte_t *arr = new byte_t[r_cnt];
 
     while (true)
@@ -62,8 +62,7 @@ void read_data1()
             {
                 logw("[th1] after get data, ring buf is empty.");
             }
-            logd("[th1] ring buf size = %d, free_size = %d",
-                 buf->size(), buf->free_size());
+            logd("[th1] ring buf size = %d, free_size = %d", buf->size(), buf->free_size());
         }
         else
         {
@@ -78,7 +77,7 @@ void read_data1()
 
 void read_data2()
 {
-    int r_cnt = 3;
+    int r_cnt   = 3;
     byte_t *arr = new byte_t[r_cnt];
 
     while (true)
@@ -90,8 +89,7 @@ void read_data2()
             {
                 logw("[th2] after get data, ring buf is empty.");
             }
-            logd("[th2] ring buf size = %d, free_size = %d",
-                 buf->size(), buf->free_size());
+            logd("[th2] ring buf size = %d, free_size = %d", buf->size(), buf->free_size());
         }
         else
         {

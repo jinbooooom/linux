@@ -1,6 +1,6 @@
 
-#include "resourceGuard.hpp"
 #include <iostream>
+#include "resourceGuard.hpp"
 
 int main()
 {
