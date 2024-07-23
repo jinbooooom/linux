@@ -6,15 +6,15 @@ project (${MY_LIB_NAME})
 
 file(
     GLOB MY_LIB_SRCS
-        ${CMAKE_CURRENT_SOURCE_DIR}/3rd/src/md5/*.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/utils/file/*.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/3rd/src/md5/*.cpp 
+        ${CMAKE_CURRENT_SOURCE_DIR}/utils/file/*.cpp 
         ${CMAKE_CURRENT_SOURCE_DIR}/utils/guard/*.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/utils/str/*.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/utils/threadPool/*.cpp
 
 )
 
-message(WARNING ${MY_LIB_SRCS})
+# message(WARNING ${MY_LIB_SRCS})
 
 execute_process(
     COMMAND bash "-c" "git log|head -n 1|awk '{printf $2}'"
@@ -38,5 +38,4 @@ target_link_libraries(${PROJECT_NAME} -lpthread)
 # 开始编译可执行程序
 # 设置输出目录为 build/bin
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/build/bin)
-
 add_subdirectory(${PROJECT_SOURCE_DIR}/tests)
