@@ -26,7 +26,7 @@ def format_files(directory, clang_format_file, exclude_dirs):
             # 检查文件扩展名是否在目标扩展名列表中
             if file.endswith(tuple(file_extensions)):
                 file_path = os.path.join(root, file)
-                # os.system(f"clang-format -i -style=file {file_path}")
+                os.system(f"clang-format -i -style=file {file_path}")
                 print(f"已格式化文件: {file_path}")
 
 def main():
@@ -34,8 +34,9 @@ def main():
                             "assets",
                             "communication",
                             "document",
-                            "tests/3rd/flatbuffers/"
+                            "tests/3rd/flatbuffers/",
                             "tools",
+                            "build",
                             ]
 
     # 解析命令行参数
