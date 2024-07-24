@@ -7,10 +7,10 @@ project (${MY_LIB_NAME})
 file(
     GLOB MY_LIB_SRCS
         ${CMAKE_CURRENT_SOURCE_DIR}/3rd/src/md5/*.cpp 
-        ${CMAKE_CURRENT_SOURCE_DIR}/utils/file/*.cpp 
-        ${CMAKE_CURRENT_SOURCE_DIR}/utils/guard/*.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/utils/str/*.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/utils/threadPool/*.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/file/*.cpp 
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/guard/*.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/str/*.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/threadPool/*.cpp
 
 )
 
@@ -23,7 +23,7 @@ execute_process(
 add_definitions(-DGIT_COMMIT_SHA1="${GIT_COMMIT}")
 
 include_directories(3rd/include)
-include_directories(utils/include)
+include_directories(src/include)
 
 add_compile_options(-std=c++14 -O2 -Wall)
 # 禁止一些警告
