@@ -16,6 +16,9 @@ def format_files(directory, clang_format_file, exclude_dirs):
     # 设置要格式化的文件扩展名
     file_extensions = ['.c', '.cpp', '.h', '.hpp']
 
+    # 存储要格式化的文件路径
+    files_to_format = []
+
     # 搜索指定路径下的所有文件
     for root, dirs, files in os.walk(directory):
         for exclude_dir in exclude_dirs:
@@ -26,8 +29,26 @@ def format_files(directory, clang_format_file, exclude_dirs):
             # 检查文件扩展名是否在目标扩展名列表中
             if file.endswith(tuple(file_extensions)):
                 file_path = os.path.join(root, file)
-                os.system(f"clang-format -i -style=file {file_path}")
-                print(f"已格式化文件: {file_path}")
+                files_to_format.append(file_path)
+
+    # 格式化所有文件
+    if files_to_format:
+        batch_size = 32  # 每组文件的大小
+        num_batches = (len(files_to_format) + batch_size - 1) // batch_size  # 计算需要的批次数
+
+        for i in range(num_batches):
+            start_idx = i * batch_size
+            end_idx = min((i + 1) * batch_size, len(files_to_format))
+            batch_files = files_to_format[start_idx:end_idx]
+            formatted_files = " ".join(batch_files)
+            os.system(f"clang-format -i -style=file {formatted_files}")
+
+            progress = ((i + 1) / num_batches) * 100
+            print(f"clang-format {progress:.2f}%")
+
+            # print(f"已格式化以下文件 (批次 {i+1} / {num_batches})")
+            # for file_path in batch_files:
+            #     print(file_path)
 
 def main():
     default_exclude_dirs = ["3rd",
