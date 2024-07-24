@@ -13,19 +13,22 @@
 ### 文件夹说明
 
 ```shell
-├── 3rdtools  # 常用的一些三方库的使用总结
+.
+├── 3rd         # 常用的一些三方库
+├── assets      # 资源，如 pdf 书籍和源码
 ├── awesome.md  # 好用的学习网站、工具等
-├── cmake  # cmake 学习
-├── communication  # 网络通信相关，包含IB RDMA、TCP/IP协议，和 mpi 通信库的使用
-├── env.md # 记录开发中一些环境的配置
-├── gdb  # 总结一些 gdb 调试技巧
-├── git  # 总结的一些 git 命令
-├── programming  # 系统编程的一些实例
-├── project  # 一些完整的 demo
-├── shell  # shell 命令行和 shell 编程
-├── source  # 一些学习资源，如 pdf 书籍和源码
-├── system # linux 操作系统的学习笔记
-└── utils  # 自己写的一些常用的工具，尽可能功能单一、简洁，方便使用
+├── build.sh    # 一键编译的脚本，生成动态库保存在 ./build/libs，生成测试程序保存在 ./build/bin
+├── document    # 文档总结
+│   ├── shell   # shell 命令行和 shell 编程
+│   ├── system  # linux 操作系统的学习笔记
+│   └── tcp_ip  # 计算机网络的学习笔记
+├── src         # 自己写的一些常用的工具，尽可能功能单一、简洁，方便使用
+├── tests       # 测试程序、系统编程的一些例子等
+├── toc.py      # README 目录生成工具
+└── tools       # 开发中常用工具的总结
+    ├── cmake   # 总结 cmake 使用方法
+    ├── gdb     # 总结 gdb 调试技巧
+    └── git     # 总结 git 命令
 ```
 
 --------------------------------------------------
