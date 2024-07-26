@@ -1,4 +1,4 @@
-g++ -shared -fPIC MathPlugin.cpp -o plugin.so
+g++ -shared -fPIC MathPlugin.cpp -o pluginTest.so
 g++ main.cpp -ldl -o main
 
 # 这两行代码是用来编译和链接 C++ 插件以及主程序的命令。

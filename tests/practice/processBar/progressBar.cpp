@@ -1,5 +1,6 @@
 #include <iomanip>
 #include <iostream>
+#include <unistd.h>
 
 void ProgressBar(int progress, int total)
 {
@@ -39,9 +40,7 @@ int main()
     {
         ProgressBar(i, total);
         // 模拟处理时间
-        // 建议使用实际任务的逻辑来替代这里的延迟，例如文件的读写或计算等
-        for (int j = 0; j < 10000000; ++j)
-        {}
+        usleep(5000);
     }
 
     return 0;
