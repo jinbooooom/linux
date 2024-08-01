@@ -30,14 +30,16 @@ add_library(common SHARED util.cpp) # 生成动态库或共享库
 
 add_library 默认生成是静态库，通过以上命令生成文件名字，
 
-    在 Linux 下是：
-    demo
-    libcommon.a
-    libcommon.so
-    在 Windows 下是：
-    demo.exe
-    common.lib
-    common.dll
+```markdown
+在 Linux 下是：
+demo
+libcommon.a
+libcommon.so
+在 Windows 下是：
+demo.exe
+common.lib
+common.dll
+```
 
 ### 指定编译包含的源文件
 
@@ -342,6 +344,36 @@ CMAKE_CXX_FLAGS：设置 C++ 编译选项，也可以通过指令 add_definition
 ```cmake
 add_definitions(-DENABLE_DEBUG -DABC) # 参数之间用空格分隔
 ```
+
+## 执行Shell命令
+
+```cmake
+cmake_minimum_required(VERSION 3.23)
+project(shellTest)
+
+set(MY_COMMAND ls -l)
+set(MY_DIR ./)
+
+# 运行shell命令并捕获输出结果
+execute_process(
+  COMMAND ${MY_COMMAND}
+  OUTPUT_VARIABLE output_variable
+  RESULT_VARIABLE result_variable
+  WORKING_DIRECTORY ${MY_DIR}
+)
+
+# 打印输出结果和返回值
+message("Output: ${output_variable}")
+message("Return Code: ${result_variable}")
+
+# 执行 cmake . 就会打印 ls -l 命令的输出结果
+```
+
+上述示例代码中的 MY_COMMAND 是要运行的实际shell命令，output_variable 是用于存储命令输出结果的变量，result_variable 是用于存储命令返回值的变量，MY_DIR 是要在其中运行命令的工作目录。
+
+在执行execute_process命令后，可以使用message命令打印出输出结果和返回值。
+
+需要注意的是，execute_process命令会立即执行指定的shell命令，因此它在CMake脚本解析期间运行，而不是在生成构建系统时运行。此外，执行的命令可能会受到操作系统的限制。
 
 ## 其它
 
