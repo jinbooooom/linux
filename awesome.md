@@ -18,4 +18,5 @@
 |        **[spdlog](https://github.com/gabime/spdlog)**        | 非常快，仅头文件/编译的C++日志库                             |
 |         **[json](https://github.com/nlohmann/json)**         | [nlohmann](https://github.com/nlohmann)的 C++11 JSON 库，提供直观的语法 |
 |   **[flatbuffers](https://github.com/google/flatbuffers)**   | FlatBuffers是一个跨平台的序列化库，旨在最大限度地提高内存效率。它允许您直接访问序列化数据，而无需首先解析/解包它，同时仍然具有很好的向前/向后兼容性。 |
+| **[backward-cpp](https://github.com/bombela/backward-cpp)**  | 优雅的打印出堆栈                                             |
 
