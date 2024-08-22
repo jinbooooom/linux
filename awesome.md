@@ -11,7 +11,8 @@
 
 |                             库名                             | 描述                                                         |
 | :----------------------------------------------------------: | ------------------------------------------------------------ |
-| **[better-enums](https://github.com/aantron/better-enums)**  | 枚举变量与字符串转换的 header-only 库                        |
+| **[better-enums](https://github.com/aantron/better-enums)**  | 枚举变量与字符串转换的 header-only 库，要求C++11（含）以上   |
+|   **[magic_enum](https://github.com/Neargye/magic_enum)**    | 枚举变量与字符串转换的 header-only 库，要求C++17（含）以上   |
 | **[matplotlib-cpp](https://github.com/lava/matplotlib-cpp)** | 基于流行的matplotlib构建的极其简单但功能强大的纯头文件C++绘图库 |
 |           **[MD5](https://github.com/pod32g/MD5)**           | MD5算法的C实现                                               |
 |        **[spdlog](https://github.com/gabime/spdlog)**        | 非常快，仅头文件/编译的C++日志库                             |
