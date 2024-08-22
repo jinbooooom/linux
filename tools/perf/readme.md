@@ -83,6 +83,8 @@ sudo LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/path/to/library perf record -F 99 -e cycl
 
 ```shell
 sudo perf script > perf.data.txt
+# 若报错 File perf.data not owned by current user or root (use -f to override)
+# 使用 sudo perf script > perf.data.txt -f
 ```
 
 ### 使用 FlameGraph 工具生成火焰图
