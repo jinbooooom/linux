@@ -6,8 +6,10 @@ project(${PROJECT_NAME})
 
 include_directories(.)
 
-aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/ SRC)
+# 编译可执行程序, mulThreadBarrierUseSem
+set(SRC_mulThreadBarrierUseSem "${CMAKE_CURRENT_SOURCE_DIR}/mulThreadBarrierUseSem.cpp")
+add_executable(${PROJECT_NAME}_mulThreadBarrierUseSem ${SRC_mulThreadBarrierUseSem})
 
-add_executable(${PROJECT_NAME} ${SRC}) 
-# add_dependencies(${PROJECT_NAME} ${MY_LIB_NAME})
-# target_link_libraries(${PROJECT_NAME} PRIVATE ${MY_LIB_NAME})
+# 编译可执行程序, mulThreadBarrierUseApi_thread_barrier_wait
+set(SRC_mulThreadBarrierUseApi_thread_barrier_wait "${CMAKE_CURRENT_SOURCE_DIR}/mulThreadBarrierUseApi_thread_barrier_wait.cpp")
+add_executable(${PROJECT_NAME}_mulThreadBarrierUseApi_thread_barrier_wait ${SRC_mulThreadBarrierUseApi_thread_barrier_wait})
