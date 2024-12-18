@@ -212,6 +212,39 @@ $ git reset --keep [commit]
 $ git revert [commit]
 ```
 
+### 标签
+
+```shell
+# 查看当前仓库中已经存在的标签：
+$ git tag
+
+# 创建轻量标签（Lightweight Tag）,轻量标签只是一个指向特定提交的引用，不包含额外的信息。
+$ git tag [tagname]
+
+# 创建带注释的标签（Annotated Tag）,带注释的标签包含更多的信息，如标签的创建者、日期、注释等。
+$ git tag -a [tagname] -m "标签描述信息"
+# 例如： git tag -a v1.0.0 -m "发布版本 1.0.0"
+
+# 为历史提交打标签, 使用 git tag 加上提交的哈希值。
+$ git tag [tagname] [commit_hash]
+# 例如：git tag v1.0.0 abc1234
+
+# 推送标签到远程仓库：默认情况下，git push 不会推送标签到远程仓库。需要显式地推送标签：
+$ git push origin [tagname]
+
+# 一次性推送所有标签
+$ git push origin --tags
+
+#  删除本地标签
+$ git tag -d [tagname]
+
+#  删除远程标签
+$ git push origin --delete <tagname>
+
+# 查看标签的详细信息
+$ git show [tagname]
+```
+
 ## 更改历史
 
 ```bash
