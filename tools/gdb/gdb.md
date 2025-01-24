@@ -1350,6 +1350,65 @@ Program terminated with signal SIGSEGV, Segmentation fault.
 - [Linux生成core文件、core文件路径设置](https://www.coonote.com/linux-note/linux-core-file-set.html)
 - [Error: /proc/sys/kernel/core_uses_pid: Permission denied](https://blog.csdn.net/LU_ZHAO/article/details/104770235)
 
+## 调试 python 与 C++ 的混合程序
+
+比如想知道一个 CUDA kernel 是怎么在 PyTorch 中调用起来的，可以用下面的代码:
+
+```python
+import torch
+def main():
+    x = torch.ones(4, device="cuda")
+    x * 2
+if __name__ == '__main__':
+    main()
+```
+
+可以给 cudaLaunchKernel 设置断点，然后通过 bt 和 py-bt 查看函数调用栈:
+
+```shell
+$ gdb python3
+(gdb) b cudaLaunchKernel
+Breakpoint 2 at 0x7fffb21bcb70
+(gdb) run test.py
+
+Thread 1 "python" hit Breakpoint 2, 0x00007fffb21bcb70 in cudaLaunchKernel ()
+   from /usr/local/cuda/lib64/libcudart.so.12
+(gdb) bt
+#0  0x00007fffb21bcb70 in cudaLaunchKernel () from /usr/local/cuda/lib64/libcudart.so.12
+#1  0x00007fff6859be82 in cudaLaunchKernel<char> (
+    func=0x7fff685a83a1 <at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<float>, at:
+:detail::Array<char*, 1> >(int, at::native::FillFunctor<float>, at::detail::Array<char*, 1>)> ...,
+gridDim=..., blockDim=..., args=0x7fffffffb7c0, sharedMem=0, stream=0x0)
+    at /usr/local/cuda/include/cuda_runtime.h:216
+#2  0x00007fff68595ed7 in __device_stub__ZN2at6native29vectorized_elementwise_kernelILi4ENS0_11FillFuncto
+rIfEENS_6detail5ArrayIPcLi1EEEEEviT0_T1_ (__par0=4, __par1=..., __par2=...)
+    at /tmp/tmpxft_00006e3d_00000000-6_FillKernel.compute_90.cudafe1.stub.c:280
+#3  0x00007fff68595f2f in at::native::__wrapper__device_stub_vectorized_elementwise_kernel<4, at::native:
+:FillFunctor<float>, at::detail::Array<char*, 1> > (__cuda_0=@0x7fffffffb82c: 4, __cuda_1=...,
+    __cuda_2=...) at /tmp/tmpxft_00006e3d_00000000-6_FillKernel.compute_90.cudafe1.stub.c:283
+#4  0x00007fff685a83d0 in at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<float>, at
+::detail::Array<char*, 1> > (N=4, f=..., data=...)
+    at /opt/pytorch/pytorch/aten/src/ATen/native/cuda/CUDALoops.cuh:59
+#5  0x00007fff685ac57b in at::native::launch_vectorized_kernel<at::native::FillFunctor<float>, at::detail
+::Array<char*, 1> > (N=4, f=..., data=...)
+    at /opt/pytorch/pytorch/aten/src/ATen/native/cuda/CUDALoops.cuh:98
+#6  0x00007fff685a50bf in at::native::gpu_kernel_impl<at::native::FillFunctor<float> > (iter=..., f=...)
+    at /opt/pytorch/pytorch/aten/src/ATen/native/cuda/CUDALoops.cuh:214
+...
+```
+
+py-bt 查看函数调用栈
+
+```shell
+(gdb) py-bt
+Traceback (most recent call first):
+  <built-in method ones of type object at remote 0x7fffafddf720>
+  File "test.py", line 6, in main
+    x = torch.ones(4, device="cuda")
+  File "test.py", line 10, in <module>
+    main()
+```
+
 ## 命令行总结
 
 ![](assets/gdb/g1.jpg)
