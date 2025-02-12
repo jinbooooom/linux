@@ -1409,6 +1409,12 @@ Traceback (most recent call first):
     main()
 ```
 
+## 用 sudo + gdb --args 启动应用程序时，指定环境变量
+
+```shell
+sudo env LD_LIBRARY_PATH=/home/path/to/mylib gdb --args ./myTest arg1 arg2
+```
+
 ## 命令行总结
 
 ![](assets/gdb/g1.jpg)
