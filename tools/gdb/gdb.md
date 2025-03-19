@@ -796,7 +796,8 @@ $19 = 0x404233 "main"
 - `info threads`：查看线程信息，可以简写为 `i threads`
 - `thread th_id`：切换到指定id的线程（可以将thread 简写为t）。这样就能查看该线程的调用栈信息(bt)和当前栈帧的局部变量信息(i locals)
 - `b line thread th1 [th2 ...]`：为线程th1，th2 ...的在代码第line行设置断点。
-- `thread apply th1 [th2...] command`：为线程 th1 th2 ...应用命令 command（可以将thread 简写为t），这样就不用切换线程。如查看编号为 1，2线程的局部变量，可以用命令`thread apply 1 2 i locals`。如果是查看所有线程的局部变量信息，可以用`thread apply all i locals`
+- `thread apply th1 [th2...] comman
+- `d`：为线程 th1 th2 ...应用命令 command（可以将thread 简写为t），这样就不用切换线程。如查看编号为 1，2线程的局部变量，可以用命令`thread apply 1 2 i locals`。如果是查看所有线程的局部变量信息，可以用`thread apply all i locals`
 - `finish`：立即执行完当前的函数，但是并不是执行完整个应用程序。
 
 ```shell
