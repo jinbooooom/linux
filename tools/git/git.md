@@ -485,6 +485,60 @@ Switched to a new branch 'recovery'
  git push origin recovery 
 ```
 
+## 临时/全局配置账号与邮箱
+
+**临时配置（仅对当前仓库有效）**
+
+```shell
+# 配置用户名
+git config user.name "您的用户名"
+
+# 配置邮箱
+git config user.email "您的邮箱@example.com"
+```
+
+**全局配置（对所有仓库有效）**
+
+```shell
+# 全局配置用户名
+git config --global user.name "您的用户名"
+
+# 全局配置邮箱
+git config --current user.email "您的邮箱@example.com"
+```
+
+**仅对当前提交配置**
+
+```shell
+# 在提交时临时指定作者信息
+git commit -m "提交信息" --author="用户名 <邮箱@example.com>"
+```
+
+**查看当前配置**
+
+```shell
+# 查看当前仓库配置
+git config user.name
+git config user.email
+
+# 查看全局配置
+git config --global user.name
+git config --global user.email
+```
+
+**临时环境变量（推荐用于临时切换）**
+
+```shell
+# 设置环境变量（仅对当前终端会话有效）
+export GIT_AUTHOR_NAME="临时用户名"
+export GIT_AUTHOR_EMAIL="临时邮箱@example.com"
+export GIT_COMMITTER_NAME="临时用户名"
+export GIT_COMMITTER_EMAIL="临时邮箱@example.com"
+
+# 然后正常提交
+git commit -m "提交信息"
+```
+
 ## 推荐阅读
 
 - http://gityuan.com/2015/06/27/git-notes/
