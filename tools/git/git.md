@@ -539,6 +539,53 @@ export GIT_COMMITTER_EMAIL="临时邮箱@example.com"
 git commit -m "提交信息"
 ```
 
+## `commit.template` 配置
+
+检查 Git `commit.template` 配置：
+
+```shell
+git config --get commit.template
+```
+
+如果没有输出，说明没设置。此时需要设置模板路径，例如：
+
+```bash
+git config --global commit.template ~/.gitcommit_template
+```
+
+或者对单个仓库设置（在仓库根目录下）：
+
+```bash
+git config commit.template .gitcommit_template
+```
+
+仓库级配置覆盖全局配置，cat `.git/config`（仓库配置） 和 `~/.gitconfig`（全局配置） 文件可以查看各种 git 配置。
+
+加载模板：
+
+- `git commit`（无参数）才会打开编辑器并加载模板内容。
+- 如果你用 `git commit -m "xxx"`，模板不会生效。
+- 如果你用 `git commit --allow-empty-message -m ""`，同样不会弹出模板。编辑器设置
+
+## 设置 GIT 编辑器
+
+```shell
+# 加上 ----global 为全局配置
+git config --global core.editor "vim" # 设置为  vim
+git config --global core.editor "nano"
+# 设置为 Notepad++（Windows
+git config --global core.editor "'C:/Program Files/Notepad++/notepad++.exe' -multiInst -notabbar -nosession -noPlugin" ）
+
+# 去掉 ----global 只对当前仓库有效
+git config core.editor "vim" # 设置当前仓库使用  vim 编辑器
+
+# 查看当前的全局编辑器
+git config --global --get core.editor
+
+# 查看当前仓库使用的编辑器
+git config --get core.editor
+```
+
 ## 推荐阅读
 
 - http://gityuan.com/2015/06/27/git-notes/
