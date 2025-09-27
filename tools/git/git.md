@@ -116,8 +116,10 @@ $ git push origin [branch-name]
 $ git branch -d [branch-name]
 $ git branch -D [branch-name]
 
-# 删除远程分支
+# 删除远程仓库上的分支，其他协作者无法再访问该分支
 $ git push origin --delete <branch-name>
+
+# 只删除本地的远程分支引用，本地不再跟踪该远程分支，远程仓库中的分支仍然存在
 $ git branch -dr <remote/branch>
 
 # 修改本地分支名字
