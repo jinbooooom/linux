@@ -340,7 +340,7 @@ c80902f12e12f1e0206667ca7c5d94f88ddd9510 c5
 4ad0c43bd8d1cfb91542f1d09e47ebdefe825c25 a.txt commit1
 ```
 
-`git rebase -i c80902 d82301`会合并主题是c6，c7，c6，merge branch new，c8的这些提交。然后将除了第一个`pick`外的其它`pick`改为`s`，即`squash`。再保存退出。
+`git rebase -i c80902 d82301`会合并主题是c5，c6，c7，c5，merge branch new，c8的这些提交。然后将除了第一个`pick`外的其它`pick`改为`s`，即`squash`。再保存退出。
 
 保存上面提交后，查看分支信息，当前分支并不在master上了，这个分支并不会保存，只是我们压缩提交记录后的一个临时分支。所以要基于当前临时分支创建新分支。
 
