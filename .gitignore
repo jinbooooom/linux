@@ -16,6 +16,8 @@ t.cpp
 build
 main
 
+.cursorindexingignore
+.specstory/*
 **/.vscode/*
 **/.vscode
 Thumbs.db
